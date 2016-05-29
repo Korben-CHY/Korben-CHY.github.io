@@ -1,0 +1,622 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Performance," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Improving Layout Performance-Optimizing Layout Hierarchies">
+<meta property="og:url" content="http://yoursite.com/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
+<meta property="og:image" content="http://developer.android.com/images/training/layout-listitem.png">
+<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-linearlayout.png">
+<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-layouttimes.png">
+<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-relativelayout.png">
+<meta property="og:image" content="http://developer.android.com/images/tools/studio-inspections-config.png">
+<meta property="og:updated_time" content="2016-01-07T02:30:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Improving Layout Performance-Optimizing Layout Hierarchies">
+<meta name="twitter:description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
+<meta name="twitter:image" content="http://developer.android.com/images/training/layout-listitem.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Improving Layout Performance-Optimizing Layout Hierarchies | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Korben C .</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">One fall in love with  White</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Improving Layout Performance-Optimizing Layout Hierarchies
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2015-11-06T23:20:59+08:00" content="2015-11-06">
+              2015-11-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。<br><a id="more"></a></p>
+<p>一个很普遍的误解，使用最基本的布局结构就可以生成最高效的布局。然而，每一个添加到应用的组件都需要初始化、布局和绘制。例如，使用嵌套的<code>LinearLayout</code>会导致更深层次的布局结构。此外，嵌套多个<code>LinearLayout</code>的实例并使用<code>layout_weight</code>参数的代价尤其高，因为每一个子View需要被测量两次。当布局需要重复的创建时，这个问题会特别的明显，例如使用``ListView<code>或</code>GridView```时。</p>
+<p>这篇课程中，你将学习如何使用[Hierarchy Viewer][1]和[Layoutopt][2]来检查和优化布局。</p>
+<h2 id="Inspect-Your-Layout"><a href="#Inspect-Your-Layout" class="headerlink" title="Inspect Your Layout"></a>Inspect Your Layout</h2><p>Android SDK 提供了叫做[Hierarchy Viewer][1]的工具，它可以在应用的运行时来分析布局，帮助我们发现布局中的性能瓶颈。</p>
+<p>选择连接的设备或模拟器上运行的进程，Hierarchy Viewer会显示出相应的布局树。每个模块的交通灯代表了Measure, Layout 和 Draw性能，帮助我们识别潜在问题。</p>
+<p>例如，图1显示了一个作为<code>ListView</code>的item的布局。这个布局在左边显示了一个小的bitmap，在右侧显示了两个堆叠的文本条目。如果布局将被创建多次–比如这个–那优化的好处将加倍。</p>
+<p><img src="http://developer.android.com/images/training/layout-listitem.png" alt="figure 1"><strong>图1.</strong>作为ListView item的布局</p>
+<p><code>hierarchyviewer</code>工具可以在<code>&lt;sdk&gt;/tools/</code>下找到。打开后，Hierarchy Viewer会显示可用的设备列表及它运行的组件。点击<strong>Load View Hierarchy</strong>来查看选择组件的视图结构。例如，图2显示了图1中介绍的布局。</p>
+<p><img src="http://developer.android.com/images/training/hierarchy-linearlayout.png" alt="firure 2"><strong>图2.</strong>图1中布局的布局结构，使用了嵌套的<code>LinearLayout</code>。</p>
+<p><img src="http://developer.android.com/images/training/hierarchy-layouttimes.png" alt="firgure 3"><strong>图3.</strong>点击一个层次结构节点来显示其性能时间。</p>
+<p>在图2中，我们可以看到这个三层的结构的text条目中有一些问题。点击条目可以看到View创建的每一个阶段需要的时间（图3）.我们可以很清楚的看到哪些条目需要最多的时间来进行measure、layout和render。</p>
+<p>使用当前的布局，渲染一个完整的List条目花费的时间是：</p>
+<ul>
+<li>Measure: 0.977ms</li>
+<li>Layout: 0.167ms</li>
+<li>Draw: 2.717ms</li>
+</ul>
+<h2 id="Revise-Your-Layout"><a href="#Revise-Your-Layout" class="headerlink" title="Revise Your Layout"></a>Revise Your Layout</h2><p>因为使用了堆叠的<code>LinearLaout</code>导致了布局的性能降低，所以通过扁平化的布局或许可以提高布局的性能——使布局浅而宽，而不是窄而深。使用<code>RelativeLayout</code>作为根结点可以做到这一点。所以，当使用了<code>RelativeLayout</code>作为根结点后，我们可以看到布局变成2层结构了。下而是对新布局的检测：</p>
+<p><img src="http://developer.android.com/images/training/hierarchy-relativelayout.png" alt="Figure 4"><strong>图4.</strong>使用<code>RelativeLayout</code>后，图1中的布局层级</p>
+<p>现在渲染List的一个条目花费的时间是：</p>
+<ul>
+<li>Measure: 0.598ms</li>
+<li>Layout: 0.110ms</li>
+<li>Draw: 2.146ms</li>
+</ul>
+<p>虽然看上去只有很小的提升，但是作为List的条目，提升的时间就不仅仅如此了。</p>
+<p>导致这些时间差异的最大原因是使用了<code>LinearLayout</code>的<code>layout_weight</code>设计，这会降低measure的速度。上面只是一个关于每一个布局都有自己合适用途的例子，你在使用过程中要仔细考虑是否有必要使用layout weight属性。</p>
+<h2 id="Use-Lint"><a href="#Use-Lint" class="headerlink" title="Use Lint"></a>Use Lint</h2><p>使用lint工具来分析你的布局文件并发现需要优化的地方是一个很好的实践。Lint替换了Layoutopt，因为它有更强大的功能。一些lint规则的例子：</p>
+<ul>
+<li>使用compound drawables——相对于包含<code>ImangeView</code>和<code>TextView</code>的<code>LinearLayout</code>，使用compound drawables会更有效率。</li>
+<li>合并根框架——如果一个<code>FrameLayout</code>是布局的根结点，但是没有提供背景、边距或其他的等等，那我们可以更有效率的merge结点来替换它。</li>
+<li>无用的分支——删除没有任何子View或背景的布局（因为它不可见），这样可以得到一个更高效的布局结构。</li>
+<li>无用的父结点——如果布局只有子View，但没有兄弟View，不是<code>ScrollView</code>或根结点，而且没有背景，那它把这个布局删除并把它的子View提升为父结点来得到一个更扁平高效的布局结构。</li>
+<li>深层次的布局——含有很多层叠的布局的性能会很差。可以考虑使用<code>RelativeLayout</code>或<code>GridLayout</code>这样的扁平布局来提升性能。默认的最大层级是10.</li>
+</ul>
+<p>使用Lint的另一个好处是它被Android Studio集成了。在编译工程时，Lint会自动的执行。</p>
+<p>你还可以通过Android Studio的<strong>File&gt;Setting&gt;Project Settings</strong>选项来进行管理、配置。检查配置页面显示了支持的检查项。<br><img src="http://developer.android.com/images/tools/studio-inspections-config.png" alt="Figure 5"><strong>图5.</strong>检查配置</p>
+<p>Lint可以自动的修复问题、提供建议，还可以直接跳转到有问题的代码处。</p>
+<hr>
+<p><em>本篇文章译自<a href="http://developer.android.com/intl/zh-cn/training/improving-layouts/optimizing-layout.html" target="_blank" rel="external">Optimizing Layout Hierarchies</a></em></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Performance/" rel="tag">#Performance</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/04/Performance-Tips/" rel="next" title="Performance Tips">
+                <i class="fa fa-chevron-left"></i> Performance Tips
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/10/Volley-完全解析/" rel="prev" title="Volley 完全解析">
+                Volley 完全解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+          <p class="site-description motion-element" itemprop="description">On The Way</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Inspect-Your-Layout"><span class="nav-number">1.</span> <span class="nav-text">Inspect Your Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Revise-Your-Layout"><span class="nav-number">2.</span> <span class="nav-text">Revise Your Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Lint"><span class="nav-number">3.</span> <span class="nav-text">Use Lint</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

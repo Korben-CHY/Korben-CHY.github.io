@@ -1,0 +1,593 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="View,Open Source," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="想要学习 Support V4 包中的 ViewDragHelper 的实现，发现里面用到了 Scroller，那今天就先来看下 Scroller 的实现吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scroller 解析">
+<meta property="og:url" content="http://yoursite.com/2015/11/26/Scroller-解析/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="想要学习 Support V4 包中的 ViewDragHelper 的实现，发现里面用到了 Scroller，那今天就先来看下 Scroller 的实现吧。">
+<meta property="og:updated_time" content="2016-05-29T10:01:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scroller 解析">
+<meta name="twitter:description" content="想要学习 Support V4 包中的 ViewDragHelper 的实现，发现里面用到了 Scroller，那今天就先来看下 Scroller 的实现吧。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Scroller 解析 | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Korben C .</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">One fall in love with  White</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Scroller 解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2015-11-26T13:28:23+08:00" content="2015-11-26">
+              2015-11-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>想要学习 Support V4 包中的 <code>ViewDragHelper</code> 的实现，发现里面用到了 <code>Scroller</code>，那今天就先来看下 <code>Scroller</code> 的实现吧。</p>
+<a id="more"></a>
+<h2 id="Scroller说明"><a href="#Scroller说明" class="headerlink" title="Scroller说明"></a>Scroller说明</h2><p>Scroller有什么作用？<br>先看官方的说明：<br><blockquote><p>This class encapsulates scrolling. You can use scrollers (Scroller or OverScroller) to collect the data you need to produce a scrolling animation—for example, in response to a fling gesture. Scrollers track scroll offsets for you over time, but they don’t automatically apply those positions to your view. It’s your responsibility to get and apply new coordinates at a rate that will make the scrolling animation look smooth.</p>
+</blockquote>翻译下：<blockquote><p>这个类为我们封装了滚动。你可以使用 scrollers(Scroller 或 OverScroller)来收集需要的数据进而产生滚动动画，比如，响应滑动手势的动画。随着时间的进行，Scrollers 会不断记录滚动的偏移，但它不会自动的把计算的值应用的 View 中。你需要不断的从 Scroller 中取出最新的坐标值，并把它应用到 View 中，使 View 的滚动平滑的进行。</p>
+</blockquote></p>
+<p>也就是说，Scroller<strong>只</strong>负责计算新的坐标位置，<strong>不</strong>负责更新 View 的坐标位置。我们要做的只是把坐标的起始X、Y位置，结束的X、Y位置，滚动的时间告诉 Scroller，Scroller 会负责所有的计算。我们需要做的是调用 computeScrollOffset() 来计算当前的坐标、判断滚动是否完成，如果没有完成，没用 Scroller 的 <code>getCurrX()</code>、<code>getCurrY()</code> 方法来得到当前的坐标位置并应用到 View 中:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mScroller.computeScrollOffset()) &#123;</span><br><span class="line">     <span class="comment">// Get current x and y positions</span></span><br><span class="line">     <span class="keyword">int</span> currX = mScroller.getCurrX();</span><br><span class="line">     <span class="keyword">int</span> currY = mScroller.getCurrY();</span><br><span class="line">    ...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Constructor"><a href="#Constructor" class="headerlink" title="Constructor"></a>Constructor</h2><p>Scroller 有三个构造函数，最终都会调用到这一个：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Create a Scroller with the specified interpolator. If the interpolator is</span><br><span class="line"> * null, the default (viscous) interpolator will be used. Specify whether or</span><br><span class="line"> * not to support progressive "flywheel" behavior in flinging.</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Scroller</span><span class="params">(Context context, Interpolator interpolator, <span class="keyword">boolean</span> flywheel)</span> </span>&#123;</span><br><span class="line">    mFinished = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果没有设置interpolator(插补器)，则使用默认的</span></span><br><span class="line">    <span class="keyword">if</span> (interpolator == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mInterpolator = <span class="keyword">new</span> ViscousFluidInterpolator();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mInterpolator = interpolator;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// pixels per inch</span></span><br><span class="line">    mPpi = context.getResources().getDisplayMetrics().density * <span class="number">160.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 减速系数</span></span><br><span class="line">    mDeceleration = computeDeceleration(ViewConfiguration.getScrollFriction());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// "Flywheel"效果，Honeycomb及以上支持</span></span><br><span class="line">    mFlywheel = flywheel;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 物理多项式系数，使滚动的效果更平滑</span></span><br><span class="line">    mPhysicalCoeff = computeDeceleration(<span class="number">0.84f</span>); <span class="comment">// look and feel tuning</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>上面代码中初始化了减速系数（mDeceleration）、物理多项式系数（mPhysicalCoeff），并设置了插补器（interpolator）。<br>Interpolator的作用是改变滚动变化的速率，如匀速、先加速后减速、正弦等。</p>
+<h2 id="StratScroll"><a href="#StratScroll" class="headerlink" title="StratScroll"></a>StratScroll</h2><p>要开始一个滚动，首先需要调用 <code>startScroll()</code> 方法，我们来看它作了什么：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Start scrolling by providing a starting point, the distance to travel,</span><br><span class="line"> * and the duration of the scroll.</span><br><span class="line"> * </span><br><span class="line"> * <span class="doctag">@param</span> startX Starting horizontal scroll offset in pixels. Positive</span><br><span class="line"> *        numbers will scroll the content to the left.</span><br><span class="line"> * <span class="doctag">@param</span> startY Starting vertical scroll offset in pixels. Positive numbers</span><br><span class="line"> *        will scroll the content up.</span><br><span class="line"> * <span class="doctag">@param</span> dx Horizontal distance to travel. Positive numbers will scroll the</span><br><span class="line"> *        content to the left.</span><br><span class="line"> * <span class="doctag">@param</span> dy Vertical distance to travel. Positive numbers will scroll the</span><br><span class="line"> *        content up.</span><br><span class="line"> * <span class="doctag">@param</span> duration Duration of the scroll in milliseconds.</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startScroll</span><span class="params">(<span class="keyword">int</span> startX, <span class="keyword">int</span> startY, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">    mMode = SCROLL_MODE;</span><br><span class="line">    mFinished = <span class="keyword">false</span>;</span><br><span class="line">    mDuration = duration;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 记录 startTime，后面会根据timePassed = currentTime - startTime来计算坐标的位置</span></span><br><span class="line">    mStartTime = AnimationUtils.currentAnimationTimeMillis();</span><br><span class="line">    mStartX = startX;</span><br><span class="line">    mStartY = startY;</span><br><span class="line">    mFinalX = startX + dx;</span><br><span class="line">    mFinalY = startY + dy;</span><br><span class="line">    mDeltaX = dx;</span><br><span class="line">    mDeltaY = dy;</span><br><span class="line">    mDurationReciprocal = <span class="number">1.0f</span> / (<span class="keyword">float</span>) mDuration;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><code>startScroll()</code> 方法中只是进行了变量的初始化，没有进行其它的操作。但有一行代码要引起我们的注意：<br><code>mStartTime = AnimationUtils.currentAnimationTimeMillis();</code><br>它记录了滚动的开始时间。有了开始时间，我们就可以知道滚动的持续时间了：timePassed = currentTime - startTime。最后，我们根据 timePassed 来计算当前坐标的位置。</p>
+<h2 id="ComputeScroll"><a href="#ComputeScroll" class="headerlink" title="ComputeScroll"></a>ComputeScroll</h2><p>虽然 Scroller 会为我们计算坐标的值，但它不会自动的计算，需要我们手动的调用 <code>computeScrollOffset()</code> 方法来进行计算，并根据它的返回值来判断滚动是否进行完毕。<br>我们来看实现代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Call this when you want to know the new location.  If it returns true,</span><br><span class="line"> * the animation is not yet finished.</span><br><span class="line"> */</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">computeScrollOffset</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mFinished) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算滚动已进行的时间</span></span><br><span class="line">    <span class="keyword">int</span> timePassed = (<span class="keyword">int</span>)(AnimationUtils.currentAnimationTimeMillis() - mStartTime);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timePassed &lt; mDuration) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (mMode) &#123;</span><br><span class="line">        <span class="keyword">case</span> SCROLL_MODE:</span><br><span class="line">        	<span class="comment">// mDurationReciprocal = 1.0f / (float) mDuration;</span></span><br><span class="line">        	<span class="comment">// timePassed * mDurationReciprocal = timePassed / mDuration</span></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">float</span> x = mInterpolator.getInterpolation(timePassed * mDurationReciprocal);</span><br><span class="line">            mCurrX = mStartX + Math.round(x * mDeltaX);</span><br><span class="line">            mCurrY = mStartY + Math.round(x * mDeltaY);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把速度考虑在内，计算坐标</span></span><br><span class="line">        <span class="keyword">case</span> FLING_MODE:</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">float</span> t = (<span class="keyword">float</span>) timePassed / mDuration;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> index = (<span class="keyword">int</span>) (NB_SAMPLES * t);</span><br><span class="line">            <span class="keyword">float</span> distanceCoef = <span class="number">1</span>.f;</span><br><span class="line">            <span class="keyword">float</span> velocityCoef = <span class="number">0</span>.f;</span><br><span class="line">            <span class="keyword">if</span> (index &lt; NB_SAMPLES) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> t_inf = (<span class="keyword">float</span>) index / NB_SAMPLES;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> t_sup = (<span class="keyword">float</span>) (index + <span class="number">1</span>) / NB_SAMPLES;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> d_inf = SPLINE_POSITION[index];</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> d_sup = SPLINE_POSITION[index + <span class="number">1</span>];</span><br><span class="line">                velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);</span><br><span class="line">                distanceCoef = d_inf + (t - t_inf) * velocityCoef;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            mCurrVelocity = velocityCoef * mDistance / mDuration * <span class="number">1000.0f</span>;</span><br><span class="line">            </span><br><span class="line">            mCurrX = mStartX + Math.round(distanceCoef * (mFinalX - mStartX));</span><br><span class="line">            <span class="comment">// Pin to mMinX &lt;= mCurrX &lt;= mMaxX</span></span><br><span class="line">            mCurrX = Math.min(mCurrX, mMaxX);</span><br><span class="line">            mCurrX = Math.max(mCurrX, mMinX);</span><br><span class="line">            </span><br><span class="line">            mCurrY = mStartY + Math.round(distanceCoef * (mFinalY - mStartY));</span><br><span class="line">            <span class="comment">// Pin to mMinY &lt;= mCurrY &lt;= mMaxY</span></span><br><span class="line">            mCurrY = Math.min(mCurrY, mMaxY);</span><br><span class="line">            mCurrY = Math.max(mCurrY, mMinY);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (mCurrX == mFinalX &amp;&amp; mCurrY == mFinalY) &#123;</span><br><span class="line">                mFinished = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        mCurrX = mFinalX;</span><br><span class="line">        mCurrY = mFinalY;</span><br><span class="line">        mFinished = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>在 <code>SCROLL_MODE</code> 时，会根据持续的时间，结合Interpolator计算当前的坐标。在 <code>FLING_MODE</code> 时，会根据持续的时间，结合 <code>SPLINE_POSITION</code> 计算出滚动速度、坐标，至于计算过程，就不做讨论了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Scroller</code> 是一个计算工具，只是一个计算工具。</p>
+<ol>
+<li>调用 <code>startScroll()</code> 方法，把 startX、startY、dx、dy，还有duration传给 <code>Scroller</code>，<code>Scroller</code> 会初始化变量，记录当前时间；</li>
+<li>不断的调用 <code>computeScrollOffset()</code> 方法，手动触发计算坐标；</li>
+<li>调用 <code>getCurrX()</code> 和 <code>getCurrY()</code> 得到当前的坐标，应用的 View 中去。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/View/" rel="tag">#View</a>
+          
+            <a href="/tags/Open-Source/" rel="tag">#Open Source</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/18/android-async-http解析/" rel="next" title="android-async-http解析">
+                <i class="fa fa-chevron-left"></i> android-async-http解析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/29/记一次Android-Bluetooth-SPP-传输数据丢失分析/" rel="prev" title="记一次Android Bluetooth SPP 传输数据丢失分析">
+                记一次Android Bluetooth SPP 传输数据丢失分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+          <p class="site-description motion-element" itemprop="description">On The Way</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scroller说明"><span class="nav-number">1.</span> <span class="nav-text">Scroller说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Constructor"><span class="nav-number">2.</span> <span class="nav-text">Constructor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StratScroll"><span class="nav-number">3.</span> <span class="nav-text">StratScroll</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ComputeScroll"><span class="nav-number">4.</span> <span class="nav-text">ComputeScroll</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

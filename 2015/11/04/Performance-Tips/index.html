@@ -1,0 +1,649 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Performance," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="这篇文章主要介绍提高Android性能的小技巧，当把这些小技巧组合起来后可以提高应用的整体性能，但并不会产生特别显著的效果。选择正确的算法和数据结构应该总是你首先需要考虑的，但这些并不在这篇文章讨论的范围。你应该把这些技巧应用在平常的代码实践中，并把它变成一个习惯来提升代码的效率。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Performance Tips">
+<meta property="og:url" content="http://yoursite.com/2015/11/04/Performance-Tips/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="这篇文章主要介绍提高Android性能的小技巧，当把这些小技巧组合起来后可以提高应用的整体性能，但并不会产生特别显著的效果。选择正确的算法和数据结构应该总是你首先需要考虑的，但这些并不在这篇文章讨论的范围。你应该把这些技巧应用在平常的代码实践中，并把它变成一个习惯来提升代码的效率。">
+<meta property="og:updated_time" content="2016-01-07T02:30:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Performance Tips">
+<meta name="twitter:description" content="这篇文章主要介绍提高Android性能的小技巧，当把这些小技巧组合起来后可以提高应用的整体性能，但并不会产生特别显著的效果。选择正确的算法和数据结构应该总是你首先需要考虑的，但这些并不在这篇文章讨论的范围。你应该把这些技巧应用在平常的代码实践中，并把它变成一个习惯来提升代码的效率。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Performance Tips | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Korben C .</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">One fall in love with  White</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Performance Tips
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2015-11-04T22:21:41+08:00" content="2015-11-04">
+              2015-11-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章主要介绍提高Android性能的小技巧，当把这些小技巧组合起来后可以提高应用的整体性能，但并不会产生特别显著的效果。选择正确的算法和数据结构应该总是你首先需要考虑的，但这些并不在这篇文章讨论的范围。你应该把这些技巧应用在平常的代码实践中，并把它变成一个习惯来提升代码的效率。</p>
+<a id="more"></a>
+<p>这里有两个编写高效代码的原则：</p>
+<ul>
+<li>不要做不需要做的事。</li>
+<li>不要分配本可以避免的内存。</li>
+</ul>
+<p>在优化Android应用时，我们要面临的一个非常棘手的问题是应用会在各种各样的设备上运行。不同版本的虚拟机以不两只的速度的运行在不同的处理器中。这并不是简单的“设备X的运行速度是设备Y在F倍”，处理一个设备后，并按照这个比例去处理其他的设备。而且，在模拟器上的性能和在真实设备上的性能没有半毛钱关系。另外，设备有没有JIT（Just In Time compiler）也有很大的不同：对于具有JIT设备的最优代码，但对于没有JIT的设备确并不适用。</p>
+<p>为了保证应用在各种各样的设备下都能良好的运行，要确保你的代码在所有档次的设备下都能高效的运行，并积极的优化你的代码。</p>
+<h2 id="Avoid-Creating-Unnecessary-Objects"><a href="#Avoid-Creating-Unnecessary-Objects" class="headerlink" title="Avoid Creating Unnecessary Objects"></a>Avoid Creating Unnecessary Objects</h2><p>创建对象从来都不是免费的。一个GC加一个为临时对象准备的内存池可以让分配内存变的廉价，但是分配内存总是消费。</p>
+<p>随着为更多的对象分配内存，就产生了强制性的周期性的GC，同时也为用户带来了卡顿的体验。虽然Android 2.3引入的并发GC可以减轻这种不好体验，但不必要的工作总是应该被避免。</p>
+<p>因此你应该避免创建本不需要的对象。下面的例子可以给你帮助：</p>
+<ul>
+<li>如果你的方法需要返回一个String对象，而返回的String总会被添加到<code>StringBuffer</code>中，那就修改你的函数签名，将String对象直接添加到<code>StringBuffer</code>中，而不是创建短命的临时对象。</li>
+<li>当从一系列输入中提取String对象时，尝试返回原始数据的subString，而不是创建一个复制对象。使用subString，你会创建一个新的<code>String</code>对象，但是它会共享<code>char[]</code>。（需要权衡的是，如果你只使用原始输入的一小部分，使用subString时这些部分将总会被保持在内存中。）</li>
+</ul>
+<p>一个较为激进的做法是将多维数组分解成一维数组：</p>
+<ul>
+<li><code>int</code>数组总是比<code>Integer</code>数组好的多，但是我们也可以概括出这样一个事实，那就是两个一维数组要比一个二维数组有效率的多。这对其他的原始数据类型同样适用。</li>
+<li>如果你正在实现一个容器来存放元组<code>(Foo,Bar)</code>，记住两个一维数组<code>Foo[]</code>和<code>Bar[]</code>通常要比一个存放<code>(Foo,Bar)</code>的数组更好。（当然，也有例外的情况，那就是你正在设计供其他人访问的API。在这些情况下，妥协速度来达到良好的API设计通常是更好的选择。但是对于你自己内部的代码，要尽可能的保持高效。）</li>
+</ul>
+<p>一般来说，要尽量避免创建临时对象。更少的对象意味着更少的内存回收，毫无疑问，这会影响用户的体验。</p>
+<h2 id="Prefer-Static-Over-Virtual"><a href="#Prefer-Static-Over-Virtual" class="headerlink" title="Prefer Static Over Virtual"></a>Prefer Static Over Virtual</h2><p>如果你不需要访问一个对象的变量，那就把方法声明为static的，这可以把访问速度提高15%-20%。而且这也是一个好的编程习惯，因为从这个方法签名中就可以表明，调用此方法并不会改变对象的状态。</p>
+<h2 id="Use-Static-Final-For-Constants思考下下面的声明："><a href="#Use-Static-Final-For-Constants思考下下面的声明：" class="headerlink" title="Use Static Final For Constants思考下下面的声明："></a>Use Static Final For Constants思考下下面的声明：</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> intVal = <span class="number">42</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">String</span> strVal = <span class="string">"Hello, world!"</span>;</span><br></pre></td></tr></table></figure>
+<p>编译器会生成一个叫做<code>&lt;clinit&gt;</code>的初始化方法，并在该类第一次被调用时执行。这个方法将42保存到<code>intVal</code>中，并从class文件的常量表中提取<code>strVal</code>引用。当这些值被引用时，通过变量查找可以访问这些值。</p>
+<p>我们可以通过添加”final”关键字来优化：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> intVal = <span class="number">42</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">String</span> strVal = <span class="string">"Hello, world!"</span>;</span><br></pre></td></tr></table></figure>
+<p>这时就不再需要<code>&lt;clinit&gt;</code>方法了，因为常量在dex文件中属于静态字段的初始化。访问<code>intVal</code>将直接使用值42，<code>strVal</code>的访问不再使用查表了，而是相对廉价的“字符串常量”指令。</p>
+<blockquote><p><strong>Note:</strong> 这个优化方法只对原始数据类型和 String 常量有作用，而不是任意的类型。当然，任何可能的情况下都声明 <code>static final</code>是一个很好的编程习惯。</p>
+</blockquote>
+<h2 id="Avoid-Internal-Getters-Setters"><a href="#Avoid-Internal-Getters-Setters" class="headerlink" title="Avoid Internal Getters/Setters"></a>Avoid Internal Getters/Setters</h2><p>使用getters（<code>i = getCount()</code>）而不是直接访问（<code>i = mCount</code>）变量，在像C++这种原生语言中很常见。这在C++中是一个非常好的习惯，而且在其他面向对象的语言中也经常被使用，例如C#和Java，因为编译器通常会inline访问，如果你需要限制或调试变量的访问，你可以在任何时候添加代码。</p>
+<p>然而，在Android中这并不是一个好主意。Virtual方法的调用是很昂贵的，远远超过变量的查表。根据面向对象编程的实践，在公共接口中使用getters和setters是合理的，但是在类的内部应该总是直接访问变量的值。</p>
+<p>没有JIT（Just In Time Compiler），直接访问比调用getter快3倍。有JIT，这个速度会是7倍。</p>
+<p>请注意，如果你使用<a href="http://developer.android.com/tools/help/proguard.html" target="_blank" rel="external">ProGuard</a>，你可以做到两全其美，因为ProGuard的可以inline访问。</p>
+<h2 id="Use-Enhanced-For-Loop-Syntax"><a href="#Use-Enhanced-For-Loop-Syntax" class="headerlink" title="Use Enhanced For Loop Syntax"></a>Use Enhanced For Loop Syntax</h2><p>增强<code>for</code>循环（有时也被称作”for-each“）可以在实现了Iterable接口的collections还有数组中使用。用于collections时，一个iterator会被分配，用于调用<code>hasNext</code>和<code>next()</code>方法。用于<a href="http://developer.android.com/reference/java/util/ArrayList.html" target="_blank" rel="external"><code>ArrayList</code></a>时，手写的计数循环大约会快3倍，但对于其他的collections，增强for循环和显示的iterator调用速度相同。</p>
+<p>下面是遍历数组的几种方法：<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> mSplat;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo[] mArray = ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> zero() &#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="keyword">sum</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mArray.length; ++i) &#123;</span><br><span class="line">        <span class="keyword">sum</span> += mArray[i].mSplat;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> one() &#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="keyword">sum</span> = <span class="number">0</span>;</span><br><span class="line">    Foo[] localArray = mArray;</span><br><span class="line">    <span class="keyword">int</span> len = localArray.length;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ++i) &#123;</span><br><span class="line">        <span class="keyword">sum</span> += localArray[i].mSplat;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> two() &#123;</span><br><span class="line">    <span class="keyword">int</span> <span class="keyword">sum</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (Foo a : mArray) &#123;</span><br><span class="line">        <span class="keyword">sum</span> += a.mSplat;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>zero()</code>是最慢的，在每一次迭代时都需要得到数组长度，但JIT并不能把它优化掉。</p>
+<p><code>one()</code>要快一些。它把长度存储到变量中从而避免了查找。但只对数组长度做了优化。</p>
+<p><code>two()</code>在没有JIT的设备上是最快的，在具有JIT的设备上几乎和<strong>one()</strong>的速度相同。它使用了Java 1.5引入的增强for循环。</p>
+<p>所以，在默认情况下你应该使用增强for循环，但对于性能苛刻的ArrayList，应该考虑方法<code>one()</code>。</p>
+<blockquote><p>Tips：你还可以参考 Josh Bloch 的 《Effective Java》这本书的第46条</p>
+</blockquote>
+<h2 id="Consider-Package-Instead-of-Private-Access-with-Private-Inner-Classes"><a href="#Consider-Package-Instead-of-Private-Access-with-Private-Inner-Classes" class="headerlink" title="Consider Package Instead of Private Access with Private Inner Classes"></a>Consider Package Instead of Private Access with Private Inner Classes</h2><p>思考下下面类的定义：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title">Inner</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">stuff</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            Foo.<span class="keyword">this</span>.doStuff(Foo.<span class="keyword">this</span>.mValue);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mValue;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        Inner <span class="keyword">in</span> = <span class="keyword">new</span> Inner();</span><br><span class="line">        mValue = <span class="number">27</span>;</span><br><span class="line">        <span class="keyword">in</span>.stuff();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doStuff</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"Value is "</span> + <span class="keyword">value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要关注的是，我们在这里定义了一个private的内部类（<code>Foo$Inner</code>）来直接访问外部类的private变量。这是合法的，而且这个代码也打印出了我们期望的“Value is 27”。</p>
+<p>问题是VM认为从<code>Foo$Inner</code>直接访问<code>Foo</code>的private成员是非法的，因为它们是不同的类，尽管Java语言允许内部类访问外部类的private成员。为了解决这个问题，编译器会生成一对方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*package*/</span> <span class="keyword">static</span> <span class="keyword">int</span> Foo.access$<span class="number">100</span>(Foo foo) &#123;</span><br><span class="line">    <span class="keyword">return</span> foo.mValue;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*package*/</span> <span class="keyword">static</span> <span class="keyword">void</span> Foo.access$<span class="number">200</span>(Foo foo, <span class="keyword">int</span> <span class="keyword">value</span>) &#123;</span><br><span class="line">    foo.doStuff(<span class="keyword">value</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内部类可以随时通过调用这些静态方法来访问外部类的<code>mValue</code>变量或者调用<code>doStuff()</code>方法。这意味着，当你访问成员变量的值时，归根结底是通过调用accessor方法。在前面我们已经讨论过，通过accessor方法来访问变量要比直接访问慢，所以这是一个特定语言用法造成的“不可见”的降低性能的例子。</p>
+<p>如果你在性能热区使用这样的代码块，你可以通过生命内部类的包访问权限来避免这种情况。不幸的是，这就意味着这些域可以被同一个包下的其他类访问，所以你不能把它应用到公共的接口中。</p>
+<h2 id="Avoid-Using-Floating-Point"><a href="#Avoid-Using-Floating-Point" class="headerlink" title="Avoid Using Floating-Point"></a>Avoid Using Floating-Point</h2><p>一般来说，在Android设备中，浮点数要比整数大约慢两倍。</p>
+<p>在速度方面，使用<code>float</code>和<code>double</code>在现代的硬件上没有任何差别。在空间方面，<code>double</code>是<code>float</code>的两倍大。对于桌面设备，假设空间不是问题，你应该使用<code>double</code>。</p>
+<p>而且，对于整型，一些处理器有硬件乘法但是缺少硬件除法。在这种情况下，整数的除法和模操作就要在软将中执行——如果你正在设计hash table或做大量的数学运算，你应该考虑这些。</p>
+<h2 id="Know-and-Use-the-Libraries"><a href="#Know-and-Use-the-Libraries" class="headerlink" title="Know and Use the Libraries"></a>Know and Use the Libraries</h2><p>除了通常的让你更喜欢函数库的原因外，还要记住，系统可以随时将函数库更换为比JIT所能提供的最好的代码还要高效的手工编写代码。一个典型的例子是与<code>String.indexOf()</code>相关的API，Dalvik将它替换成内联的固有函数。与之相似，```函数System.arraycopy()在具有JIT的Nexus One设备上比手写循环大约快9倍。</p>
+<blockquote><p><strong>Tip:</strong>同样参见Josh Bloch的《Effective Java》的第47条</p>
+</blockquote>
+<h2 id="Use-Native-Methods-Carefully"><a href="#Use-Native-Methods-Carefully" class="headerlink" title="Use Native Methods Carefully"></a>Use Native Methods Carefully</h2><p>通过<a href="http://developer.android.com/tools/sdk/ndk/index.html" target="_blank" rel="external">Android NDK</a>来使用native code来开发应用，并不一定比使用Java有更好的性能。一方面，在Java和native之间转换也是有代价的，而JIT并不能进行优化。如果你正在分配native资源（比如native堆上的内存，文件描述符等），及时的回收这些资源将非常的困难。你还需要为每一个不同的架构编译不同的版本（而不是依赖JIT）。另一方面，你甚至需要为你认为相同的架构来编译多个版本：为G1中的ARM处理器编译的native代码在Nexus One中并不能发挥优势，反之亦然。</p>
+<p>当你已经具有native代码并想把它移植到Android中时很具有优势，并不是为了提升应用中使用Java编写的模块的速度。</p>
+<p>如果你需要使用native代码，你应该阅读<a href="http://developer.android.com/guide/practices/jni.html" target="_blank" rel="external">JNI Tips</a>。</p>
+<blockquote><p><strong>Tip:</strong>同样参见Josh Bloch的《Effective Java》的第54条</p>
+</blockquote>
+<h2 id="Performance-Myths"><a href="#Performance-Myths" class="headerlink" title="Performance Myths"></a>Performance Myths</h2><p>在没有JIT的设备上，调用确定类型的方法确实比调用接口的方法更有效率。（举个栗子，调用<code>HashMap</code>的方法要比掉用<code>Map</code>的方法更有效率，尽管他们都是<code>HashMap</code>。）这并不是说调用接口会降低2倍的速度，实际上应该是降低了6%的速度。而且，JIT使两者的效率并没有多大的差异。</p>
+<p>在没有JIT的设备上，读取缓存域大约比频繁的直接读取快20%。具有JIT，访问成员变量和本地变量几乎一样快，所以这并不需要做什么优化除非你认为这使你的代码更易读。（这对于final，static，static final域同样适用。）</p>
+<h2 id="Always-Measure"><a href="#Always-Measure" class="headerlink" title="Always Measure"></a>Always Measure</h2><p>在你进行优化之前，确定你确实有需要解决的问题。确定你能够准确测量出现在的性能，否则你并不能从尝试中获益。</p>
+<p>本文中说明的每一个技巧都有相应的基准（benchmark）支持。这些基准可以在<a href="http://code.google.com/p/dalvik/source/browse/#svn/trunk/benchmarks" target="_blank" rel="external">code.google.com “dalvik” project</a>中找到。</p>
+<p>这些基准是使用Java版本的 <a href="http://code.google.com/p/caliper/" target="_blank" rel="external">Caliper</a> microbenchmarking框架构建的。Microbenchmarks 很难得到准确的值，所以Caliper来为你做这些困难的工作，甚至包括一些你认为测量到却没有测量到的情况（所以，可以说，VM优化了你所有的代码）。我们强烈的推荐你使用Caliper来运行你自己的microbenchmarks。</p>
+<p>你可能发现<a href="http://developer.android.com/tools/debugging/debugging-tracing.html" target="_blank" rel="external">Traceview</a>也可以实现测量，但是你需要知道它会使JIT不可用。这可能会导致错误的测量JIT本可以优化的时间。所以，确定遵循Traceview的建议进行优化后，确实提高了运行速度。</p>
+<p>更多关于如何分析与调试应用，还可以参考下面的文章：</p>
+<ul>
+<li><a href="http://developer.android.com/tools/debugging/debugging-tracing.html" target="_blank" rel="external">Profiling with Traceview and dmtracedump</a></li>
+<li><a href="http://developer.android.com/tools/debugging/systrace.html" target="_blank" rel="external">Analyzing UI Performance with Systrace</a></li>
+</ul>
+<hr>
+<blockquote><p>本文译自<a href="http://developer.android.com/intl/zh-cn/training/articles/perf-tips.html#ObjectCreation" target="_blank" rel="external">Performance Tips</a>。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Performance/" rel="tag">#Performance</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/22/Managing-Your-App-s-Memory/" rel="next" title="Managing Your App's Memory">
+                <i class="fa fa-chevron-left"></i> Managing Your App's Memory
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/" rel="prev" title="Improving Layout Performance-Optimizing Layout Hierarchies">
+                Improving Layout Performance-Optimizing Layout Hierarchies <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+          <p class="site-description motion-element" itemprop="description">On The Way</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Avoid-Creating-Unnecessary-Objects"><span class="nav-number">1.</span> <span class="nav-text">Avoid Creating Unnecessary Objects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prefer-Static-Over-Virtual"><span class="nav-number">2.</span> <span class="nav-text">Prefer Static Over Virtual</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Static-Final-For-Constants思考下下面的声明："><span class="nav-number">3.</span> <span class="nav-text">Use Static Final For Constants思考下下面的声明：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Avoid-Internal-Getters-Setters"><span class="nav-number">4.</span> <span class="nav-text">Avoid Internal Getters/Setters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Enhanced-For-Loop-Syntax"><span class="nav-number">5.</span> <span class="nav-text">Use Enhanced For Loop Syntax</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consider-Package-Instead-of-Private-Access-with-Private-Inner-Classes"><span class="nav-number">6.</span> <span class="nav-text">Consider Package Instead of Private Access with Private Inner Classes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Avoid-Using-Floating-Point"><span class="nav-number">7.</span> <span class="nav-text">Avoid Using Floating-Point</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Know-and-Use-the-Libraries"><span class="nav-number">8.</span> <span class="nav-text">Know and Use the Libraries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Native-Methods-Carefully"><span class="nav-number">9.</span> <span class="nav-text">Use Native Methods Carefully</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Performance-Myths"><span class="nav-number">10.</span> <span class="nav-text">Performance Myths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Always-Measure"><span class="nav-number">11.</span> <span class="nav-text">Always Measure</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
