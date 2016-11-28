@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Performance," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -84,22 +84,34 @@
 
 
 
-<meta name="description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
+<meta name="description" content="java中的static关键字主要用于内存管理。static关键字可以修饰变量、方法、代码块和内部类。static关键字属于类而不是类的实例。
+下面这些都可以是静态的：
+
+变量
+方法
+代码块
+内部类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Improving Layout Performance-Optimizing Layout Hierarchies">
-<meta property="og:url" content="http://yoursite.com/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/index.html">
+<meta property="og:title" content="Java static Keyword">
+<meta property="og:url" content="http://yoursite.com/2016/11/29/Java-static-Keyword/index.html">
 <meta property="og:site_name" content="Korben C .">
-<meta property="og:description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
-<meta property="og:image" content="http://developer.android.com/images/training/layout-listitem.png">
-<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-linearlayout.png">
-<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-layouttimes.png">
-<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-relativelayout.png">
-<meta property="og:image" content="http://developer.android.com/images/tools/studio-inspections-config.png">
-<meta property="og:updated_time" content="2016-01-07T02:30:27.000Z">
+<meta property="og:description" content="java中的static关键字主要用于内存管理。static关键字可以修饰变量、方法、代码块和内部类。static关键字属于类而不是类的实例。
+下面这些都可以是静态的：
+
+变量
+方法
+代码块
+内部类">
+<meta property="og:updated_time" content="2016-11-28T16:30:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Improving Layout Performance-Optimizing Layout Hierarchies">
-<meta name="twitter:description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
-<meta name="twitter:image" content="http://developer.android.com/images/training/layout-listitem.png">
+<meta name="twitter:title" content="Java static Keyword">
+<meta name="twitter:description" content="java中的static关键字主要用于内存管理。static关键字可以修饰变量、方法、代码块和内部类。static关键字属于类而不是类的实例。
+下面这些都可以是静态的：
+
+变量
+方法
+代码块
+内部类">
 
 
 
@@ -117,7 +129,7 @@
   };
 </script>
 
-  <title> Improving Layout Performance-Optimizing Layout Hierarchies | Korben C . </title>
+  <title> Java static Keyword | Korben C . </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -237,7 +249,7 @@
             
             
               
-                Improving Layout Performance-Optimizing Layout Hierarchies
+                Java static Keyword
               
             
           </h1>
@@ -249,8 +261,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2015-11-06T23:20:59+08:00" content="2015-11-06">
-              2015-11-06
+            <time itemprop="dateCreated" datetime="2016-11-29T00:30:30+08:00" content="2016-11-29">
+              2016-11-29
             </time>
           </span>
 
@@ -263,8 +275,8 @@
               <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -296,46 +308,35 @@
       
 
       
-        <p>就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。<br><a id="more"></a></p>
-<p>一个很普遍的误解，使用最基本的布局结构就可以生成最高效的布局。然而，每一个添加到应用的组件都需要初始化、布局和绘制。例如，使用嵌套的<code>LinearLayout</code>会导致更深层次的布局结构。此外，嵌套多个<code>LinearLayout</code>的实例并使用<code>layout_weight</code>参数的代价尤其高，因为每一个子View需要被测量两次。当布局需要重复的创建时，这个问题会特别的明显，例如使用``ListView<code>或</code>GridView```时。</p>
-<p>这篇课程中，你将学习如何使用[Hierarchy Viewer][1]和[Layoutopt][2]来检查和优化布局。</p>
-<h2 id="Inspect-Your-Layout"><a href="#Inspect-Your-Layout" class="headerlink" title="Inspect Your Layout"></a>Inspect Your Layout</h2><p>Android SDK 提供了叫做[Hierarchy Viewer][1]的工具，它可以在应用的运行时来分析布局，帮助我们发现布局中的性能瓶颈。</p>
-<p>选择连接的设备或模拟器上运行的进程，Hierarchy Viewer会显示出相应的布局树。每个模块的交通灯代表了Measure, Layout 和 Draw性能，帮助我们识别潜在问题。</p>
-<p>例如，图1显示了一个作为<code>ListView</code>的item的布局。这个布局在左边显示了一个小的bitmap，在右侧显示了两个堆叠的文本条目。如果布局将被创建多次–比如这个–那优化的好处将加倍。</p>
-<p><img src="http://developer.android.com/images/training/layout-listitem.png" alt="figure 1"><strong>图1.</strong>作为ListView item的布局</p>
-<p><code>hierarchyviewer</code>工具可以在<code>&lt;sdk&gt;/tools/</code>下找到。打开后，Hierarchy Viewer会显示可用的设备列表及它运行的组件。点击<strong>Load View Hierarchy</strong>来查看选择组件的视图结构。例如，图2显示了图1中介绍的布局。</p>
-<p><img src="http://developer.android.com/images/training/hierarchy-linearlayout.png" alt="firure 2"><strong>图2.</strong>图1中布局的布局结构，使用了嵌套的<code>LinearLayout</code>。</p>
-<p><img src="http://developer.android.com/images/training/hierarchy-layouttimes.png" alt="firgure 3"><strong>图3.</strong>点击一个层次结构节点来显示其性能时间。</p>
-<p>在图2中，我们可以看到这个三层的结构的text条目中有一些问题。点击条目可以看到View创建的每一个阶段需要的时间（图3）.我们可以很清楚的看到哪些条目需要最多的时间来进行measure、layout和render。</p>
-<p>使用当前的布局，渲染一个完整的List条目花费的时间是：</p>
+        <p>java中的<strong>static</strong>关键字主要用于内存管理。<strong>static</strong>关键字可以修饰<code>变量、方法、代码块和内部类</code>。<strong>static</strong>关键字属于类而不是类的实例。</p>
+<p>下面这些都可以是静态的：</p>
+<ol>
+<li>变量</li>
+<li>方法</li>
+<li>代码块</li>
+<li>内部类</li>
+</ol>
+<a id="more"></a>
+<h1 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h1><p>如果一个变量被声明为静态的，那么它就是静态变量。</p>
 <ul>
-<li>Measure: 0.977ms</li>
-<li>Layout: 0.167ms</li>
-<li>Draw: 2.717ms</li>
+<li>静态变量可以用于引用所有对象的公共属性（对于每个对象并不是独有的）</li>
+<li>静态变量只会在类加载时分配一次内存</li>
 </ul>
-<h2 id="Revise-Your-Layout"><a href="#Revise-Your-Layout" class="headerlink" title="Revise Your Layout"></a>Revise Your Layout</h2><p>因为使用了堆叠的<code>LinearLaout</code>导致了布局的性能降低，所以通过扁平化的布局或许可以提高布局的性能——使布局浅而宽，而不是窄而深。使用<code>RelativeLayout</code>作为根结点可以做到这一点。所以，当使用了<code>RelativeLayout</code>作为根结点后，我们可以看到布局变成2层结构了。下而是对新布局的检测：</p>
-<p><img src="http://developer.android.com/images/training/hierarchy-relativelayout.png" alt="Figure 4"><strong>图4.</strong>使用<code>RelativeLayout</code>后，图1中的布局层级</p>
-<p>现在渲染List的一个条目花费的时间是：</p>
+<h2 id="静态变量的优点"><a href="#静态变量的优点" class="headerlink" title="静态变量的优点"></a>静态变量的优点</h2><p>使程序的内存使用更加高效，节约内存的使用</p>
+<h1 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h1><p>如果一个方法被声明为静态的，那么它就是静态方法。</p>
 <ul>
-<li>Measure: 0.598ms</li>
-<li>Layout: 0.110ms</li>
-<li>Draw: 2.146ms</li>
+<li>静态方法隶属于类而不是类的对象</li>
+<li>不用创建类的实例，就可以引用静态方法</li>
+<li>静态方法可以访问静态数据成员，并可以更改它的值</li>
 </ul>
-<p>虽然看上去只有很小的提升，但是作为List的条目，提升的时间就不仅仅如此了。</p>
-<p>导致这些时间差异的最大原因是使用了<code>LinearLayout</code>的<code>layout_weight</code>设计，这会降低measure的速度。上面只是一个关于每一个布局都有自己合适用途的例子，你在使用过程中要仔细考虑是否有必要使用layout weight属性。</p>
-<h2 id="Use-Lint"><a href="#Use-Lint" class="headerlink" title="Use Lint"></a>Use Lint</h2><p>使用lint工具来分析你的布局文件并发现需要优化的地方是一个很好的实践。Lint替换了Layoutopt，因为它有更强大的功能。一些lint规则的例子：</p>
-<ul>
-<li>使用compound drawables——相对于包含<code>ImangeView</code>和<code>TextView</code>的<code>LinearLayout</code>，使用compound drawables会更有效率。</li>
-<li>合并根框架——如果一个<code>FrameLayout</code>是布局的根结点，但是没有提供背景、边距或其他的等等，那我们可以更有效率的merge结点来替换它。</li>
-<li>无用的分支——删除没有任何子View或背景的布局（因为它不可见），这样可以得到一个更高效的布局结构。</li>
-<li>无用的父结点——如果布局只有子View，但没有兄弟View，不是<code>ScrollView</code>或根结点，而且没有背景，那它把这个布局删除并把它的子View提升为父结点来得到一个更扁平高效的布局结构。</li>
-<li>深层次的布局——含有很多层叠的布局的性能会很差。可以考虑使用<code>RelativeLayout</code>或<code>GridLayout</code>这样的扁平布局来提升性能。默认的最大层级是10.</li>
+<h2 id="静态方法的限制"><a href="#静态方法的限制" class="headerlink" title="静态方法的限制"></a>静态方法的限制</h2><ul>
+<li>静态方法不能直接的引用非静态变量或非静态方法</li>
+<li><code>this</code>和<code>super</code>不能在静态方法中使用</li>
 </ul>
-<p>使用Lint的另一个好处是它被Android Studio集成了。在编译工程时，Lint会自动的执行。</p>
-<p>你还可以通过Android Studio的<strong>File&gt;Setting&gt;Project Settings</strong>选项来进行管理、配置。检查配置页面显示了支持的检查项。<br><img src="http://developer.android.com/images/tools/studio-inspections-config.png" alt="Figure 5"><strong>图5.</strong>检查配置</p>
-<p>Lint可以自动的修复问题、提供建议，还可以直接跳转到有问题的代码处。</p>
-<hr>
-<p><em>本篇文章译自<a href="http://developer.android.com/intl/zh-cn/training/improving-layouts/optimizing-layout.html" target="_blank" rel="external">Optimizing Layout Hierarchies</a></em></p>
+<h1 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h1><ul>
+<li>静态代码块被用来初始化成员数据</li>
+<li>静态代码块在类加载时执行，并且在<code>main</code>方法前执行</li>
+</ul>
 
       
     </div>
@@ -357,7 +358,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Performance/" rel="tag">#Performance</a>
+            <a href="/tags/Java/" rel="tag">#Java</a>
           
         </div>
       
@@ -366,17 +367,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/04/Performance-Tips/" rel="next" title="Performance Tips">
-                <i class="fa fa-chevron-left"></i> Performance Tips
+              <a href="/2016/05/29/记一次Android-Bluetooth-SPP-传输数据丢失分析/" rel="next" title="记一次Android Bluetooth SPP 传输数据丢失分析">
+                <i class="fa fa-chevron-left"></i> 记一次Android Bluetooth SPP 传输数据丢失分析
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/10/Volley-完全解析/" rel="prev" title="Volley 完全解析">
-                Volley 完全解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -490,7 +487,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Inspect-Your-Layout"><span class="nav-number">1.</span> <span class="nav-text">Inspect Your Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Revise-Your-Layout"><span class="nav-number">2.</span> <span class="nav-text">Revise Your Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Lint"><span class="nav-number">3.</span> <span class="nav-text">Use Lint</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态变量"><span class="nav-number">1.</span> <span class="nav-text">静态变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态变量的优点"><span class="nav-number">1.1.</span> <span class="nav-text">静态变量的优点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态方法"><span class="nav-number">2.</span> <span class="nav-text">静态方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态方法的限制"><span class="nav-number">2.1.</span> <span class="nav-text">静态方法的限制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态代码块"><span class="nav-number">3.</span> <span class="nav-text">静态代码块</span></a></li></ol></div>
             
           </div>
         </section>
