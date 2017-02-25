@@ -5,10 +5,10 @@
   
 
 
-<html class="theme-next muse use-motion">
+<html class="theme-next muse use-motion" lang="en">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
@@ -27,9 +27,12 @@
 
 
 
+
+
+
   
   
-  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -63,9 +66,9 @@
 
 
 
-<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
   <meta name="keywords" content="Performance,Memory," />
@@ -77,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -97,19 +100,35 @@
 
 
 
-<script type="text/javascript" id="hexo.configuration">
+<script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
+    root: '/',
     scheme: 'Muse',
-    sidebar: {"position":"left","display":"post"},
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
     duoshuo: {
-      userId: 0,
+      userId: '0',
       author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     }
   };
 </script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/10/22/Managing-Your-App-s-Memory/"/>
+
+
+
+
 
   <title> Managing Your App's Memory | Korben C . </title>
 </head>
@@ -117,6 +136,10 @@
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
 
   
+
+
+
+
 
 
 
@@ -136,25 +159,29 @@
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-meta ">
-  
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
 
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">Korben C .</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with Splendid White</p>
+      
   </div>
-  <p class="site-subtitle">One Fall in Love with Splendid White</p>
-</div>
 
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
 <nav class="site-nav">
@@ -201,6 +228,8 @@
   
 </nav>
 
+
+
  </div>
     </header>
 
@@ -214,13 +243,23 @@
     
 
   
-  
 
   
   
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/10/22/Managing-Your-App-s-Memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
 
     
       <header class="post-header">
@@ -239,24 +278,36 @@
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2015-10-22T23:01:59+08:00" content="2015-10-22">
-              2015-10-22
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-22T23:01:59+08:00">
+                2015-10-22
+              </time>
+            
+
+            
+
+            
           </span>
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp;
+            
+              <span class="post-meta-divider">|</span>
+            
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
               
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Android/" itemprop="url" rel="index">
                     <span itemprop="name">Android</span>
                   </a>
@@ -264,7 +315,6 @@
 
                 
                 
-
               
             </span>
           
@@ -274,11 +324,14 @@
           
 
           
-
-          
           
 
           
+
+          
+
+          
+
         </div>
       </header>
     
@@ -390,6 +443,7 @@
     <div>
       
         
+
       
     </div>
 
@@ -400,15 +454,20 @@
       
     </div>
 
+
     <footer class="post-footer">
       
         <div class="post-tags">
           
-            <a href="/tags/Performance/" rel="tag">#Performance</a>
+            <a href="/tags/Performance/" rel="tag"># Performance</a>
           
-            <a href="/tags/Memory/" rel="tag">#Memory</a>
+            <a href="/tags/Memory/" rel="tag"># Memory</a>
           
         </div>
+      
+
+      
+        
       
 
       
@@ -420,6 +479,8 @@
               </a>
             
           </div>
+
+          <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
@@ -443,7 +504,7 @@
     </div>
   </div>
 
-
+          
           </div>
           
 
@@ -482,26 +543,31 @@
         </ul>
       
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
                alt="Korben C ." />
           <p class="site-author-name" itemprop="name">Korben C .</p>
-          <p class="site-description motion-element" itemprop="description">On The Way</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
         </div>
         <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">12</span>
-              <span class="site-state-item-name">posts</span>
-            </a>
-          </div>
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
 
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">categories</span>
               
             </div>
@@ -510,7 +576,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -530,19 +596,29 @@
         
         
 
+        
+
+
       </section>
 
       
+      <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
+
             
               
             
+
             
               <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#How-Android-Manages-Memory"><span class="nav-number">1.</span> <span class="nav-text">How Android Manages Memory</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sharing-Memory"><span class="nav-number">1.1.</span> <span class="nav-text">Sharing Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Allocating-and-Reclaiming-App-Memory"><span class="nav-number">1.2.</span> <span class="nav-text">Allocating and Reclaiming App Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Restricting-App-Memory"><span class="nav-number">1.3.</span> <span class="nav-text">Restricting App Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Switching-Apps"><span class="nav-number">1.4.</span> <span class="nav-text">Switching Apps</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#How-Your-App-Should-Manage-Memory"><span class="nav-number">2.</span> <span class="nav-text">How Your App Should Manage Memory</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-services-sparingly"><span class="nav-number">2.1.</span> <span class="nav-text">Use services sparingly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Release-memory-when-your-user-interface-becomes-hidden"><span class="nav-number">2.2.</span> <span class="nav-text">Release memory when your user interface becomes hidden</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Release-memory-as-memory-becomes-tight"><span class="nav-number">2.3.</span> <span class="nav-text">Release memory as memory becomes tight</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Check-how-much-memory-you-should-use"><span class="nav-number">2.4.</span> <span class="nav-text">Check how much memory you should use</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Avoid-wasting-memory-with-bitmaps"><span class="nav-number">2.5.</span> <span class="nav-text">Avoid wasting memory with bitmaps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-optimized-data-containers"><span class="nav-number">2.6.</span> <span class="nav-text">Use optimized data containers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Be-aware-of-memory-overhead"><span class="nav-number">2.7.</span> <span class="nav-text">Be aware of memory overhead</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Be-careful-with-code-abstractions"><span class="nav-number">2.8.</span> <span class="nav-text">Be careful with code abstractions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-nano-protobufs-for-serialized-data"><span class="nav-number">2.9.</span> <span class="nav-text">Use nano protobufs for serialized data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Avoid-dependency-injection-frameworks"><span class="nav-number">2.10.</span> <span class="nav-text">Avoid dependency injection frameworks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Be-careful-about-using-external-libraries"><span class="nav-number">2.11.</span> <span class="nav-text">Be careful about using external libraries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optimize-overall-performance"><span class="nav-number">2.12.</span> <span class="nav-text">Optimize overall performance</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-ProGuard-to-strip-out-any-unneeded-code"><span class="nav-number">2.13.</span> <span class="nav-text">Use ProGuard to strip out any unneeded code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-zipalign-on-your-final-APK"><span class="nav-number">2.14.</span> <span class="nav-text">Use zipalign on your final APK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Analyze-your-RAM-usage"><span class="nav-number">2.15.</span> <span class="nav-text">Analyze your RAM usage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-multiple-processes"><span class="nav-number">2.16.</span> <span class="nav-text">Use multiple processes</span></a></li></ol></li></ol></div>
             
+
           </div>
         </section>
+      <!--/noindex-->
+      
+
       
 
     </div>
@@ -558,15 +634,16 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Korben C .</span>
 </div>
 
+
 <div class="powered-by">
-  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
@@ -576,15 +653,20 @@
   </a>
 </div>
 
+
         
 
         
       </div>
     </footer>
 
-    <div class="back-to-top">
-      <i class="fa fa-arrow-up"></i>
-    </div>
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
   </div>
 
   
@@ -607,51 +689,48 @@
 
 
 
-  
-  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
 
   
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
 
   
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
   
-  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
   
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
-
-
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
   
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
 
 
 
   
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
 
 
 
@@ -660,10 +739,43 @@
 
 
   
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
   
   
 
   
+
+  
+
+  
+
+  
+
 
   
 
