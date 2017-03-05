@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,Basic,CodingL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="现在我们所使用的编程语言大多是C、C++、Java等高级语言，这些高级语言让我们无需再面对与计算机直接交互的机器级语言，从而让我们的工作更有成效。
+然而，作为程序员的我们，怎会不好奇自己所书写的高级语言代码转变成了什么样的汇编语言代码，且是怎样被计算机运行的？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序在计算机中的运行过程简析">
+<meta property="og:url" content="http://yoursite.com/2017/03/06/程序在计算机中的运行过程简析/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="现在我们所使用的编程语言大多是C、C++、Java等高级语言，这些高级语言让我们无需再面对与计算机直接交互的机器级语言，从而让我们的工作更有成效。
+然而，作为程序员的我们，怎会不好奇自己所书写的高级语言代码转变成了什么样的汇编语言代码，且是怎样被计算机运行的？">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_frame.JPG">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/get_math_s.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_frame_init.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_frame_new.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_save_prameter.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_get_max_init.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_get_max_compl.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_get_max_12.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_main_get_12.png">
+<meta property="og:image" content="http://yoursite.com/images/program_procedure/stack_done.png">
+<meta property="og:updated_time" content="2017-03-05T16:26:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序在计算机中的运行过程简析">
+<meta name="twitter:description" content="现在我们所使用的编程语言大多是C、C++、Java等高级语言，这些高级语言让我们无需再面对与计算机直接交互的机器级语言，从而让我们的工作更有成效。
+然而，作为程序员的我们，怎会不好奇自己所书写的高级语言代码转变成了什么样的汇编语言代码，且是怎样被计算机运行的？">
+<meta name="twitter:image" content="http://yoursite.com/images/program_procedure/stack_frame.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/06/程序在计算机中的运行过程简析/"/>
+
+
+
+
+
+  <title> 程序在计算机中的运行过程简析 | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with Wei Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/06/程序在计算机中的运行过程简析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                程序在计算机中的运行过程简析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-06T00:26:01+08:00">
+                2017-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>现在我们所使用的编程语言大多是<code>C</code>、<code>C++</code>、<code>Java</code>等高级语言，这些高级语言让我们无需再面对与计算机直接交互的机器级语言，从而让我们的工作更有成效。</p>
+<p>然而，作为<code>程序员</code>的我们，怎会不好奇自己所书写的<code>高级语言代码</code>转变成了什么样的<code>汇编语言</code>代码，且是怎样被计算机运行的？<br><a id="more"></a></p>
+<h1 id="汇编指令"><a href="#汇编指令" class="headerlink" title="汇编指令"></a>汇编指令</h1><p>理解<code>汇编语言</code>之前，我们首先需要理解<code>汇编指令</code>，通过下表，让我们一起学习几个常用的<code>汇编指令</code>。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MOVL $0x3051, %EAX</code></td>
+<td>把<code>0x3051</code>这个值放到 <code>EAX</code>寄存器， 4个字节</td>
+</tr>
+<tr>
+<td><code>MOVL %EAX, -12(%EBP)</code></td>
+<td>把寄存器<code>EAX</code>的值，存放到<code>EBP</code>指向的地址减去12个字节的地方</td>
+</tr>
+<tr>
+<td><code>LEAL -12(%EBP)  %EAX</code></td>
+<td>把 <code>%EBP</code>减去12得到的地址，放到<code>EAX</code>寄存器当中</td>
+</tr>
+<tr>
+<td><code>PUSHL %EBP</code></td>
+<td>把寄存器<code>EBP</code>的值压栈</td>
+</tr>
+<tr>
+<td><code>POPL %EBP</code></td>
+<td>把栈顶的值弹出， 存放到<code>EBP</code>寄存器中</td>
+</tr>
+<tr>
+<td><code>SUBL %4 %ESP</code></td>
+<td>把<code>ESP</code>寄存器的值减去4</td>
+</tr>
+</tbody>
+</table>
+<h1 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h1><p>在了解了基本的<code>汇编指令</code>后，我们还需要再了解下<code>栈帧</code>的概念。</p>
+<h2 id="什么是栈帧？"><a href="#什么是栈帧？" class="headerlink" title="什么是栈帧？"></a>什么是栈帧？</h2><p>函数<code>A（调用者）</code>调用函数<code>B（被调用者）</code>，<code>A</code>需要在<code>B</code>执行完毕后，再依据<code>B</code>的返回结果后继续执行。此时，<code>A</code>的局部变量、参数、返回地址就保存在<code>A</code>的<code>栈帧</code>中。调用<code>B</code>时，为<code>B</code>分配新的<code>栈帧</code>，来保存<code>B</code>执行过程中的局部变量。</p>
+<p>为单个过程分配的那部分<code>栈</code>就是<code>栈帧（stak frame）</code>了。</p>
+<h2 id="栈帧的结构"><a href="#栈帧的结构" class="headerlink" title="栈帧的结构"></a>栈帧的结构</h2><p><code>栈帧</code>的最顶端以两个指针界定，寄存器<code>%ebp</code>为帧指针，而寄存器<code>%esp</code>为栈指针。</p>
+<p>下图描述了<code>栈帧</code>的基本结构：</p>
+<p><img src="/images/program_procedure/stack_frame.JPG" alt="image"></p>
+<h1 id="汇编的执行"><a href="#汇编的执行" class="headerlink" title="汇编的执行"></a>汇编的执行</h1><p>我相信上面对于<code>栈帧</code>的介绍一定让大家倍感迷惑，坠入云雾。下面就让我们通过一段汇编代码的执行过程，来了解什么是<code>栈帧</code>。</p>
+<h2 id="C代码"><a href="#C代码" class="headerlink" title="C代码"></a>C代码</h2><p>现在我们有一个<code>Math.c</code>文件，定义了一段<code>C</code>代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getMax</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &gt; y) &#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">12</span>;</span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">8</span>;</span><br><span class="line">    <span class="keyword">int</span> max = getMax(x, y);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"The max value between %d and %d is %d\n"</span>, x, y, max);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这段<code>C</code>代码通过调用<code>getMax</code>函数得到两个数的最大值，并将结果打印出来。</p>
+<h2 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h2><p>通过在命令行执行:<br><figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -<span class="keyword">S</span> Math.c -o Math.<span class="keyword">s</span></span><br></pre></td></tr></table></figure></p>
+<p>可以得到<code>Math.c</code>对应的汇编文件<code>Math.s</code>：<br><img src="/images/program_procedure/get_math_s.png" alt="image"></p>
+<h2 id="执行汇编"><a href="#执行汇编" class="headerlink" title="执行汇编"></a>执行汇编</h2><p><code>Math.c</code>的<code>main</code>函数编译后的汇编代码如下：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">_main:                                  <span class="comment">## @main</span></span><br><span class="line">	.cfi_startproc</span><br><span class="line"><span class="comment">## BB#0:</span></span><br><span class="line">	pushq	%rbp</span><br><span class="line">Ltmp3:</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">Ltmp4:</span><br><span class="line">	.cfi_offset %rbp, -<span class="number">16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">Ltmp5:</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	subq	$16, %rsp</span><br><span class="line">	movl	$12, -<span class="number">4</span>(%rbp)</span><br><span class="line">	movl	$8, -<span class="number">8</span>(%rbp)</span><br><span class="line">	movl	-<span class="number">4</span>(%rbp), %edi</span><br><span class="line">	movl	-<span class="number">8</span>(%rbp), %esi</span><br><span class="line">	callq	_getMax</span><br><span class="line">	leaq	L<span class="number">_</span>.str(%rip), %rdi</span><br><span class="line">	movl	%eax, -<span class="number">12</span>(%rbp)</span><br><span class="line">	movl	-<span class="number">4</span>(%rbp), %esi</span><br><span class="line">	movl	-<span class="number">8</span>(%rbp), %edx</span><br><span class="line">	movl	-<span class="number">12</span>(%rbp), %ecx</span><br><span class="line">	movb	$0, %al</span><br><span class="line">	callq	_printf</span><br><span class="line">	xorl	%ecx, %ecx</span><br><span class="line">	movl	%eax, -<span class="number">16</span>(%rbp)         <span class="comment">## 4-byte Spill</span></span><br><span class="line">	movl	%ecx, %eax</span><br><span class="line">	addq	$16, %rsp</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line"></span><br><span class="line">	.section	__TEXT,__cstring,cstring_literals</span><br><span class="line">L<span class="number">_</span>.str:                                 <span class="comment">## @.str</span></span><br><span class="line">	.asciz	<span class="string">"The max value between %d and %d is %d\n"</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>注意</strong>：X86-64寄存器中，寄存器<code>%rbp</code>为帧指针，而寄存器<code>%rsp</code>为栈指针。此处使用的是X86-64的CPU，因此代码中出现的是<code>%rbp</code>，而不是<code>%rsp</code></p>
+</blockquote>
+<p>下面我们来一步一步的解析。<br>假设下图为<code>栈</code>的初始状态:<br><img src="/images/program_procedure/stack_frame_init.png" alt="image"></p>
+<p>下面几步操作，为<code>main</code>函数创建了一个新的栈帧：<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">_main:                                  ## @main</span><br><span class="line">    .cfi_startproc                      ## 用在每个函数的开始，用于初始化一些内部数据结构</span><br><span class="line">## BB#<span class="number">0</span>:</span><br><span class="line">    pushq   %rbp                        ## 将寄存器%rbp的值压入栈中，保存%rbp的值</span><br><span class="line">    movq    %rsp, %rbp                  ## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span><br><span class="line">                                           总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">                                           指向了新的栈帧的起始位置</span><br><span class="line">    subq    $16, %rsp                   ## 寄存器%rsp的值减去<span class="number">16</span>，即栈顶的值减去<span class="number">16</span>，则为栈</span><br><span class="line">                                           分配新的空间，长度为<span class="number">16</span>，这一步创建了新的栈帧</span><br></pre></td></tr></table></figure></p>
+<p>栈顶<code>%rsp</code>的地址减去16，栈的空间增长，<code>%rbp</code>仍然指向新的栈帧的开始处：<br><img src="/images/program_procedure/stack_frame_new.png" alt="image"></p>
+<p>函数继续，将值12和8保存在了栈中，同时也分别保存在了保存函数参数的寄存器中，然后调用函数<code>getMax</code>：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// _main:                                  <span class="comment">## @main</span></span><br><span class="line">//     .cfi_startproc                      <span class="comment">## 用在每个函数的开始，用于初始化一些内部数据结构</span></span><br><span class="line">// <span class="comment">## BB#0:</span></span><br><span class="line">//     pushq   %rbp                        <span class="comment">## 将寄存器%rbp的值压入栈中，保存%rbp的值</span></span><br><span class="line">//     movq    %rsp, %rbp                  <span class="comment">## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span></span><br><span class="line">//                                            总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">//                                            指向了新的栈帧的起始位置</span><br><span class="line">//     subq    $16, %rsp                   <span class="comment">## 寄存器%rsp的值减去16，即栈顶的值减去16，则为栈</span></span><br><span class="line">//                                            分配新的空间，长度为<span class="number">16</span>，这一步创建了新的栈帧</span><br><span class="line">    movl    $12, -<span class="number">4</span>(%rbp)               <span class="comment">## 将12保存在%rbp - 4的地址处</span></span><br><span class="line">    movl    $8, -<span class="number">8</span>(%rbp)                <span class="comment">## 将8保存在%rbp - 8的地址处</span></span><br><span class="line">    movl    -<span class="number">4</span>(%rbp), %edi              <span class="comment">## 将地址%rbp - 4处的值（为12）保存在%edi寄存器中</span></span><br><span class="line">    movl    -<span class="number">8</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 8处的值（为8）保存在%esi寄存器中</span></span><br><span class="line">    callq   _getMax                     <span class="comment">## 调用函数_getMax，这一步执行了两步操作，首先保存了</span></span><br><span class="line">                                        <span class="comment">## 下一条指令的地址，然后跳转到了函数_getMan</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/program_procedure/stack_save_prameter.png" alt="image"></p>
+<p>下面我们进入到<code>getMax</code>函数的汇编：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">_getMax:                                <span class="comment">## @getMax</span></span><br><span class="line">	</span><br><span class="line"><span class="comment">## BB#0:</span></span><br><span class="line">	pushq	%rbp</span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">Ltmp2:</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	movl	%edi, -<span class="number">8</span>(%rbp)</span><br><span class="line">	movl	%esi, -<span class="number">12</span>(%rbp)</span><br><span class="line">	movl	-<span class="number">8</span>(%rbp), %esi</span><br><span class="line">	cmpl	-<span class="number">12</span>(%rbp), %esi</span><br><span class="line">	jle	LBB0_2</span><br><span class="line"><span class="comment">## BB#1:</span></span><br><span class="line">	movl	-<span class="number">8</span>(%rbp), %eax</span><br><span class="line">	movl	%eax, -<span class="number">4</span>(%rbp)</span><br><span class="line">	jmp	LBB0_3</span><br><span class="line">LBB0_2:</span><br><span class="line">	movl	-<span class="number">12</span>(%rbp), %eax</span><br><span class="line">	movl	%eax, -<span class="number">4</span>(%rbp)</span><br><span class="line">LBB0_3:</span><br><span class="line">	movl	-<span class="number">4</span>(%rbp), %eax</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br></pre></td></tr></table></figure></p>
+<p>接着解析<code>getMax</code>函数的代码。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">_getMax</span>:                                ## <span class="variable">@getMax</span></span><br><span class="line">	</span><br><span class="line">## BB<span class="number">#0</span>:</span><br><span class="line">    pushq   %rbp                        ## 将寄存器%rbp的值压入栈中，保存%rbp的值</span><br><span class="line">    movq    %rsp, %rbp                  ## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span><br><span class="line">                                           总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">                                           指向了新的栈帧的起始位置</span><br></pre></td></tr></table></figure>
+<p>前两步操作与<code>main</code>函数的相同：保存前一个栈帧的地址，同时将<code>%rbp</code>指向栈顶，即新的栈帧的起始位置。</p>
+<p><img src="/images/program_procedure/stack_get_max_init.png" alt="image"></p>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// _getMax:                                ## @getMax</span></span><br><span class="line"><span class="comment">// 	</span></span><br><span class="line"><span class="comment">// ## BB#0:</span></span><br><span class="line"><span class="comment">//     pushq   %rbp                        ## 将寄存器%rbp的值压入栈中，保存%rbp的值</span></span><br><span class="line"><span class="comment">//     movq    %rsp, %rbp                  ## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span></span><br><span class="line"><span class="comment">//                                            总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span></span><br><span class="line"><span class="comment">//                                            指向了新的栈帧的起始位置</span></span><br><span class="line">    movl    <span class="built_in">%edi</span>, -<span class="number">8</span>(<span class="built_in">%rbp</span>)              ## 将<span class="built_in">%edi</span>寄存器的值（为<span class="number">12</span>）保存在地址<span class="built_in">%rbp</span> - <span class="number">8</span>处</span><br><span class="line">    movl    <span class="built_in">%esi</span>, -<span class="number">12</span>(<span class="built_in">%rbp</span>)             ## 将<span class="built_in">%esi</span>寄存器的值（为<span class="number">8</span>）保存在地址<span class="built_in">%rbp</span> - <span class="number">12</span>处</span><br></pre></td></tr></table></figure>
+<p>上面的操作将<code>main</code>函数中保存的值–12与8读取，保存在了栈中。</p>
+<p>然而，细心的读者一定发现问题了。不是要分配新的栈帧空间吗？为什么直接引用了栈帧之外的地址？</p>
+<p>x86-64遵循ABI规则的版本，它定义了一些规范，遵循ABI的具体实现应该满足这些规范，其中，他就规定了程序可以使用栈顶之外128字节的地址。</p>
+<blockquote>
+<p>上面的文字笔者在文章<a href="http://note.youdao.com/" target="_blank" rel="external">X86-64寄存器和栈帧</a>中找到，实在没有找到原始的blog地址，这里给出了百度文库的地址。</p>
+</blockquote>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// _getMax:                                <span class="comment">## @getMax</span></span><br><span class="line">// 	</span><br><span class="line"><span class="regexp">//</span> <span class="comment">## BB#0:</span></span><br><span class="line">//     pushq   %rbp                        <span class="comment">## 将寄存器%rbp的值压入栈中，保存%rbp的值</span></span><br><span class="line">//     movq    %rsp, %rbp                  <span class="comment">## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span></span><br><span class="line">//                                            总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">//                                            指向了新的栈帧的起始位置</span><br><span class="line">//     movl    %edi, -<span class="number">8</span>(%rbp)              <span class="comment">## 将%edi寄存器的值（为12）保存在地址%rbp - 8处</span></span><br><span class="line">//     movl    %esi, -<span class="number">12</span>(%rbp)             <span class="comment">## 将%esi寄存器的值（为8）保存在地址%rbp - 12处</span></span><br><span class="line">    movl    -<span class="number">8</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 8处的值（为12）保存在%esi寄存器中</span></span><br><span class="line">    cmpl    -<span class="number">12</span>(%rbp), %esi             <span class="comment">## 将地址%rbp - 12处的值（为8）和%esi寄存器中的</span></span><br><span class="line">                                           值（为<span class="number">12</span>）进行比较</span><br><span class="line">    jle LBB0_2                          <span class="comment">## 如果cmpl比较的结果小于等于0（$esi 减去 -12(%rbp)），</span></span><br><span class="line">                                           则跳转（<span class="keyword">goto</span>）到LBB0_2，否则执行下一条指令</span><br><span class="line">                                           这里（<span class="number">12</span> - <span class="number">8</span>）大于<span class="number">0</span>，不跳转</span><br><span class="line"><span class="comment">## BB#1:</span></span><br><span class="line">    movl    -<span class="number">8</span>(%rbp), %eax              <span class="comment">## 将地址$rbp - 8处的值（为12）保存在%eax寄存器中</span></span><br><span class="line">    movl    %eax, -<span class="number">4</span>(%rbp)              <span class="comment">## 将%eax寄存器中的值（为12）保存在地址$rbp - 4处</span></span><br><span class="line">    jmp LBB0_3                          <span class="comment">## 跳转（goto）到LBB0_3处</span></span><br><span class="line">LBB0_2:</span><br><span class="line">	movl	-<span class="number">12</span>(%rbp), %eax</span><br><span class="line">	movl	%eax, -<span class="number">4</span>(%rbp)</span><br></pre></td></tr></table></figure>
+<p>上面两步操作将8保存在了<code>%esi</code>寄存器中，并调用了<code>cmpl</code>函数进行比较。<br><img src="/images/program_procedure/stack_get_max_compl.png" alt="image"><br>执行完毕后，跳转到了<code>LBB0_3</code>：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// _getMax:                                <span class="comment">## @getMax</span></span><br><span class="line">// 	</span><br><span class="line"><span class="regexp">//</span> <span class="comment">## BB#0:</span></span><br><span class="line">//     pushq   %rbp                        <span class="comment">## 将寄存器%rbp的值压入栈中，保存%rbp的值</span></span><br><span class="line">//     movq    %rsp, %rbp                  <span class="comment">## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span></span><br><span class="line">//                                            总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">//                                            指向了新的栈帧的起始位置</span><br><span class="line">//     movl    %edi, -<span class="number">8</span>(%rbp)              <span class="comment">## 将%edi寄存器的值（为12）保存在地址%rbp - 8处</span></span><br><span class="line">//     movl    %esi, -<span class="number">12</span>(%rbp)             <span class="comment">## 将%esi寄存器的值（为8）保存在地址%rbp - 12处</span></span><br><span class="line">//     movl    -<span class="number">8</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 8处的值（为12）保存在%esi寄存器中</span></span><br><span class="line">//     cmpl    -<span class="number">12</span>(%rbp), %esi             <span class="comment">## 将地址%rbp - 12处的值（为8）和%esi寄存器中的</span></span><br><span class="line">//                                            值（为<span class="number">12</span>）进行比较</span><br><span class="line">//     jle LBB0_2                          <span class="comment">## 如果cmpl比较的结果小于等于0（$esi 减去 -12(%rbp)），</span></span><br><span class="line">//                                            则跳转（<span class="keyword">goto</span>）到LBB0_2，否则执行下一条指令</span><br><span class="line">//                                            这里（<span class="number">12</span> - <span class="number">8</span>）大于<span class="number">0</span>，不跳转</span><br><span class="line">// <span class="comment">## BB#1:</span></span><br><span class="line">//     movl    -<span class="number">8</span>(%rbp), %eax              <span class="comment">## 将地址$rbp - 8处的值（为12）保存在%eax寄存器中</span></span><br><span class="line">//     movl    %eax, -<span class="number">4</span>(%rbp)              <span class="comment">## 将%eax寄存器中的值（为12）保存在地址$rbp - 4处</span></span><br><span class="line">//     jmp LBB0_3                          <span class="comment">## 跳转（goto）到LBB0_3处</span></span><br><span class="line">// LBB0_2:</span><br><span class="line"><span class="regexp">//</span>     movl    -<span class="number">12</span>(%rbp), %eax</span><br><span class="line">//     movl    %eax, -<span class="number">4</span>(%rbp)</span><br><span class="line">LBB0_3:</span><br><span class="line">    movl    -<span class="number">4</span>(%rbp), %eax              <span class="comment">## 将地址%rbp - 4的值（为12）保存在%eax寄存器中</span></span><br><span class="line">    popq    %rbp                        <span class="comment">## 出栈，将栈顶的值保存在%rbp寄存器中</span></span><br><span class="line">    retq                                <span class="comment">## 结束函数调用，跳转到_callq保存的指令处</span></span><br></pre></td></tr></table></figure>
+<p>结束了<code>getMax</code>函数，得到了最大值12：</p>
+<p><img src="/images/program_procedure/stack_get_max_12.png" alt="image"></p>
+<p>我们又回到了<code>main</code>函数中：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// _main:                                  <span class="comment">## @main</span></span><br><span class="line">//     .cfi_startproc                      <span class="comment">## 用在每个函数的开始，用于初始化一些内部数据结构</span></span><br><span class="line">// <span class="comment">## BB#0:</span></span><br><span class="line">//     pushq   %rbp                        <span class="comment">## 将寄存器%rbp的值压入栈中，保存%rbp的值</span></span><br><span class="line">//     movq    %rsp, %rbp                  <span class="comment">## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span></span><br><span class="line">//                                            总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">//                                            指向了新的栈帧的起始位置</span><br><span class="line">//     subq    $16, %rsp                   <span class="comment">## 寄存器%rsp的值减去16，即栈顶的值减去16，则为栈</span></span><br><span class="line">//                                            分配新的空间，长度为<span class="number">16</span>，这一步创建了新的栈帧</span><br><span class="line">//     movl    $12, -<span class="number">4</span>(%rbp)               <span class="comment">## 将12保存在%rbp - 4的地址处</span></span><br><span class="line">//     movl    $8, -<span class="number">8</span>(%rbp)                <span class="comment">## 将8保存在%rbp - 8的地址处</span></span><br><span class="line">//     movl    -<span class="number">4</span>(%rbp), %edi              <span class="comment">## 将地址%rbp - 4处的值（为12）保存在%edi寄存器中</span></span><br><span class="line">//     movl    -<span class="number">8</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 8处的值（为8）保存在%esi寄存器中</span></span><br><span class="line">//     callq   _getMax                     <span class="comment">## 调用函数_getMax，这一步执行了两步操作，首先保存了</span></span><br><span class="line">//                                         <span class="comment">## 下一条指令的地址，然后跳转到了函数_getMan</span></span><br><span class="line">    leaq    L<span class="number">_</span>.str(%rip), %rdi          <span class="comment">## 将L_.str的地址保存在%rdi寄存器中</span></span><br><span class="line">    movl    %eax, -<span class="number">12</span>(%rbp)             <span class="comment">## 将寄存器%eax的值（为12）保存到地址%rbp - 12处</span></span><br><span class="line">    movl    -<span class="number">4</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 4的值（为12）保存到%esi寄存器中</span></span><br><span class="line">    movl    -<span class="number">8</span>(%rbp), %edx              <span class="comment">## 将地址%rbp - 8的值（为8）保存到%edx寄存器中</span></span><br><span class="line">    movl    -<span class="number">12</span>(%rbp), %ecx             <span class="comment">## 将地址%rbp - 12的值（为12）保存到%ecx寄存器中</span></span><br><span class="line">    movb    $0, %al                     <span class="comment">## 将寄存器%al的值置为0</span></span><br><span class="line">    callq   _printf                     <span class="comment">## 调用prinf函数</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的代码在调用<code>getMax</code>后，得到最大值12：<br><img src="/images/program_procedure/stack_main_get_12.png" alt="image"><br>最后再调用<code>printf</code>函数，输出最终的结果。</p>
+<p>到这里函数执行完毕：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">// _main:                                  <span class="comment">## @main</span></span><br><span class="line">//     .cfi_startproc                      <span class="comment">## 用在每个函数的开始，用于初始化一些内部数据结构</span></span><br><span class="line">// <span class="comment">## BB#0:</span></span><br><span class="line">//     pushq   %rbp                        <span class="comment">## 将寄存器%rbp的值压入栈中，保存%rbp的值</span></span><br><span class="line">//     movq    %rsp, %rbp                  <span class="comment">## 改变寄存器%rbp的值为寄存器%rsp的值， 由于%rsp</span></span><br><span class="line">//                                            总是指向栈顶，因此这时%rbp也指向栈顶，实际%rbp</span><br><span class="line">//                                            指向了新的栈帧的起始位置</span><br><span class="line">//     subq    $16, %rsp                   <span class="comment">## 寄存器%rsp的值减去16，即栈顶的值减去16，则为栈</span></span><br><span class="line">//                                            分配新的空间，长度为<span class="number">16</span>，这一步创建了新的栈帧</span><br><span class="line">//     movl    $12, -<span class="number">4</span>(%rbp)               <span class="comment">## 将12保存在%rbp - 4的地址处</span></span><br><span class="line">//     movl    $8, -<span class="number">8</span>(%rbp)                <span class="comment">## 将8保存在%rbp - 8的地址处</span></span><br><span class="line">//     movl    -<span class="number">4</span>(%rbp), %edi              <span class="comment">## 将地址%rbp - 4处的值（为12）保存在%edi寄存器中</span></span><br><span class="line">//     movl    -<span class="number">8</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 8处的值（为8）保存在%esi寄存器中</span></span><br><span class="line">//     callq   _getMax                     <span class="comment">## 调用函数_getMax，这一步执行了两步操作，首先保存了</span></span><br><span class="line">//                                         <span class="comment">## 下一条指令的地址，然后跳转到了函数_getMan</span></span><br><span class="line">//     leaq    L<span class="number">_</span>.str(%rip), %rdi          <span class="comment">## 将L_.str的地址保存在%rdi寄存器中</span></span><br><span class="line">//     movl    %eax, -<span class="number">12</span>(%rbp)             <span class="comment">## 将寄存器%eax的值（为12）保存到地址%rbp - 12处</span></span><br><span class="line">//     movl    -<span class="number">4</span>(%rbp), %esi              <span class="comment">## 将地址%rbp - 4的值（为12）保存到%esi寄存器中</span></span><br><span class="line">//     movl    -<span class="number">8</span>(%rbp), %edx              <span class="comment">## 将地址%rbp - 8的值（为8）保存到%edx寄存器中</span></span><br><span class="line">//     movl    -<span class="number">12</span>(%rbp), %ecx             <span class="comment">## 将地址%rbp - 12的值（为12）保存到%ecx寄存器中</span></span><br><span class="line">//     movb    $0, %al                     <span class="comment">## 将寄存器%al的值置为0</span></span><br><span class="line">//     callq   _printf                     <span class="comment">## 调用prinf函数</span></span><br><span class="line">    xorl    %ecx, %ecx</span><br><span class="line">    movl    %eax, -<span class="number">16</span>(%rbp)         <span class="comment">## 4-byte Spill</span></span><br><span class="line">    movl    %ecx, %eax</span><br><span class="line">    addq    $16, %rsp                   <span class="comment">## 寄存器%rsp的值增加16，即栈顶的值增加16，则减少栈</span></span><br><span class="line">//                                            的空间，长度为<span class="number">16</span>，这一步删除了当前的栈帧</span><br><span class="line">    popq    %rbp                        <span class="comment">## 出栈，将栈顶的值保存在%rbp寄存器中</span></span><br><span class="line">    retq                                <span class="comment">## 结束函数调用</span></span><br><span class="line">    .cfi_endproc</span><br><span class="line"></span><br><span class="line">    .section    __TEXT,__cstring,cstring_literals</span><br><span class="line">L<span class="number">_</span>.str:                                 <span class="comment">## @.str</span></span><br><span class="line">    .asciz  <span class="string">"The max value between %d and %d is %d\n"</span></span><br></pre></td></tr></table></figure></p>
+<p>最终栈帧又回到<code>main</code>函数执行前的状态：<br><img src="/images/program_procedure/stack_done.png" alt="image"></p>
+<hr>
+<p><strong>完</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Basic/" rel="tag"># Basic</a>
+          
+            <a href="/tags/CodingL/" rel="tag"># CodingL</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/26/初窥计算机程序的运行/" rel="next" title="初窥计算机程序的运行">
+                <i class="fa fa-chevron-left"></i> 初窥计算机程序的运行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#汇编指令"><span class="nav-number">1.</span> <span class="nav-text">汇编指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈帧"><span class="nav-number">2.</span> <span class="nav-text">栈帧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是栈帧？"><span class="nav-number">2.1.</span> <span class="nav-text">什么是栈帧？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈帧的结构"><span class="nav-number">2.2.</span> <span class="nav-text">栈帧的结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#汇编的执行"><span class="nav-number">3.</span> <span class="nav-text">汇编的执行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C代码"><span class="nav-number">3.1.</span> <span class="nav-text">C代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#汇编"><span class="nav-number">3.2.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行汇编"><span class="nav-number">3.3.</span> <span class="nav-text">执行汇编</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
