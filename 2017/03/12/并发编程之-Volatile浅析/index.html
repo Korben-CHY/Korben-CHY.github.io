@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Java," />
+  <meta name="keywords" content="Java,Basic,CodingL," />
 
 
 
@@ -87,34 +87,19 @@
 
 
 
-<meta name="description" content="java中的static关键字主要用于内存管理。static关键字可以修饰变量、方法、代码块和内部类。static关键字属于类而不是类的实例。
-下面这些都可以是静态的：
-
-变量
-方法
-代码块
-内部类">
+<meta name="description" content="volatile是一个神秘的关键字，我想大部分人都仅仅知道她在并发编程中使用，却从来没用使用过，也疑惑怎样正确的使用volatile。
+今天就让我们试着揭开volatile的神秘面纱。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java static Keyword">
-<meta property="og:url" content="http://yoursite.com/2016/11/29/Java-static-Keyword/index.html">
+<meta property="og:title" content="并发编程之-Volatile浅析">
+<meta property="og:url" content="http://yoursite.com/2017/03/12/并发编程之-Volatile浅析/index.html">
 <meta property="og:site_name" content="Korben C .">
-<meta property="og:description" content="java中的static关键字主要用于内存管理。static关键字可以修饰变量、方法、代码块和内部类。static关键字属于类而不是类的实例。
-下面这些都可以是静态的：
-
-变量
-方法
-代码块
-内部类">
-<meta property="og:updated_time" content="2016-11-28T16:30:30.000Z">
+<meta property="og:description" content="volatile是一个神秘的关键字，我想大部分人都仅仅知道她在并发编程中使用，却从来没用使用过，也疑惑怎样正确的使用volatile。
+今天就让我们试着揭开volatile的神秘面纱。">
+<meta property="og:updated_time" content="2017-03-12T15:44:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java static Keyword">
-<meta name="twitter:description" content="java中的static关键字主要用于内存管理。static关键字可以修饰变量、方法、代码块和内部类。static关键字属于类而不是类的实例。
-下面这些都可以是静态的：
-
-变量
-方法
-代码块
-内部类">
+<meta name="twitter:title" content="并发编程之-Volatile浅析">
+<meta name="twitter:description" content="volatile是一个神秘的关键字，我想大部分人都仅仅知道她在并发编程中使用，却从来没用使用过，也疑惑怎样正确的使用volatile。
+今天就让我们试着揭开volatile的神秘面纱。">
 
 
 
@@ -142,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/29/Java-static-Keyword/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/12/并发编程之-Volatile浅析/"/>
 
 
 
 
 
-  <title> Java static Keyword | Korben C . </title>
+  <title> 并发编程之-Volatile浅析 | Korben C . </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -267,7 +252,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/29/Java-static-Keyword/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/12/并发编程之-Volatile浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -288,7 +273,7 @@
             
             
               
-                Java static Keyword
+                并发编程之-Volatile浅析
               
             
           </h1>
@@ -303,8 +288,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-29T00:30:30+08:00">
-                2016-11-29
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-12T23:44:11+08:00">
+                2017-03-12
               </time>
             
 
@@ -326,8 +311,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
                   </a>
                 </span>
 
@@ -361,34 +346,37 @@
       
 
       
-        <p>java中的<strong>static</strong>关键字主要用于内存管理。<strong>static</strong>关键字可以修饰<code>变量、方法、代码块和内部类</code>。<strong>static</strong>关键字属于类而不是类的实例。</p>
-<p>下面这些都可以是静态的：</p>
-<ol>
-<li>变量</li>
-<li>方法</li>
-<li>代码块</li>
-<li>内部类</li>
-</ol>
-<a id="more"></a>
-<h1 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h1><p>如果一个变量被声明为静态的，那么它就是静态变量。</p>
+        <p><code>volatile</code>是一个神秘的关键字，我想大部分人都仅仅知道她在并发编程中使用，却从来没用使用过，也疑惑怎样正确的使用<code>volatile</code>。</p>
+<p>今天就让我们试着揭开<code>volatile</code>的神秘面纱。<br><a id="more"></a></p>
+<h1 id="Volatile-VS-Synchronized"><a href="#Volatile-VS-Synchronized" class="headerlink" title="Volatile VS Synchronized"></a>Volatile VS Synchronized</h1><p><code>volatile</code>与<code>synchronized</code>类似，都在并发编程中扮演着重要的角色。<code>volatile</code>是轻量级的<code>synchronized</code>。</p>
+<p>如果一个变量被声明为<code>volatile</code>，那么：</p>
 <ul>
-<li>静态变量可以用于引用所有对象的公共属性（对于每个对象并不是独有的）</li>
-<li>静态变量只会在类加载时分配一次内存</li>
+<li>这个变量就从不会被线程缓存，所有的读写操作都直接在内存中进行</li>
+<li>这个变量仿佛被<code>synchronized</code>代码块包含，线程同步</li>
 </ul>
-<h2 id="静态变量的优点"><a href="#静态变量的优点" class="headerlink" title="静态变量的优点"></a>静态变量的优点</h2><p>使程序的内存使用更加高效，节约内存的使用</p>
-<h1 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h1><p>如果一个方法被声明为静态的，那么它就是静态方法。</p>
+<p><code>volatile</code>与<code>synchronized</code>的对比：<br>特征 | Synchronized  | Volatile<br>—|—|—<br>修饰的变量 | 对象 | 对象或原始数据类型<br>是否允许<code>null</code> | 否 | 是<br>是否可修饰代码块 | 是 | 否</p>
+<p>也就是说，<code>volatile</code>与<code>synchronized</code>的区别主要如下：</p>
 <ul>
-<li>静态方法隶属于类而不是类的对象</li>
-<li>不用创建类的实例，就可以引用静态方法</li>
-<li>静态方法可以访问静态数据成员，并可以更改它的值</li>
+<li>原始数据类型（int、long…）可以被<code>volatile</code>修饰，但不能被<code>synchronized</code>修饰</li>
+<li>读写被<code>volatile</code>修饰的变量从不会阻塞：只是对变量做了简单的读写，而不像<code>synchronized</code>会持有锁</li>
+<li>因为被<code>volatile</code>修饰的变量持有锁，所以<code>volatile</code>并不适合将“读取-更新-写入”这样的操作来作为一个原子操作</li>
+<li>被<code>volatile</code>修饰的变量可以为<code>null</code></li>
 </ul>
-<h2 id="静态方法的限制"><a href="#静态方法的限制" class="headerlink" title="静态方法的限制"></a>静态方法的限制</h2><ul>
-<li>静态方法不能直接的引用非静态变量或非静态方法</li>
-<li><code>this</code>和<code>super</code>不能在静态方法中使用</li>
+<h1 id="错误的使用姿势"><a href="#错误的使用姿势" class="headerlink" title="错误的使用姿势"></a>错误的使用姿势</h1><h2 id="被volatile修饰的数组，其中的元素并不被volatile修饰"><a href="#被volatile修饰的数组，其中的元素并不被volatile修饰" class="headerlink" title="被volatile修饰的数组，其中的元素并不被volatile修饰"></a>被volatile修饰的数组，其中的元素并不被volatile修饰</h2><p>也就是说，被<code>volatile</code>修饰的数组<code>array</code>：</p>
+<ul>
+<li><code>array[x] = y</code>这样的赋值并不是线程安全的，即在A线程中赋值<code>array[x] = y</code>，在B线程中并不一定可以正确读取<code>array[x]</code>的值</li>
+<li><code>array = new int[]</code>是线程安全的，即在A线程中初始化<code>array = new int[]</code>，在B线程中可以正确得到<code>array</code>初始化后的引用</li>
 </ul>
-<h1 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h1><ul>
-<li>静态代码块被用来初始化成员数据</li>
-<li>静态代码块在类加载时执行，并且在<code>main</code>方法前执行</li>
+<blockquote>
+<p>如果我们想获得真正线程安全的<code>array</code>改怎么做呢？尝试下<code>AtomicIntegerArray</code>或<code>AtomicLongArray</code>吧</p>
+</blockquote>
+<h2 id="（-，-）这样的操作也不是线程安全的"><a href="#（-，-）这样的操作也不是线程安全的" class="headerlink" title="（++，+=）这样的操作也不是线程安全的"></a>（++，+=）这样的操作也不是线程安全的</h2><p>标题什么意思？看代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> i; <span class="comment">// 使用volatile修饰 i</span></span><br><span class="line">...</span><br><span class="line">i++;            <span class="comment">// 这样的操作不是线程安全的</span></span><br><span class="line">...</span><br><span class="line">i += <span class="number">5</span>;         <span class="comment">// 这样的操作也不是线程安全的</span></span><br></pre></td></tr></table></figure></p>
+<p>为什么被<code>volatile</code>修饰的<code>i</code>的<code>i += 5</code>不是线程安全的？<code>i += 5</code>等价于下面的代码：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int temp<span class="comment">;</span></span><br><span class="line"><span class="keyword">synchronized </span>(i) &#123;</span><br><span class="line">  temp = i<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line">temp += <span class="number">5</span><span class="comment">; // 这里temp的值可能会被其他的线程偷偷的改掉！</span></span><br><span class="line"><span class="keyword">synchronized </span>(i) &#123;</span><br><span class="line">  i = temp<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="正确的使用姿势"><a href="#正确的使用姿势" class="headerlink" title="正确的使用姿势"></a>正确的使用姿势</h1><p>那到底<code>volatile</code>该怎样使用呢？</p>
+<p>要使<code>volatile</code>变量提供理想的线程安全，必须同时满足下面两个条件：</p>
+<ul>
+<li>对变量的写操作不依赖于当前值</li>
+<li>该变量没有包含在具有其他变量的不变式中</li>
 </ul>
 
       
@@ -415,6 +403,10 @@
           
             <a href="/tags/Java/" rel="tag"># Java</a>
           
+            <a href="/tags/Basic/" rel="tag"># Basic</a>
+          
+            <a href="/tags/CodingL/" rel="tag"># CodingL</a>
+          
         </div>
       
 
@@ -426,8 +418,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/05/29/记一次Android-Bluetooth-SPP-传输数据丢失分析/" rel="next" title="记一次Android Bluetooth SPP 传输数据丢失分析">
-                <i class="fa fa-chevron-left"></i> 记一次Android Bluetooth SPP 传输数据丢失分析
+              <a href="/2017/03/06/程序在计算机中的运行过程简析/" rel="next" title="程序在计算机中的运行过程简析">
+                <i class="fa fa-chevron-left"></i> 程序在计算机中的运行过程简析
               </a>
             
           </div>
@@ -435,10 +427,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/26/初窥计算机程序的运行/" rel="prev" title="初窥计算机程序的运行">
-                初窥计算机程序的运行 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -563,7 +551,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态变量"><span class="nav-number">1.</span> <span class="nav-text">静态变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态变量的优点"><span class="nav-number">1.1.</span> <span class="nav-text">静态变量的优点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态方法"><span class="nav-number">2.</span> <span class="nav-text">静态方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态方法的限制"><span class="nav-number">2.1.</span> <span class="nav-text">静态方法的限制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态代码块"><span class="nav-number">3.</span> <span class="nav-text">静态代码块</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Volatile-VS-Synchronized"><span class="nav-number">1.</span> <span class="nav-text">Volatile VS Synchronized</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误的使用姿势"><span class="nav-number">2.</span> <span class="nav-text">错误的使用姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#被volatile修饰的数组，其中的元素并不被volatile修饰"><span class="nav-number">2.1.</span> <span class="nav-text">被volatile修饰的数组，其中的元素并不被volatile修饰</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（-，-）这样的操作也不是线程安全的"><span class="nav-number">2.2.</span> <span class="nav-text">（++，+=）这样的操作也不是线程安全的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正确的使用姿势"><span class="nav-number">3.</span> <span class="nav-text">正确的使用姿势</span></a></li></ol></div>
             
 
           </div>
