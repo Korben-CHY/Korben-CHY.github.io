@@ -1,0 +1,730 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Way" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在前一篇文章中，我们介绍了JUnit学习之–assertThat，学习了新的断言方式，今天我们继续学习JUnit的常用功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUnit学习之--常用功能">
+<meta property="og:url" content="http://korben-chy.github.io/2017/03/23/JUnit学习之-常用功能/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="在前一篇文章中，我们介绍了JUnit学习之–assertThat，学习了新的断言方式，今天我们继续学习JUnit的常用功能。">
+<meta property="og:updated_time" content="2017-03-22T16:29:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JUnit学习之--常用功能">
+<meta name="twitter:description" content="在前一篇文章中，我们介绍了JUnit学习之–assertThat，学习了新的断言方式，今天我们继续学习JUnit的常用功能。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2017/03/23/JUnit学习之-常用功能/"/>
+
+
+
+
+
+  <title> JUnit学习之--常用功能 | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/23/JUnit学习之-常用功能/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JUnit学习之--常用功能
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-23T00:29:27+08:00">
+                2017-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/23/JUnit学习之-常用功能/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/23/JUnit学习之-常用功能/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在前一篇文章中，我们介绍了<a href="http://korben-chy.github.io/2017/03/19/JUnit%E5%AD%A6%E4%B9%A0%E4%B9%8B-assertThat/">JUnit学习之–assertThat</a>，学习了新的断言方式，今天我们继续学习<code>JUnit</code>的常用功能。<br><a id="more"></a></p>
+<h1 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h1><p>在测试时，我们不仅要测试正常的代码执行，同时也要测试异常的发生。<code>JUnit</code>给我们提供了几种方式来测试异常。</p>
+<h2 id="try-fail-catch"><a href="#try-fail-catch" class="headerlink" title="try/fail/catch"></a>try/fail/catch</h2><p><code>JUnit</code>对于异常的测试中，最经典的莫过于在<code>catch</code>中判断异常，如果异常没有发生，则在<code>try</code>中声明失败:</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@Test</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> testException() &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        String s = <span class="literal">null</span>;</div><div class="line">        System.<span class="keyword">out</span>.println(s.length());</div><div class="line">        fail();</div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        assertThat(e, instanceOf(NullPointerException.<span class="keyword">class</span>));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很显然，这种测试的缺点是书写的代码较多，而且会经常忘记<code>fail()</code>的调用。所以，<code>JUnit</code>为我们提供了更简洁的方法。</p>
+<h2 id="Test-expected-Exception-class"><a href="#Test-expected-Exception-class" class="headerlink" title="@Test(expected = Exception.class)"></a>@Test(expected = Exception.class)</h2><p>使用<code>@Test</code>的<code>expected</code>属性，我们可以简化代码如下：</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@Test</span>(expected = NullPointerException.<span class="keyword">class</span>)</div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> testException() &#123;</div><div class="line">    String s = <span class="literal">null</span>;</div><div class="line">    System.<span class="keyword">out</span>.println(s.length());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="ExpectedException-Rule"><a href="#ExpectedException-Rule" class="headerlink" title="ExpectedException Rule"></a>ExpectedException Rule</h2><p>使用<code>ExpectedException</code>，通过定义异常的校验规则，我们同样可以达到测试异常的目的：</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@Rule</span> <span class="keyword">public</span> ExpectedException exception = ExpectedException.none();</div><div class="line"></div><div class="line"><span class="keyword">@Test</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> testException() &#123;</div><div class="line">    exception.expect(NullPointerException.<span class="keyword">class</span>);</div><div class="line">    exception.expectMessage(containsString(<span class="string">"exception message"</span>));</div><div class="line">    String s = <span class="literal">null</span>;</div><div class="line">    System.<span class="keyword">out</span>.println(s.length());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>异常规则允许我们定义异常的类型，并还可以校验异常的错误信息。</p>
+<h1 id="Timeout-for-tests"><a href="#Timeout-for-tests" class="headerlink" title="Timeout for tests"></a>Timeout for tests</h1><p>我们还可以通过<code>JUnit</code>测试函数的运行时间，如果一个函数的运行时间太长，<code>JUnit</code>会报失败。</p>
+<h2 id="Test-timeout-1000"><a href="#Test-timeout-1000" class="headerlink" title="@Test(timeout = 1000)"></a>@Test(timeout = 1000)</h2><p>我们可以在<code>@Test</code>注解中指定函数运行的最大时间，以毫秒为单位：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>(timeout = <span class="number">1000</span>)</div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">testTimeout</span><span class="params">()</span> </span>&#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Timeout-Rule"><a href="#Timeout-Rule" class="headerlink" title="Timeout Rule"></a>Timeout Rule</h2><p>我们同样可以使用<code>Timeout Rule</code>来测试函数的运行时间。与<code>timeout</code>不同的是，<code>Timeout Rule</code>会作用于当前测试类的每一个方法。而且<code>Timeout Rule</code>会覆盖<code>timeout</code><br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Rule</span></div><div class="line"><span class="keyword">public</span> Timeout globalTimeout = Timeout.seconds(<span class="number">1</span>);</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">testTimeOut</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    TimeUnit.SECONDS.sleep(<span class="number">2</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：如果<code>@Test(timeout = xx)</code>与<code>Timeout Rule</code>同时出现，则高优先级的<code>Timeout Rulle</code>起作用。</p>
+</blockquote>
+<p><code>Timeout Rule</code>作用于当前类的所有方法，包括<code>@Before</code>和<code>@After</code>。</p>
+<h2 id="Parameterized-tests"><a href="#Parameterized-tests" class="headerlink" title="Parameterized tests"></a>Parameterized tests</h2><p>如果我们需要通过输入一系列不同的参数来测试某一方法时，可以通过<code>JUnit</code>的<code>Parameterized</code>测试类来实现。</p>
+<p><code>Parameterized</code>测试类会为其中的每一个参数创建一个测试类的实例，并运行这个实例的测试方法。</p>
+<p>例如下面的例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.Assert.assertEquals;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Arrays;</div><div class="line"><span class="keyword">import</span> java.util.Collection;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"><span class="keyword">import</span> org.junit.runner.RunWith;</div><div class="line"><span class="keyword">import</span> org.junit.runners.Parameterized;</div><div class="line"><span class="keyword">import</span> org.junit.runners.Parameterized.Parameters;</div><div class="line"></div><div class="line"><span class="meta">@RunWith</span>(Parameterized.class)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FibonacciTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Parameters</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Collection&lt;Object[]&gt; data() &#123;</div><div class="line">        <span class="keyword">return</span> Arrays.asList(<span class="keyword">new</span> Object[][] &#123;     </div><div class="line">                 &#123; <span class="number">0</span>, <span class="number">0</span> &#125;, &#123; <span class="number">1</span>, <span class="number">1</span> &#125;, &#123; <span class="number">2</span>, <span class="number">1</span> &#125;, &#123; <span class="number">3</span>, <span class="number">2</span> &#125;, &#123; <span class="number">4</span>, <span class="number">3</span> &#125;, &#123; <span class="number">5</span>, <span class="number">5</span> &#125;, &#123; <span class="number">6</span>, <span class="number">8</span> &#125;  </div><div class="line">           &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> fInput;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> fExpected;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FibonacciTest</span><span class="params">(<span class="keyword">int</span> input, <span class="keyword">int</span> expected)</span> </span>&#123;</div><div class="line">        fInput= input;</div><div class="line">        fExpected= expected;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</div><div class="line">        assertEquals(fExpected, Fibonacci.compute(fInput));</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Fibonacci</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">compute</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) &#123; </div><div class="line">            result = n; </div><div class="line">        &#125; <span class="keyword">else</span> &#123; </div><div class="line">            result = compute(n - <span class="number">1</span>) + compute(n - <span class="number">2</span>); </div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当我们运行上面的测试类时，<code>JUnit</code>会为我们构建<code>FibonacciTest(0, 0)</code>、<br><code>FibonacciTest(1, 1)</code>…、<code>FibonacciTest(6, 8)</code>等一系列的实例。</p>
+<p>上面的代码还可以省略掉构造函数，只需要成员变量为<code>public</code>，并用<code>@Parameter</code>来标识出：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.Assert.assertEquals;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Arrays;</div><div class="line"><span class="keyword">import</span> java.util.Collection;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"><span class="keyword">import</span> org.junit.runner.RunWith;</div><div class="line"><span class="keyword">import</span> org.junit.runners.Parameterized;</div><div class="line"><span class="keyword">import</span> org.junit.runners.Parameterized.Parameter;</div><div class="line"><span class="keyword">import</span> org.junit.runners.Parameterized.Parameters;</div><div class="line"></div><div class="line"><span class="meta">@RunWith</span>(Parameterized.class)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FibonacciTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Parameters</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Collection&lt;Object[]&gt; data() &#123;</div><div class="line">        <span class="function"><span class="keyword">return</span> Arrays.<span class="title">asList</span><span class="params">(<span class="keyword">new</span> Object[][] &#123;</span></span></div><div class="line">                 &#123; <span class="number">0</span>, <span class="number">0</span> &#125;, &#123; <span class="number">1</span>, <span class="number">1</span> &#125;, &#123; <span class="number">2</span>, <span class="number">1</span> &#125;, &#123; <span class="number">3</span>, <span class="number">2</span> &#125;, &#123; <span class="number">4</span>, <span class="number">3</span> &#125;, &#123; <span class="number">5</span>, <span class="number">5</span> &#125;, &#123; <span class="number">6</span>, <span class="number">8</span> &#125;  </div><div class="line">           &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Parameter</span> <span class="comment">// first data value (0) is default</span></div><div class="line">    <span class="keyword">public</span> <span class="comment">/* NOT private */</span> <span class="keyword">int</span> fInput;</div><div class="line"></div><div class="line">    <span class="meta">@Parameter</span>(<span class="number">1</span>)</div><div class="line">    <span class="keyword">public</span> <span class="comment">/* NOT private */</span> <span class="keyword">int</span> fExpected;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</div><div class="line">        assertEquals(fExpected, Fibonacci.compute(fInput));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Aggregating-tests-in-suites"><a href="#Aggregating-tests-in-suites" class="headerlink" title="Aggregating tests in suites"></a>Aggregating tests in suites</h1><p><code>suite</code>可以帮助我们同时运行多个测试类。</p>
+<h2 id="创建测试类"><a href="#创建测试类" class="headerlink" title="创建测试类"></a>创建测试类</h2><p>假设我们有测试类<code>TestClass1</code>和<code>TestClass2</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClass1</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="meta">@Test</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testPrintMessage</span><span class="params">()</span> </span>&#123;	</div><div class="line">      System.out.println(<span class="string">"Inside test"</span>);    </div><div class="line">      assertEquals(<span class="string">"message"</span>, <span class="string">"message"</span>); </div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClass2</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="meta">@Test</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testPrintMessage</span><span class="params">()</span> </span>&#123;</div><div class="line">      System.out.println(<span class="string">"Inside test2"</span>);</div><div class="line">      assertEquals(<span class="string">"message"</span>, <span class="string">"message"</span>);</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="创建Test-Suite"><a href="#创建Test-Suite" class="headerlink" title="创建Test Suite"></a>创建Test Suite</h2><p>我们需要用<code>@Suite.SuiteClasses</code>来指明需要测试的测试类:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">import</span> <span class="selector-tag">org</span><span class="selector-class">.junit</span><span class="selector-class">.runner</span><span class="selector-class">.RunWith</span>;</div><div class="line"><span class="selector-tag">import</span> <span class="selector-tag">org</span><span class="selector-class">.junit</span><span class="selector-class">.runners</span><span class="selector-class">.Suite</span>;</div><div class="line"></div><div class="line">@<span class="keyword">RunWith</span>(<span class="keyword">Suite</span>.<span class="keyword">class</span>)</div><div class="line"></div><div class="line">@Suite.SuiteClasses(&#123;</div><div class="line">   <span class="selector-tag">TestClass1</span><span class="selector-class">.class</span>,</div><div class="line">   <span class="selector-tag">TestClass2</span><span class="selector-class">.class</span></div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="selector-tag">public</span> <span class="selector-tag">class</span> <span class="selector-tag">JunitTestSuite</span> &#123;   </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="创建Test-Runner"><a href="#创建Test-Runner" class="headerlink" title="创建Test Runner"></a>创建Test Runner</h2><p>最后创建<code>TestRunner</code>运行上面的<code>TestSuite</code>即可：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.runner.JUnitCore;</div><div class="line"><span class="keyword">import</span> org.junit.runner.Result;</div><div class="line"><span class="keyword">import</span> org.junit.runner.notification.Failure;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestRunner</span> </span>&#123;</div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> void main(<span class="type">String</span>[] args) &#123;</div><div class="line">      <span class="type">Result</span> result = <span class="type">JUnitCore</span>.runClasses(<span class="type">JunitTestSuite</span>.<span class="keyword">class</span>);</div><div class="line"></div><div class="line">      <span class="keyword">for</span> (<span class="type">Failure</span> failure : result.getFailures()) &#123;</div><div class="line">         <span class="type">System</span>.out.<span class="built_in">println</span>(failure.<span class="built_in">toString</span>());</div><div class="line">      &#125;</div><div class="line">		</div><div class="line">      <span class="type">System</span>.out.<span class="built_in">println</span>(result.wasSuccessful());</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/19/JUnit学习之-assertThat/" rel="next" title="JUnit学习之--assertThat">
+                <i class="fa fa-chevron-left"></i> JUnit学习之--assertThat
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/23/JUnit学习之-常用功能/"
+           data-title="JUnit学习之--常用功能" data-url="http://korben-chy.github.io/2017/03/23/JUnit学习之-常用功能/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Exceptions"><span class="nav-number">1.</span> <span class="nav-text">Exceptions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#try-fail-catch"><span class="nav-number">1.1.</span> <span class="nav-text">try/fail/catch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Test-expected-Exception-class"><span class="nav-number">1.2.</span> <span class="nav-text">@Test(expected = Exception.class)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ExpectedException-Rule"><span class="nav-number">1.3.</span> <span class="nav-text">ExpectedException Rule</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Timeout-for-tests"><span class="nav-number">2.</span> <span class="nav-text">Timeout for tests</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Test-timeout-1000"><span class="nav-number">2.1.</span> <span class="nav-text">@Test(timeout = 1000)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Timeout-Rule"><span class="nav-number">2.2.</span> <span class="nav-text">Timeout Rule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Parameterized-tests"><span class="nav-number">2.3.</span> <span class="nav-text">Parameterized tests</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Aggregating-tests-in-suites"><span class="nav-number">3.</span> <span class="nav-text">Aggregating tests in suites</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建测试类"><span class="nav-number">3.1.</span> <span class="nav-text">创建测试类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Test-Suite"><span class="nav-number">3.2.</span> <span class="nav-text">创建Test Suite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Test-Runner"><span class="nav-number">3.3.</span> <span class="nav-text">创建Test Runner</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"korbenblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
