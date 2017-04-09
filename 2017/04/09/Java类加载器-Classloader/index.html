@@ -1,0 +1,772 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,Basic,CodingL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="类加载器是Java虚拟机的一个基石，它使得一个类可以被动态的加载的Java虚拟机中并执行，使Java运行时不用关注所运行的文件和文件系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java类加载器--Classloader">
+<meta property="og:url" content="http://korben-chy.github.io/2017/04/09/Java类加载器-Classloader/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="类加载器是Java虚拟机的一个基石，它使得一个类可以被动态的加载的Java虚拟机中并执行，使Java运行时不用关注所运行的文件和文件系统。">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_classloader/classLoader_hierarchy.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_classloader/classLoader_delegation.png">
+<meta property="og:updated_time" content="2017-04-09T05:37:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java类加载器--Classloader">
+<meta name="twitter:description" content="类加载器是Java虚拟机的一个基石，它使得一个类可以被动态的加载的Java虚拟机中并执行，使Java运行时不用关注所运行的文件和文件系统。">
+<meta name="twitter:image" content="http://korben-chy.github.io/images/java_classloader/classLoader_hierarchy.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2017/04/09/Java类加载器-Classloader/"/>
+
+
+
+
+
+  <title> Java类加载器--Classloader | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/09/Java类加载器-Classloader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java类加载器--Classloader
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-09T13:37:58+08:00">
+                2017-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/09/Java类加载器-Classloader/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/09/Java类加载器-Classloader/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>类加载器是<code>Java</code>虚拟机的一个基石，它使得一个类可以被动态的加载的<code>Java</code>虚拟机中并执行，使<code>Java</code>运行时不用关注所运行的文件和文件系统。<br><a id="more"></a></p>
+<h1 id="详解类加载器"><a href="#详解类加载器" class="headerlink" title="详解类加载器"></a>详解类加载器</h1><p>当一个类被其他正在运行的类引用时，这个类会被加载到<code>Java</code>虚拟机中。而<code>Classloader</code>用来加载类到<code>Java</code>虚拟机中。<code>Java</code>源代码被编译成为<code>.class</code>字节码文件，<code>Classloader</code>读取<code>.class</code>字节码文件，生成<code>java.lang.class</code>的一个实例。</p>
+<blockquote>
+<p>什么时候类被引用，或者说什么时候类被加载？</p>
+<ul>
+<li>这个类被实例化时，如：<code>FooClass f = new FooClass()</code>；</li>
+<li>这个类被静态的引用时，如<code>System.out</code>。</li>
+</ul>
+</blockquote>
+<h2 id="类加载器的主要方法"><a href="#类加载器的主要方法" class="headerlink" title="类加载器的主要方法"></a>类加载器的主要方法</h2><p>每一个类加载器都是<code>java.lang.ClassLoader</code>的子类，开发人员同样可以通过继承<code>java.lang.ClassLoader</code>实现自己的类加载器。下面我们首先进入<code>java.lang.ClassLoader</code>的内部，看它的主要方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> java.lang;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoader</span> </span>&#123;</div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> Class <span class="title">loadClass</span><span class="params">(String name)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">protected</span> Class <span class="title">defineClass</span><span class="params">(<span class="keyword">byte</span>[] b)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">protected</span> Class <span class="title">findClass</span><span class="params">(String name)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ClassLoader <span class="title">getParent</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="loadClass"><a href="#loadClass" class="headerlink" title="loadClass"></a>loadClass</h3><p><code>loadClass</code>可以说是<code>ClassLoader</code>中最主要的方法。这个方法传入全引用的类名，返回这个类的实例：<code>java.lang.Class</code>，所做的工作就是加载类到<code>Java</code>虚拟机中。<br><figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">Class</span>&lt;?&gt; loadClass(<span class="keyword">String</span> <span class="keyword">name</span>) throws ClassNotFoundException</div></pre></td></tr></table></figure></p>
+<h3 id="defineClass"><a href="#defineClass" class="headerlink" title="defineClass"></a>defineClass</h3><p><code>defineClass</code>将字节数组转换为<code>java.lang.Class</code>的实例。<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">Class</span>&lt;?&gt; defineClass(String name, <span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len) <span class="keyword">throws</span> ClassFormatError</div></pre></td></tr></table></figure></p>
+<h3 id="findClass"><a href="#findClass" class="headerlink" title="findClass"></a>findClass</h3><p><code>findClass</code>通过类名，查找<code>java.lang.Class</code>的实例。<br><figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> <span class="keyword">Class</span>&lt;?&gt; findClass(<span class="keyword">String</span> <span class="keyword">name</span>) throws ClassNotFoundException</div></pre></td></tr></table></figure></p>
+<h3 id="getParent"><a href="#getParent" class="headerlink" title="getParent"></a>getParent</h3><p><code>getParent</code>返回父<code>ClassLoader</code>。当前的<code>ClassLoader</code>是通过继承其他的<code>ClassLoader</code>得到的，这里返回父<code>ClassLoader</code>。<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> ClassLoader getParent()</div></pre></td></tr></table></figure></p>
+<h2 id="类加载器的组织结构"><a href="#类加载器的组织结构" class="headerlink" title="类加载器的组织结构"></a>类加载器的组织结构</h2><p>首先看下图，描述了系统类加载器的组织结构，指明了类加载器的启动顺序，箭头指向的是父类加载器:<br><img src="/images/java_classloader/classLoader_hierarchy.png" alt="image"></p>
+<p>当<code>Java</code>虚拟机启动时，<code>bootstrap classloader</code>会负责加载<code>&lt;JAVA_HOME/jre/lib</code>下的类库到<code>Java</code>虚拟机中。<code>bootstrap classloader</code>是所有其他类加载器的父类，也就是说，<code>bootstrap classloader</code>是原始的类加载器，它并没有一个父类。</p>
+<p>在<code>bootstrap classloader</code>之后启动的是<code>extension classloader</code>，它是<code>bootstrap classloader</code>的子类，负责加载<code>&lt;JAVA_HOME&gt;/jre/lib/ext</code>下的类库，还有在<code>java.ext.dirs</code>属性中指明的类库。</p>
+<p>第三个启动的是<code>system class classloader</code>，它是<code>extension classloader</code>的子类。负责加载<code>CLASSPATH</code>环境变量下的类库，以及<code>java.class.path</code>属性指明的类库。</p>
+<p>除上述三种系统类加载器之外，我们还可以通过继承<code>java.lang.ClassLoader</code>实现自己的类加载器。我们开发人员自定义的类加载器都是继承自<code>system class classloader</code>。在了解了类加载器的组织结构后，我们来看类加载器的委托模式。</p>
+<h2 id="类加载器的委托模式"><a href="#类加载器的委托模式" class="headerlink" title="类加载器的委托模式"></a>类加载器的委托模式</h2><p>什么是类加载器的委托模式？当一个类加载器尝试加载一个类或资源时，总是首先代理给它的父加载器来加载这个类或资源，只有当父类加载器加载失败时，自己才尝试加载。因此，可以说类加载器负责加载父类加载器不会加载的类。当然，父类加载器不能够调用子类加载器。</p>
+<p>下图说明了委托模式的执行过程：<br><img src="/images/java_classloader/classLoader_delegation.png" alt="image"></p>
+<h3 id="为什么使用委托模式"><a href="#为什么使用委托模式" class="headerlink" title="为什么使用委托模式"></a>为什么使用委托模式</h3><p>那么为什么使用委托模式？</p>
+<ul>
+<li>委托模式避免了类的重复加载</li>
+<li>委托模式保证了<code>Java</code>核心类库的类型安全</li>
+</ul>
+<p>第一点很好理解，通过委托模式，每次只有一个类加载器加载一个类，因此这样就避免了类的重复加载。</p>
+<p>为什么委托模式保证了<code>Java</code>核心类库的类型安全？</p>
+<p>说明这个原因前，我们首先需要说明一下<code>Java</code>虚拟机是如何判定两个<code>Java</code>类是相同的？<code>Java</code>虚拟机不仅要看类的全名是否相同，还要看加载此类的类加载器是否一样。只有两者都相同的情况，才认为两个类是相同的。</p>
+<p>所有<code>Java</code>类都继承自<code>java.lang.Object</code>类，也就是说在运行的时候，<code>java.lang.Object</code>这个类需要被加载到<code>Java</code>虚拟机中。由于委托模式，<code>Java</code>核心库的类的加载工作都是由<code>Bootstrap
+Classloader</code>来统一完成加载的，保证了<code>Java</code>应用所使用的都是同一个版本的<code>Java</code>核心库的类，是互相兼容的。</p>
+<h1 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h1><p>在绝大多数情况下，<code>Java</code>提供的默认类加载器已经足够用了。但仍然有需要我们开发自己的类加载器的情况。比如通过<code>HTTP</code>、<code>FTP</code>动态获得类字节码文件。</p>
+<p>创建在即的类加载器需要继承<code>java.lang.ClassLoader</code>，并重载<code>loadClass</code>方法：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.DataInputStream;</div><div class="line"><span class="keyword">import</span> java.io.<span class="keyword">File</span>;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 我们的自定义类加载器</div><div class="line"> * CustomClassloader 只会加载包"com.korben"下的类，其他的类会委托给父加载器进行加载</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> CustomClassloader <span class="keyword">extends</span> ClassLoader &#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> CustomClassloader(ClassLoader parent) &#123;</div><div class="line">        <span class="keyword">super</span>(parent);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 从文件系统读取并加载类</div><div class="line">     *</div><div class="line">     * @param name 完全限定的类名, 例如 com.korben.Foo</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">Class</span> getClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">        String <span class="keyword">file</span> = name.replace(<span class="string">'.'</span>, <span class="keyword">File</span>.separatorChar) + <span class="string">".class"</span>;</div><div class="line">        <span class="keyword">byte</span>[] b;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 读取类的自己数组</span></div><div class="line">            b = readClassFileData(<span class="keyword">file</span>);</div><div class="line"></div><div class="line">            <span class="comment">// 调用 java.lang.Classloader 的 defineClass 方法，将字节数组转化为 java.lang.Class</span></div><div class="line">            <span class="comment">// 的实例</span></div><div class="line">            <span class="keyword">Class</span> c = defineClass(name, b, <span class="number">0</span>, b.length);</div><div class="line">            resolveClass(c);</div><div class="line">            <span class="keyword">return</span> c;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 加载类</div><div class="line">     *</div><div class="line">     * 只会加载包"com.korben"下的类，其他的类会委托给父加载器进行加载</div><div class="line">     *</div><div class="line">     * @param name 完全限定的类名, 例如 com.korben.Foo</div><div class="line">     */</div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="keyword">Class</span> loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"Loading Class '"</span> + name + <span class="string">"'"</span>);</div><div class="line">        <span class="keyword">if</span> (name.startsWith(<span class="string">"com.korben"</span>)) &#123;</div><div class="line">            System.out.<span class="keyword">println</span>(<span class="string">"Loading Class using CustomClassloader"</span>);</div><div class="line">            <span class="keyword">return</span> getClass(name);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 从文件系统读取 .class 文件为字节数组。</div><div class="line">     *</div><div class="line">     * @param name 文件名</div><div class="line">     * @return 读取的字节数组</div><div class="line">     * @throws IOException</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] readClassFileData(String name) <span class="keyword">throws</span> IOException &#123;</div><div class="line">        InputStream stream = getClass().getClassLoader().getResourceAsStream(</div><div class="line">                name);</div><div class="line">        <span class="keyword">int</span> <span class="keyword">size</span> = stream.available();</div><div class="line">        <span class="keyword">byte</span> buff[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="keyword">size</span>];</div><div class="line">        DataInputStream in = <span class="keyword">new</span> DataInputStream(stream);</div><div class="line">        in.readFully(buff);</div><div class="line">        in.close();</div><div class="line">        <span class="keyword">return</span> buff;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Basic/" rel="tag"># Basic</a>
+          
+            <a href="/tags/CodingL/" rel="tag"># CodingL</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/29/并发编程之-synchronized浅析/" rel="next" title="并发编程之-synchronized浅析">
+                <i class="fa fa-chevron-left"></i> 并发编程之-synchronized浅析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/09/Java类加载器-Classloader/"
+           data-title="Java类加载器--Classloader" data-url="http://korben-chy.github.io/2017/04/09/Java类加载器-Classloader/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#详解类加载器"><span class="nav-number">1.</span> <span class="nav-text">详解类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器的主要方法"><span class="nav-number">1.1.</span> <span class="nav-text">类加载器的主要方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#loadClass"><span class="nav-number">1.1.1.</span> <span class="nav-text">loadClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defineClass"><span class="nav-number">1.1.2.</span> <span class="nav-text">defineClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#findClass"><span class="nav-number">1.1.3.</span> <span class="nav-text">findClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getParent"><span class="nav-number">1.1.4.</span> <span class="nav-text">getParent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器的组织结构"><span class="nav-number">1.2.</span> <span class="nav-text">类加载器的组织结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器的委托模式"><span class="nav-number">1.3.</span> <span class="nav-text">类加载器的委托模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么使用委托模式"><span class="nav-number">1.3.1.</span> <span class="nav-text">为什么使用委托模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义类加载器"><span class="nav-number">2.</span> <span class="nav-text">自定义类加载器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"korbenblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
