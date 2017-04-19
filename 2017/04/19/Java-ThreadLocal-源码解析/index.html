@@ -1,0 +1,771 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,Basic," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="我们都知道ThreadLocal是用来保存线程局部变量的，即保存在ThreadLocal中的变量只有当前线程可以访问，而其他线程是不能访问和修改的。
+那么ThreadLocal具体是怎样实现的？今天就让我们来揭开她的神秘面纱。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java ThreadLocal 源码解析">
+<meta property="og:url" content="http://korben-chy.github.io/2017/04/19/Java-ThreadLocal-源码解析/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="我们都知道ThreadLocal是用来保存线程局部变量的，即保存在ThreadLocal中的变量只有当前线程可以访问，而其他线程是不能访问和修改的。
+那么ThreadLocal具体是怎样实现的？今天就让我们来揭开她的神秘面纱。">
+<meta property="og:image" content="http://korben-chy.github.io/images/thread_local/threadLocal.png">
+<meta property="og:updated_time" content="2017-04-19T15:46:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java ThreadLocal 源码解析">
+<meta name="twitter:description" content="我们都知道ThreadLocal是用来保存线程局部变量的，即保存在ThreadLocal中的变量只有当前线程可以访问，而其他线程是不能访问和修改的。
+那么ThreadLocal具体是怎样实现的？今天就让我们来揭开她的神秘面纱。">
+<meta name="twitter:image" content="http://korben-chy.github.io/images/thread_local/threadLocal.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2017/04/19/Java-ThreadLocal-源码解析/"/>
+
+
+
+
+
+  <title> Java ThreadLocal 源码解析 | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/19/Java-ThreadLocal-源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java ThreadLocal 源码解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T23:46:20+08:00">
+                2017-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/04/19/Java-ThreadLocal-源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们都知道<code>ThreadLocal</code>是用来保存线程局部变量的，即保存在<code>ThreadLocal</code>中的变量只有当前线程可以访问，而其他线程是不能访问和修改的。</p>
+<p>那么<code>ThreadLocal</code>具体是怎样实现的？今天就让我们来揭开她的神秘面纱。<br><a id="more"></a></p>
+<h1 id="ThreadLocal-API"><a href="#ThreadLocal-API" class="headerlink" title="ThreadLocal API"></a>ThreadLocal API</h1><p>在分析<code>ThreadLocal</code>源码之前，我们先来看她的主要<code>API</code>，了解下<code>ThreadLocal</code>的功能：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span>(<span class="params"></span>)</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params">T <span class="keyword">value</span></span>)</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span>(<span class="params"></span>)</span>;</div></pre></td></tr></table></figure></p>
+<p>这些<code>API</code>简单明了，我们从接口的名称就可以知道具体的作用。从上面的<code>API</code>中知道，<code>ThreadLocal</code>可以存储一个对象，类似于一个没有<code>Key</code>的<code>Map</code>，由于<code>ThreadLocal</code>只能保存一个值。</p>
+<h1 id="大胆猜测"><a href="#大胆猜测" class="headerlink" title="大胆猜测"></a>大胆猜测</h1><p>在分析了<code>ThreadLocal</code>的<code>API</code>后，并结合已知的<code>ThreadLocal</code>特性，我们来大胆的猜测下<code>ThreadLocal</code>的实现方式:</p>
+<ul>
+<li>保存在<code>ThreadLocal</code>的变量只能在当前线程访问，那么<code>ThreadLocal</code>应当是<code>Thread</code>的私有成员变量；</li>
+<li>每个线程可以持有多个<code>ThreadLocal</code>的实例，那么上一条猜测的成员变量应当是<code>ThreadLocal</code>的集合；</li>
+<li>我们可以通过<code>ThreadLocal.get()</code>方法方便的获取保存在<code>ThreadLocal</code>中的值，那么上面猜测的<code>ThreadLocal</code>的集合应当是一个<code>Map</code>。或者类似于<code>Map</code>的结构，而且这个类似结构以<code>ThreadLocal</code>的实例为<code>Key</code>，以我们保存的值为<code>Value</code>。</li>
+</ul>
+<p>好了，神棍预测结束，下面我们来深入<code>ThreadLocal</code>的源码，来验证或者否定这些预测。</p>
+<h1 id="深入-ThreadLocal-源码"><a href="#深入-ThreadLocal-源码" class="headerlink" title="深入 ThreadLocal 源码"></a>深入 ThreadLocal 源码</h1><h2 id="Thread-的“私有”成员变量–ThreadLocalMap"><a href="#Thread-的“私有”成员变量–ThreadLocalMap" class="headerlink" title="Thread 的“私有”成员变量–ThreadLocalMap"></a>Thread 的“私有”成员变量–ThreadLocalMap</h2><p>首先来验证我们的前两条预测：<code>ThreadLocal</code>以集合的形式作为<code>Thread</code>的私有成员变量存在。</p>
+<p>那就从<code>set</code>方法找起，看我们保存的值是怎样保存在<code>ThreadLocal</code>中的：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params">T <span class="keyword">value</span></span>) </span>&#123;</div><div class="line">    Thread t = Thread.currentThread();</div><div class="line">    ThreadLocal.ThreadLocalMap map = getMap(t);</div><div class="line">    <span class="keyword">if</span> (map != <span class="literal">null</span>)</div><div class="line">        map.<span class="keyword">set</span>(<span class="keyword">this</span>, <span class="keyword">value</span>);</div><div class="line">    <span class="function"><span class="keyword">else</span></span></div><div class="line">        <span class="title">createMap</span>(<span class="params">t, <span class="keyword">value</span></span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们的值被保存在了<code>ThreadLocal.ThreadLocalMap</code>中，继续：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ThreadLocal.<span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> t.threadLocals;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到<code>ThreadLocal.ThreadLocalMap</code>是<code>Thead</code>的成员变量，来前往<code>Thread.java</code>一探究竟：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/* ThreadLocal values pertaining <span class="keyword">to</span> this thread. This map <span class="keyword">is</span> maintained</div><div class="line"> * <span class="keyword">by</span> <span class="keyword">the</span> ThreadLocal <span class="built_in">class</span>. */</div><div class="line">ThreadLocal.ThreadLocalMap threadLocals = null;</div></pre></td></tr></table></figure>
+<p><code>ThreadLocal.ThreadLocalMap</code>是<code>Thread</code>的包访问权限的成员变量，负责保存<code>ThreadLocal</code>中的值。由于是<strong>包访问权限</strong>，因此保存在<code>ThreadLocal</code>中的值只能被当前线程访问和修改。</p>
+<p>我们的第一条预测可以说是部分正确了，那么<code>ThreadLocal.ThreadLocalMap</code>的内部结构是怎样的，是否保存了<code>ThreadLocal</code>的集合呢？</p>
+<h2 id="ThreadLocalMap–保存-TheadLocal-的集合"><a href="#ThreadLocalMap–保存-TheadLocal-的集合" class="headerlink" title="ThreadLocalMap–保存 TheadLocal 的集合"></a>ThreadLocalMap–保存 TheadLocal 的集合</h2><p><code>TheadLocalMap</code>是<code>ThreadLocal</code>的静态内部类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Entry[] table;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line">    ThreadLocalMap(ThreadLocal&lt;?&gt; firstKey, Object firstValue);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> Entry <span class="title">getEntry</span><span class="params">(ThreadLocal&lt;?&gt; key)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(ThreadLocal&lt;?&gt; key, Object value)</span> </span>&#123;</div><div class="line">        ...</div><div class="line">        </div><div class="line">        Entry[] tab = table;</div><div class="line">        </div><div class="line">        ...</div><div class="line">        </div><div class="line">        tab[i] = <span class="keyword">new</span> Entry(key, value);</div><div class="line">        <span class="keyword">int</span> sz = ++size;</div><div class="line">        </div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(ThreadLocal&lt;?&gt; key)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的代码中有两行关键代码：<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">Entry</span>[] table;</div></pre></td></tr></table></figure></p>
+<p>以及：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">Entry[] <span class="built_in">tab</span> = table;</div><div class="line"><span class="built_in">tab</span>[i] = <span class="keyword">new</span> Entry(<span class="built_in">key</span>, value);</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>到现在<code>ThreadLocal</code>在<code>Thread</code>中的存值方式已经明了了:<br><img src="/images/thread_local/threadLocal.png" alt="image"></p>
+<p><code>ThreadLocal</code>是以集合的方式在<code>Thread</code>中存在的（<code>Entry[]</code>），而存储的方式为<code>key-value</code>的键值对（<code>ThreadLocal</code>为<code>Key</code>，值为对应的<code>Value</code>）。</p>
+<p>那么问题来了，既然<code>Entry</code>在<code>Thead</code>中是以数组的形式而不是<code>Map</code>的形式存在的，那么这种存储方式是怎样做到快速检索的？</p>
+<h1 id="散列函数–快速检索-ThreadLocal"><a href="#散列函数–快速检索-ThreadLocal" class="headerlink" title="散列函数–快速检索 ThreadLocal"></a>散列函数–快速检索 ThreadLocal</h1><p>在<code>ThreadLocal</code>的<code>get</code>与<code>set</code>方法中，都是通过<code>threadLocalHashCode</code>来定位当前<code>ThreadLocal</code>的索引的：<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">     <span class="keyword">private</span> Entry getEntry(ThreadLocal&lt;?&gt; <span class="built_in">key</span>) &#123;</div><div class="line">         <span class="built_in">int</span> i = <span class="built_in">key</span>.threadLocalHashCode &amp; (table.length - <span class="number">1</span>);</div><div class="line">         Entry e = table[i];</div><div class="line">...</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     <span class="keyword">private</span> <span class="keyword">void</span> <span class="built_in">set</span>(ThreadLocal&lt;?&gt; <span class="built_in">key</span>, <span class="keyword">Object</span> value) &#123;</div><div class="line">              e = tab[i = nextIndex(i, len)]) &#123;</div><div class="line">...</div><div class="line">         <span class="built_in">int</span> i = <span class="built_in">key</span>.threadLocalHashCode &amp; (len<span class="number">-1</span>);</div><div class="line">         ...</div><div class="line">     &#125;</div></pre></td></tr></table></figure></p>
+<p>而<code>threadLocalHashCode</code>的值总是<code>HASH_INCREMENT</code>的倍数：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> threadLocalHashCode = nextHashCode();</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> AtomicInteger nextHashCode = <span class="keyword">new</span> AtomicInteger();</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="function"><span class="keyword">int</span> <span class="title">nextHashCode</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">return</span> nextHashCode.<span class="title">getAndAdd</span><span class="params">(HASH_INCREMENT)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先需要指明的是<code>code &amp; (len-1)</code>等价于<code>code % len</code>，是<code>%</code>的一种高效算法。查阅资料得知，<code>code % len</code>是<a href="https://zh.wikipedia.org/zh/%E5%93%88%E5%B8%8C%E8%A1%A8#.E5.A4.84.E7.90.86.E7.A2.B0.E6.92.9E" target="_blank" rel="external">散列函数</a>中的一种。</p>
+<p>何为<code>散列函数</code>？在维基百科中找到如下解释：</p>
+<blockquote>
+<p>散列函数能使对一个数据序列的访问过程更加迅速有效，通过散列函数，数据元素将被更快定位。</p>
+</blockquote>
+<p>通过<code>散列函数</code>，<code>ThreadLocalMap</code>构建了一个哈希表，来快速的定位<code>ThreadLocal</code>。</p>
+<p>在构造散列函数的过程中，神奇的数字–<code>0x61c88647</code>起到了重要的作用：<br><figure class="highlight zephir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * The difference between successively generated hash codes - turns</div><div class="line"> * implicit sequential thread-local IDs into near-optimally spread</div><div class="line"> * multiplicative hash values for power-of-two-sized tables.</div><div class="line"> */</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HASH_INCREMENT = <span class="number">0x61c88647</span>;</div></pre></td></tr></table></figure></p>
+<p>数字<code>0x61c88647</code>使得上面的散列函数生成的散列冲突率极低，而且均匀分布，我测试添加<code>100000</code>个<code>ThreadLocal</code>，都没有发现冲突。<code>0x61c88647</code>为什么这么神奇？有兴趣的童鞋可以看下<a href="http://www.javaspecialists.eu/archive/Issue164.html" target="_blank" rel="external">这篇</a>文章。</p>
+<p>虽然散列函数的冲突率很低，但总会有冲突产生。<code>ThreadLocal</code>使用线性探测（linear-probe）来解决冲突，<code>ThreadLocal</code>中解决冲突的代码为<code>nextIndex</code>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Increment i modulo len.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">nextIndex</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> ((i + <span class="number">1</span> &lt; len) ? i + <span class="number">1</span> : <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到<code>ThreadLocal</code>解决冲突的处理很简单，只是向后找，如果已经到末尾，则从头开始找。</p>
+<hr>
+<p>结束</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Basic/" rel="tag"># Basic</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/12/译：一个成功的Git分支模型/" rel="next" title="译：一个成功的Git分支模型">
+                <i class="fa fa-chevron-left"></i> 译：一个成功的Git分支模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadLocal-API"><span class="nav-number">1.</span> <span class="nav-text">ThreadLocal API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#大胆猜测"><span class="nav-number">2.</span> <span class="nav-text">大胆猜测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#深入-ThreadLocal-源码"><span class="nav-number">3.</span> <span class="nav-text">深入 ThreadLocal 源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Thread-的“私有”成员变量–ThreadLocalMap"><span class="nav-number">3.1.</span> <span class="nav-text">Thread 的“私有”成员变量–ThreadLocalMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocalMap–保存-TheadLocal-的集合"><span class="nav-number">3.2.</span> <span class="nav-text">ThreadLocalMap–保存 TheadLocal 的集合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#散列函数–快速检索-ThreadLocal"><span class="nav-number">4.</span> <span class="nav-text">散列函数–快速检索 ThreadLocal</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "1df5358122a34c2ea8ff83d099d7006e",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
