@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Performance," />
+  <meta name="keywords" content="HTTPS," />
 
 
 
@@ -87,22 +87,18 @@
 
 
 
-<meta name="description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
+<meta name="description" content="我们知道Http是不安全的，容易被黑客攻击，而Https是安全的。那为什么Https是安全的？下面我们来尝试回答这个问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Improving Layout Performance-Optimizing Layout Hierarchies">
-<meta property="og:url" content="http://korben-chy.github.io/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/index.html">
+<meta property="og:title" content="Https 实现原理">
+<meta property="og:url" content="http://korben-chy.github.io/2017/05/03/Https-实现原理/index.html">
 <meta property="og:site_name" content="Korben C .">
-<meta property="og:description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
-<meta property="og:image" content="http://developer.android.com/images/training/layout-listitem.png">
-<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-linearlayout.png">
-<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-layouttimes.png">
-<meta property="og:image" content="http://developer.android.com/images/training/hierarchy-relativelayout.png">
-<meta property="og:image" content="http://developer.android.com/images/tools/studio-inspections-config.png">
-<meta property="og:updated_time" content="2016-01-07T02:30:27.000Z">
+<meta property="og:description" content="我们知道Http是不安全的，容易被黑客攻击，而Https是安全的。那为什么Https是安全的？下面我们来尝试回答这个问题。">
+<meta property="og:image" content="http://korben-chy.github.io/images/https_principle/https_simplify_principle.png">
+<meta property="og:updated_time" content="2017-05-03T15:48:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Improving Layout Performance-Optimizing Layout Hierarchies">
-<meta name="twitter:description" content="就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。">
-<meta name="twitter:image" content="http://developer.android.com/images/training/layout-listitem.png">
+<meta name="twitter:title" content="Https 实现原理">
+<meta name="twitter:description" content="我们知道Http是不安全的，容易被黑客攻击，而Https是安全的。那为什么Https是安全的？下面我们来尝试回答这个问题。">
+<meta name="twitter:image" content="http://korben-chy.github.io/images/https_principle/https_simplify_principle.png">
 
 
 
@@ -130,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://korben-chy.github.io/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/"/>
+  <link rel="canonical" href="http://korben-chy.github.io/2017/05/03/Https-实现原理/"/>
 
 
 
 
 
-  <title> Improving Layout Performance-Optimizing Layout Hierarchies | Korben C . </title>
+  <title> Https 实现原理 | Korben C . </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -265,7 +261,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/03/Https-实现原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -286,7 +282,7 @@
             
             
               
-                Improving Layout Performance-Optimizing Layout Hierarchies
+                Https 实现原理
               
             
           </h1>
@@ -301,8 +297,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-06T23:20:59+08:00">
-                2015-11-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-03T23:48:42+08:00">
+                2017-05-03
               </time>
             
 
@@ -324,8 +320,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/HTTPS/" itemprop="url" rel="index">
+                    <span itemprop="name">HTTPS</span>
                   </a>
                 </span>
 
@@ -342,7 +338,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/05/03/Https-实现原理/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -369,46 +365,23 @@
       
 
       
-        <p>就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。<br><a id="more"></a></p>
-<p>一个很普遍的误解，使用最基本的布局结构就可以生成最高效的布局。然而，每一个添加到应用的组件都需要初始化、布局和绘制。例如，使用嵌套的<code>LinearLayout</code>会导致更深层次的布局结构。此外，嵌套多个<code>LinearLayout</code>的实例并使用<code>layout_weight</code>参数的代价尤其高，因为每一个子View需要被测量两次。当布局需要重复的创建时，这个问题会特别的明显，例如使用``ListView<code>或</code>GridView```时。</p>
-<p>这篇课程中，你将学习如何使用[Hierarchy Viewer][1]和[Layoutopt][2]来检查和优化布局。</p>
-<h2 id="Inspect-Your-Layout"><a href="#Inspect-Your-Layout" class="headerlink" title="Inspect Your Layout"></a>Inspect Your Layout</h2><p>Android SDK 提供了叫做[Hierarchy Viewer][1]的工具，它可以在应用的运行时来分析布局，帮助我们发现布局中的性能瓶颈。</p>
-<p>选择连接的设备或模拟器上运行的进程，Hierarchy Viewer会显示出相应的布局树。每个模块的交通灯代表了Measure, Layout 和 Draw性能，帮助我们识别潜在问题。</p>
-<p>例如，图1显示了一个作为<code>ListView</code>的item的布局。这个布局在左边显示了一个小的bitmap，在右侧显示了两个堆叠的文本条目。如果布局将被创建多次–比如这个–那优化的好处将加倍。</p>
-<p><img src="http://developer.android.com/images/training/layout-listitem.png" alt="figure 1"><strong>图1.</strong>作为ListView item的布局</p>
-<p><code>hierarchyviewer</code>工具可以在<code>&lt;sdk&gt;/tools/</code>下找到。打开后，Hierarchy Viewer会显示可用的设备列表及它运行的组件。点击<strong>Load View Hierarchy</strong>来查看选择组件的视图结构。例如，图2显示了图1中介绍的布局。</p>
-<p><img src="http://developer.android.com/images/training/hierarchy-linearlayout.png" alt="firure 2"><strong>图2.</strong>图1中布局的布局结构，使用了嵌套的<code>LinearLayout</code>。</p>
-<p><img src="http://developer.android.com/images/training/hierarchy-layouttimes.png" alt="firgure 3"><strong>图3.</strong>点击一个层次结构节点来显示其性能时间。</p>
-<p>在图2中，我们可以看到这个三层的结构的text条目中有一些问题。点击条目可以看到View创建的每一个阶段需要的时间（图3）.我们可以很清楚的看到哪些条目需要最多的时间来进行measure、layout和render。</p>
-<p>使用当前的布局，渲染一个完整的List条目花费的时间是：</p>
-<ul>
-<li>Measure: 0.977ms</li>
-<li>Layout: 0.167ms</li>
-<li>Draw: 2.717ms</li>
-</ul>
-<h2 id="Revise-Your-Layout"><a href="#Revise-Your-Layout" class="headerlink" title="Revise Your Layout"></a>Revise Your Layout</h2><p>因为使用了堆叠的<code>LinearLaout</code>导致了布局的性能降低，所以通过扁平化的布局或许可以提高布局的性能——使布局浅而宽，而不是窄而深。使用<code>RelativeLayout</code>作为根结点可以做到这一点。所以，当使用了<code>RelativeLayout</code>作为根结点后，我们可以看到布局变成2层结构了。下而是对新布局的检测：</p>
-<p><img src="http://developer.android.com/images/training/hierarchy-relativelayout.png" alt="Figure 4"><strong>图4.</strong>使用<code>RelativeLayout</code>后，图1中的布局层级</p>
-<p>现在渲染List的一个条目花费的时间是：</p>
-<ul>
-<li>Measure: 0.598ms</li>
-<li>Layout: 0.110ms</li>
-<li>Draw: 2.146ms</li>
-</ul>
-<p>虽然看上去只有很小的提升，但是作为List的条目，提升的时间就不仅仅如此了。</p>
-<p>导致这些时间差异的最大原因是使用了<code>LinearLayout</code>的<code>layout_weight</code>设计，这会降低measure的速度。上面只是一个关于每一个布局都有自己合适用途的例子，你在使用过程中要仔细考虑是否有必要使用layout weight属性。</p>
-<h2 id="Use-Lint"><a href="#Use-Lint" class="headerlink" title="Use Lint"></a>Use Lint</h2><p>使用lint工具来分析你的布局文件并发现需要优化的地方是一个很好的实践。Lint替换了Layoutopt，因为它有更强大的功能。一些lint规则的例子：</p>
-<ul>
-<li>使用compound drawables——相对于包含<code>ImangeView</code>和<code>TextView</code>的<code>LinearLayout</code>，使用compound drawables会更有效率。</li>
-<li>合并根框架——如果一个<code>FrameLayout</code>是布局的根结点，但是没有提供背景、边距或其他的等等，那我们可以更有效率的merge结点来替换它。</li>
-<li>无用的分支——删除没有任何子View或背景的布局（因为它不可见），这样可以得到一个更高效的布局结构。</li>
-<li>无用的父结点——如果布局只有子View，但没有兄弟View，不是<code>ScrollView</code>或根结点，而且没有背景，那它把这个布局删除并把它的子View提升为父结点来得到一个更扁平高效的布局结构。</li>
-<li>深层次的布局——含有很多层叠的布局的性能会很差。可以考虑使用<code>RelativeLayout</code>或<code>GridLayout</code>这样的扁平布局来提升性能。默认的最大层级是10.</li>
-</ul>
-<p>使用Lint的另一个好处是它被Android Studio集成了。在编译工程时，Lint会自动的执行。</p>
-<p>你还可以通过Android Studio的<strong>File&gt;Setting&gt;Project Settings</strong>选项来进行管理、配置。检查配置页面显示了支持的检查项。<br><img src="http://developer.android.com/images/tools/studio-inspections-config.png" alt="Figure 5"><strong>图5.</strong>检查配置</p>
-<p>Lint可以自动的修复问题、提供建议，还可以直接跳转到有问题的代码处。</p>
-<hr>
-<p><em>本篇文章译自<a href="http://developer.android.com/intl/zh-cn/training/improving-layouts/optimizing-layout.html" target="_blank" rel="external">Optimizing Layout Hierarchies</a></em></p>
+        <p>我们知道<code>Http</code>是不安全的，容易被黑客攻击，而<code>Https</code>是安全的。那为什么<code>Https</code>是安全的？下面我们来尝试回答这个问题。<br><a id="more"></a></p>
+<h1 id="Https-与-Http"><a href="#Https-与-Http" class="headerlink" title="Https 与 Http"></a>Https 与 Http</h1><h2 id="Http-是不安全的"><a href="#Http-是不安全的" class="headerlink" title="Http 是不安全的"></a>Http 是不安全的</h2><p><code>HTTP</code>传输过程是是明文的，我们上网浏览过、提交过的内容，所有在后台工作的人、中间节点都可以查看到。比如路由器的所有者、网线途径路线的不明意图者、省市运营商、运营商骨干网、跨运营商网关等都能够查看。甚至可以被篡改、伪造，造成个人的隐私泄露。</p>
+<h2 id="Https-的传输过程是加密的"><a href="#Https-的传输过程是加密的" class="headerlink" title="Https 的传输过程是加密的"></a>Https 的传输过程是加密的</h2><p>要解决<code>HTTP</code>带来的问题，<code>HTTPS(Hypertext Transfer Protocol Secure)</code>应运而生。<code>HTTPS</code>是基于<code>HTTP</code>，使用<code>SSL/TLS</code>加密传输过程中的数据包，从而可以防止<strong>窃听</strong>和<strong>中间人攻击</strong>。</p>
+<h1 id="Https-是怎样加密的"><a href="#Https-是怎样加密的" class="headerlink" title="Https 是怎样加密的"></a>Https 是怎样加密的</h1><p><code>HTTPS</code>是怎样进行加密从而保证数据传输的安全性的？</p>
+<h2 id="对称加密–加密加密协议"><a href="#对称加密–加密加密协议" class="headerlink" title="对称加密–加密加密协议"></a>对称加密–加密加密协议</h2><p>在数据的传输过程中，例如从<code>Server</code>端到<code>Client</code>端，把传输的数据使用秘钥加密，这样可以保证数据内容只有<code>Server</code>和<code>Client</code>能够读懂，而<code>中间人</code>只能看到密文，不知道其真正的含义。</p>
+<p>我们知道加密的方式有<code>对称加密</code>和<code>非对称加密</code>。<code>对称加密</code>相比于<code>非对称加密</code>速度快很多，几乎不会增加系统的开销，因此<code>HTTPS</code>采用了<code>对称加密</code>算法来加密数据。</p>
+<p>然而，<code>对称加密</code>的缺点是加密与解密的双发必须取得相同的秘钥，那么从<code>Server</code>端到<code>Client</code>端，我们怎样保证<code>秘钥</code>不被窃取呢？</p>
+<h2 id="非对称加密–加密对称加密的秘钥"><a href="#非对称加密–加密对称加密的秘钥" class="headerlink" title="非对称加密–加密对称加密的秘钥"></a>非对称加密–加密对称加密的秘钥</h2><p>这时候就需要<a href="https://zh.wikipedia.org/wiki/%E5%85%AC%E5%BC%80%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86" target="_blank" rel="external"><code>非对称加密</code></a>出场了。</p>
+<p><code>非对称加密</code>由<code>加密秘钥</code>和<code>解密密钥</code>组成，这两个密钥是数学相关，用某用户密钥加密后所得的信息，只能用该用户的解密密钥才能解密。如果知道了其中一个，并不能计算出另外一个。因此如果公开了一对密钥中的一个，并不会危害到另外一个的秘密性质。称公开的密钥为公钥；不公开的密钥为私钥。</p>
+<p>虽然<code>非对称加密</code>效率略低，但是当数据量很小时这些开销可以忽略不计，因此使用<code>非对称加密</code>算法来加密<code>对称加密</code>的秘钥是一个不错的选择。</p>
+<p><code>Client</code>端使用<code>Server</code>端提供的<code>公钥</code>加密密码，<code>Server</code>端可以使用解密用的<code>私钥</code>解密密码，这样就解决了<code>密钥</code>传输的问题。</p>
+<p>那么，<code>Client</code>端怎样辨别传输过来的加密<code>公钥</code>是有效的而不是伪造的？</p>
+<h2 id="数字证书–证明身份"><a href="#数字证书–证明身份" class="headerlink" title="数字证书–证明身份"></a>数字证书–证明身份</h2><p>要证明自己的身份，网站需要申请<code>数字证书</code>。</p>
+<p>什么是<code>数字证书</code>？数字证书是一个经证书授权中心（具备公信力的机构，CA）数字签名的包含公开密钥拥有者信息以及公开密钥的文件。</p>
+<p><code>数字证书</code>保证了当前访问的网站是经授权机构认证的合法的网站，同时提供了加密用的<code>公钥</code>。</p>
+<p>浏览器在验证了<code>数字证书</code>的合法性后，会进行后续的通信过程。</p>
+<h1 id="Https-的简化流程"><a href="#Https-的简化流程" class="headerlink" title="Https 的简化流程"></a>Https 的简化流程</h1><p><img src="/images/https_principle/https_simplify_principle.png" alt="image"></p>
 
       
     </div>
@@ -438,7 +411,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Performance/" rel="tag"># Performance</a>
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
           
         </div>
       
@@ -451,8 +424,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/04/Performance-Tips/" rel="next" title="Performance Tips">
-                <i class="fa fa-chevron-left"></i> Performance Tips
+              <a href="/2017/04/19/Java-ThreadLocal-源码解析/" rel="next" title="Java ThreadLocal 源码解析">
+                <i class="fa fa-chevron-left"></i> Java ThreadLocal 源码解析
               </a>
             
           </div>
@@ -460,10 +433,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/10/Volley-完全解析/" rel="prev" title="Volley 完全解析">
-                Volley 完全解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -594,7 +563,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Inspect-Your-Layout"><span class="nav-number">1.</span> <span class="nav-text">Inspect Your Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Revise-Your-Layout"><span class="nav-number">2.</span> <span class="nav-text">Revise Your Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Lint"><span class="nav-number">3.</span> <span class="nav-text">Use Lint</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Https-与-Http"><span class="nav-number">1.</span> <span class="nav-text">Https 与 Http</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Http-是不安全的"><span class="nav-number">1.1.</span> <span class="nav-text">Http 是不安全的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Https-的传输过程是加密的"><span class="nav-number">1.2.</span> <span class="nav-text">Https 的传输过程是加密的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Https-是怎样加密的"><span class="nav-number">2.</span> <span class="nav-text">Https 是怎样加密的</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密–加密加密协议"><span class="nav-number">2.1.</span> <span class="nav-text">对称加密–加密加密协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密–加密对称加密的秘钥"><span class="nav-number">2.2.</span> <span class="nav-text">非对称加密–加密对称加密的秘钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字证书–证明身份"><span class="nav-number">2.3.</span> <span class="nav-text">数字证书–证明身份</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Https-的简化流程"><span class="nav-number">3.</span> <span class="nav-text">Https 的简化流程</span></a></li></ol></div>
             
 
           </div>
