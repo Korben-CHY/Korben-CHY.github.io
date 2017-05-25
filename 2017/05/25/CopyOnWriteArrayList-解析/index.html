@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Performance," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="有时我们的布局中需要一个很少使用的复杂views，它们可能是条止的详细信息、进度条指示器或撤销的消息。我们可以通过在需要时再加载这些复杂View来减少内存使用和渲染时间。">
+<meta name="description" content="我们知道ArrayList不是线程安全的，可以通过：Collections.synchronizedList(arrayList)来将ArrayList转换为一个线程安全的 List，而CopyOnWriteArrayList生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Improving Layout Performance-Loading Views On Demand">
-<meta property="og:url" content="http://korben-chy.github.io/2015/11/11/Improving-Layout-Performance-Loading-Views-On-Demand/index.html">
+<meta property="og:title" content="CopyOnWriteArrayList 解析">
+<meta property="og:url" content="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/index.html">
 <meta property="og:site_name" content="Korben C .">
-<meta property="og:description" content="有时我们的布局中需要一个很少使用的复杂views，它们可能是条止的详细信息、进度条指示器或撤销的消息。我们可以通过在需要时再加载这些复杂View来减少内存使用和渲染时间。">
-<meta property="og:updated_time" content="2016-01-07T02:30:27.000Z">
+<meta property="og:description" content="我们知道ArrayList不是线程安全的，可以通过：Collections.synchronizedList(arrayList)来将ArrayList转换为一个线程安全的 List，而CopyOnWriteArrayList生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。">
+<meta property="og:updated_time" content="2017-05-25T13:09:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Improving Layout Performance-Loading Views On Demand">
-<meta name="twitter:description" content="有时我们的布局中需要一个很少使用的复杂views，它们可能是条止的详细信息、进度条指示器或撤销的消息。我们可以通过在需要时再加载这些复杂View来减少内存使用和渲染时间。">
+<meta name="twitter:title" content="CopyOnWriteArrayList 解析">
+<meta name="twitter:description" content="我们知道ArrayList不是线程安全的，可以通过：Collections.synchronizedList(arrayList)来将ArrayList转换为一个线程安全的 List，而CopyOnWriteArrayList生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://korben-chy.github.io/2015/11/11/Improving-Layout-Performance-Loading-Views-On-Demand/"/>
+  <link rel="canonical" href="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/"/>
 
 
 
 
 
-  <title> Improving Layout Performance-Loading Views On Demand | Korben C . </title>
+  <title> CopyOnWriteArrayList 解析 | Korben C . </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -259,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/11/11/Improving-Layout-Performance-Loading-Views-On-Demand/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -280,7 +280,7 @@
             
             
               
-                Improving Layout Performance-Loading Views On Demand
+                CopyOnWriteArrayList 解析
               
             
           </h1>
@@ -295,8 +295,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-11T23:10:03+08:00">
-                2015-11-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-25T21:09:37+08:00">
+                2017-05-25
               </time>
             
 
@@ -318,8 +318,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -336,7 +336,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2015/11/11/Improving-Layout-Performance-Loading-Views-On-Demand/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/05/25/CopyOnWriteArrayList-解析/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -363,19 +363,16 @@
       
 
       
-        <p>有时我们的布局中需要一个很少使用的复杂views，它们可能是条止的详细信息、进度条指示器或撤销的消息。我们可以通过在需要时再加载这些复杂View来减少内存使用和渲染时间。<br><a id="more"></a></p>
-<h2 id="Define-a-ViewStub"><a href="#Define-a-ViewStub" class="headerlink" title="Define a ViewStub"></a>Define a ViewStub</h2><p><code>[ViewStub][1]</code>是一个轻量级的View，它在布局中不占任何的空间，不绘制任何东西也不参与布局。因此，它可以很容易的添加到视图中或从视图中移除。每一个<code>ViewStub</code>只需要包含<code>android:layout</code>属性来指定布局。</p>
-<p>下面的<code>ViewStub</code>包含了一个透明进度条的布局。只有当新的条止被引入应用时才可见。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;ViewStub</div><div class="line">    android:id=<span class="string">"@+id/stub_import"</span></div><div class="line">    android:inflatedId=<span class="string">"@+id/panel_import"</span></div><div class="line">    android:layout=<span class="string">"@layout/progress_overlay"</span></div><div class="line">    android:layout_width=<span class="string">"fill_parent"</span></div><div class="line">    android:layout_height=<span class="string">"wrap_content"</span></div><div class="line">    android:layout_gravity=<span class="string">"bottom"</span> /&gt;</div></pre></td></tr></table></figure>
-<h2 id="Load-the-ViewStub-Layout"><a href="#Load-the-ViewStub-Layout" class="headerlink" title="Load the ViewStub Layout"></a>Load the ViewStub Layout</h2><p>要加载<code>ViewStub</code>指定的布局。我们可以通过改变View的visiblity属性（通过调用<code>setVisibility(View.VISIBLE)</code>）或调用<code>inflate()</code>函数。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">((ViewStub) findViewById(R.id.stub_import)).setVisibility(View.VISIBLE);</div><div class="line"><span class="comment">// or</span></div><div class="line">View importPanel = ((ViewStub) findViewById(R.id.stub_import)).inflate();</div></pre></td></tr></table></figure>
-<blockquote><p><strong>Note:</strong><code>inflate()</code>函数在结束后会返回<code>View</code>，因此你不需要调用<code>findViewById()</code>来和布局交互。</p>
-</blockquote>
-<p>当视图visible或inflated后，<code>ViewStub</code>结点就不在视图结构中了。它会被指定的布局和<code>android:inflatedId</code>指定的ID替换。（由<code>android:id</code>属性为<code>ViewStub</code>指定的ID在<code>ViewStub</code>布局visible或inflated后才有效。）</p>
-<blockquote><p><strong>Note:</strong>当前<code>ViewStub</code>的一个缺点是它不支持<code>&lt;merge/&gt;</code>标签。</p>
-</blockquote>
+        <p>我们知道<code>ArrayList</code>不是线程安全的，可以通过：<code>Collections.synchronizedList(arrayList)</code>来将<code>ArrayList</code>转换为一个线程安全的 List，而<code>CopyOnWriteArrayList</code>生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。<br><a id="more"></a></p>
+<h1 id="1、CopyOnWriteArrayList-官方介绍"><a href="#1、CopyOnWriteArrayList-官方介绍" class="headerlink" title="1、CopyOnWriteArrayList 官方介绍"></a>1、CopyOnWriteArrayList 官方介绍</h1><p><code>CopyOnWriteArrayList</code> 是<code>ArrayList</code>的一个变体，其中所有可变操作（add、set 等等）都是通过对底层数组进行一次新的复制来实现的。</p>
+<p>这一般需要很大的开销，但是当遍历操作的数量大大超过可变操作的数量时，这种方法可能比其他替代方法更<br>有效。在不能或不想进行同步遍历，但又需要从并发线程中排除冲突时，它也很有用。“快照”风格的迭代器方法在创建迭代器时使用了对数组状态的引用。此数组在迭代器的生存期内不会更改，因此不可能发生冲突，并且迭代器保证不会抛出i<code>ConcurrentModificationException</code>。创建迭代器以后，迭代器就不会反映列表的添加、移除或者更改。在迭代器上进行的元素更改操作（remove、set 和 add）不受支持。这些方法将抛出<code>UnsupportedOperationException</code>。</p>
+<h1 id="2、源代码解析"><a href="#2、源代码解析" class="headerlink" title="2、源代码解析"></a>2、源代码解析</h1><p><code>CopyOnWriteArrayList</code>的<code>add</code>方法与<code>set</code>方法思想相同，因此我们这里只解析<code>add</code>方法。</p>
+<p>下面来看源代码：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> boolean <span class="title">add</span>(<span class="params">E e</span>) </span>&#123;</div><div class="line">    final ReentrantLock <span class="keyword">lock</span> = <span class="keyword">this</span>.<span class="keyword">lock</span>;</div><div class="line">    <span class="keyword">lock</span>.<span class="keyword">lock</span>();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Object[] elements = getArray();</div><div class="line">        <span class="keyword">int</span> len = elements.length;</div><div class="line">        Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</div><div class="line">        newElements[len] = e;</div><div class="line">        setArray(newElements);</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">lock</span>.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function">final <span class="keyword">void</span> <span class="title">setArray</span>(<span class="params">Object[] a</span>) </span>&#123;</div><div class="line">    array = a;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在上面的代码中，在添加新的值时，除了加锁操作保证同步外，对容器数组进行了一次拷贝，然后使用新拷贝的数组替换原来的数组。这样所有的读操作都是基于不变的旧数组的，而写操作通过<code>ReentrantLock</code>保证了同步。</p>
+<h1 id="3、适用场景"><a href="#3、适用场景" class="headerlink" title="3、适用场景"></a>3、适用场景</h1><p>由于所有的修改都是基于拷贝的新数组中，而所有的读操作都是基于不会改变的老数组，所以读写是完全分离的，不会发生冲突，读读之间也不会发生冲突，只有写写之间是互斥的，需要加锁。由于复制的成本是昂贵的，因此<code>CopyOnWriteArrayList</code>适用于“当遍历操作的数量大大超过可变操作的数量”的场景。</p>
+<p>像官方文档中提到的，由于“读”操作不需要同步，只有“写”操作需要加同步，所以也适用于“在不能或不想进行同步遍历，但又需要从并发线程中排除冲突”的场景。</p>
 <hr>
-<p><em>本篇文章译自 <a href="http://developer.android.com/intl/zh-cn/training/improving-layouts/loading-ondemand.html" target="_blank" rel="external">Loading Views On Demand</a></em></p>
+<p>完</p>
 
       
     </div>
@@ -405,7 +402,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Performance/" rel="tag"># Performance</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -418,8 +415,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/10/Improving-Layout-Performance-Re-using-Layouts-with-include/" rel="next" title="Improving Layout Performance-Re-using Layouts with &lt;include/&gt">
-                <i class="fa fa-chevron-left"></i> Improving Layout Performance-Re-using Layouts with &lt;include/&gt
+              <a href="/2017/05/25/常见-WEB-安全问题/" rel="next" title="常见 WEB 安全问题">
+                <i class="fa fa-chevron-left"></i> 常见 WEB 安全问题
               </a>
             
           </div>
@@ -427,10 +424,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/12/SmoothProgressBar-解析-CircularProgressBar/" rel="prev" title="SmoothProgressBar 解析(CircularProgressBar)">
-                SmoothProgressBar 解析(CircularProgressBar) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -561,7 +554,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Define-a-ViewStub"><span class="nav-number">1.</span> <span class="nav-text">Define a ViewStub</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Load-the-ViewStub-Layout"><span class="nav-number">2.</span> <span class="nav-text">Load the ViewStub Layout</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、CopyOnWriteArrayList-官方介绍"><span class="nav-number">1.</span> <span class="nav-text">1、CopyOnWriteArrayList 官方介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、源代码解析"><span class="nav-number">2.</span> <span class="nav-text">2、源代码解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、适用场景"><span class="nav-number">3.</span> <span class="nav-text">3、适用场景</span></a></li></ol></div>
             
 
           </div>

