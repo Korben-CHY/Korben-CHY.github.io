@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Java," />
+  <meta name="keywords" content="Java,Concurrent," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="我们知道ArrayList不是线程安全的，可以通过：Collections.synchronizedList(arrayList)来将ArrayList转换为一个线程安全的 List，而CopyOnWriteArrayList生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。">
+<meta name="description" content="在Java中，使用synchronized是我们最常用的同步手段。而在Java 5中，又新引入了ReentrantLock来提供同步的功能，那么ReentrantLock相比于synchronized有何异同呢？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CopyOnWriteArrayList 解析">
-<meta property="og:url" content="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/index.html">
+<meta property="og:title" content="ReentrantLock VS synchronized">
+<meta property="og:url" content="http://korben-chy.github.io/2017/06/20/ReentrantLock-VS-synchronized/index.html">
 <meta property="og:site_name" content="Korben C .">
-<meta property="og:description" content="我们知道ArrayList不是线程安全的，可以通过：Collections.synchronizedList(arrayList)来将ArrayList转换为一个线程安全的 List，而CopyOnWriteArrayList生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。">
-<meta property="og:updated_time" content="2017-05-25T13:09:37.000Z">
+<meta property="og:description" content="在Java中，使用synchronized是我们最常用的同步手段。而在Java 5中，又新引入了ReentrantLock来提供同步的功能，那么ReentrantLock相比于synchronized有何异同呢？">
+<meta property="og:updated_time" content="2017-06-20T06:56:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CopyOnWriteArrayList 解析">
-<meta name="twitter:description" content="我们知道ArrayList不是线程安全的，可以通过：Collections.synchronizedList(arrayList)来将ArrayList转换为一个线程安全的 List，而CopyOnWriteArrayList生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。">
+<meta name="twitter:title" content="ReentrantLock VS synchronized">
+<meta name="twitter:description" content="在Java中，使用synchronized是我们最常用的同步手段。而在Java 5中，又新引入了ReentrantLock来提供同步的功能，那么ReentrantLock相比于synchronized有何异同呢？">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/"/>
+  <link rel="canonical" href="http://korben-chy.github.io/2017/06/20/ReentrantLock-VS-synchronized/"/>
 
 
 
 
 
-  <title> CopyOnWriteArrayList 解析 | Korben C . </title>
+  <title> ReentrantLock VS synchronized | Korben C . </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -259,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/06/20/ReentrantLock-VS-synchronized/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -280,7 +280,7 @@
             
             
               
-                CopyOnWriteArrayList 解析
+                ReentrantLock VS synchronized
               
             
           </h1>
@@ -295,8 +295,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-25T21:09:37+08:00">
-                2017-05-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T14:56:34+08:00">
+                2017-06-20
               </time>
             
 
@@ -336,7 +336,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/05/25/CopyOnWriteArrayList-解析/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/06/20/ReentrantLock-VS-synchronized/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -363,14 +363,29 @@
       
 
       
-        <p>我们知道<code>ArrayList</code>不是线程安全的，可以通过：<code>Collections.synchronizedList(arrayList)</code>来将<code>ArrayList</code>转换为一个线程安全的 List，而<code>CopyOnWriteArrayList</code>生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。<br><a id="more"></a></p>
-<h1 id="1、CopyOnWriteArrayList-官方介绍"><a href="#1、CopyOnWriteArrayList-官方介绍" class="headerlink" title="1、CopyOnWriteArrayList 官方介绍"></a>1、CopyOnWriteArrayList 官方介绍</h1><p><code>CopyOnWriteArrayList</code> 是<code>ArrayList</code>的一个变体，其中所有可变操作（add、set 等等）都是通过对底层数组进行一次新的复制来实现的。</p>
-<p>这一般需要很大的开销，但是当遍历操作的数量大大超过可变操作的数量时，这种方法可能比其他替代方法更<br>有效。在不能或不想进行同步遍历，但又需要从并发线程中排除冲突时，它也很有用。“快照”风格的迭代器方法在创建迭代器时使用了对数组状态的引用。此数组在迭代器的生存期内不会更改，因此不可能发生冲突，并且迭代器保证不会抛出i<code>ConcurrentModificationException</code>。创建迭代器以后，迭代器就不会反映列表的添加、移除或者更改。在迭代器上进行的元素更改操作（remove、set 和 add）不受支持。这些方法将抛出<code>UnsupportedOperationException</code>。</p>
-<h1 id="2、源代码解析"><a href="#2、源代码解析" class="headerlink" title="2、源代码解析"></a>2、源代码解析</h1><p><code>CopyOnWriteArrayList</code>的<code>add</code>方法与<code>set</code>方法思想相同，因此我们这里只解析<code>add</code>方法。</p>
-<p>下面来看源代码：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> boolean <span class="title">add</span>(<span class="params">E e</span>) </span>&#123;</div><div class="line">    final ReentrantLock <span class="keyword">lock</span> = <span class="keyword">this</span>.<span class="keyword">lock</span>;</div><div class="line">    <span class="keyword">lock</span>.<span class="keyword">lock</span>();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Object[] elements = getArray();</div><div class="line">        <span class="keyword">int</span> len = elements.length;</div><div class="line">        Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</div><div class="line">        newElements[len] = e;</div><div class="line">        setArray(newElements);</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">lock</span>.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function">final <span class="keyword">void</span> <span class="title">setArray</span>(<span class="params">Object[] a</span>) </span>&#123;</div><div class="line">    array = a;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在上面的代码中，在添加新的值时，除了加锁操作保证同步外，对容器数组进行了一次拷贝，然后使用新拷贝的数组替换原来的数组。这样所有的读操作都是基于不变的旧数组的，而写操作通过<code>ReentrantLock</code>保证了同步。</p>
-<h1 id="3、适用场景"><a href="#3、适用场景" class="headerlink" title="3、适用场景"></a>3、适用场景</h1><p>由于所有的修改都是基于拷贝的新数组中，而所有的读操作都是基于不会改变的老数组，所以读写是完全分离的，不会发生冲突，读读之间也不会发生冲突，只有写写之间是互斥的，需要加锁。由于复制的成本是昂贵的，因此<code>CopyOnWriteArrayList</code>适用于“当遍历操作的数量大大超过可变操作的数量”的场景。</p>
-<p>像官方文档中提到的，由于“读”操作不需要同步，只有“写”操作需要加同步，所以也适用于“在不能或不想进行同步遍历，但又需要从并发线程中排除冲突”的场景。</p>
+        <p>在<code>Java</code>中，使用<code>synchronized</code>是我们最常用的同步手段。而在<code>Java 5</code>中，又新引入了<code>ReentrantLock</code>来提供同步的功能，那么<code>ReentrantLock</code>相比于<code>synchronized</code>有何异同呢？<br><a id="more"></a></p>
+<h1 id="1、什么是-ReentrantLock？"><a href="#1、什么是-ReentrantLock？" class="headerlink" title="1、什么是 ReentrantLock？"></a>1、什么是 ReentrantLock？</h1><p>根据 Java 官方文档：</p>
+<blockquote>
+<p>ReentrantLock is a reentrant mutual exclusion Lock with the same basic behaviour and semantics as the implicit monitor lock accessed using synchronized methods and statements, but with extended capabilities.</p>
+<p><code>ReentrantLock</code>是一个可重入的互斥锁，它具有与使用<code>synchronized</code>方法和语句所访问的隐式监视器锁相同的一些基本行为和语义，但功能更强大。</p>
+</blockquote>
+<h1 id="2、ReentrantLock-和-synchronized-的不同点"><a href="#2、ReentrantLock-和-synchronized-的不同点" class="headerlink" title="2、ReentrantLock 和 synchronized 的不同点"></a>2、ReentrantLock 和 synchronized 的不同点</h1><h2 id="2-1、语法使用上的不同"><a href="#2-1、语法使用上的不同" class="headerlink" title="2.1、语法使用上的不同"></a>2.1、语法使用上的不同</h2><ol>
+<li>在写法上，使用<code>synchronized</code>关键字时，我们需要标明<code>synchronized</code>关键字来获取锁，而获取的锁会被隐式的释放；而使用<code>ReentrantLock</code>时，我们需要通过<code>lock()</code>方法来获得锁，通过<code>unlock()</code>方法来释放锁。</li>
+<li><code>synchronized</code>强制所有锁的获取和释放必须在“块结构”中，而<code>ReentrantLock</code>提供了更加灵活的方法，它允许锁的获取和释放在不同的块中，而且在使用多个锁时，可以以任意的顺序释放：<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> ReentrantLock <span class="keyword">lock</span>;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  ...</div><div class="line">  <span class="keyword">lock</span>.<span class="keyword">lock</span>();</div><div class="line">  ...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  ...</div><div class="line">  <span class="keyword">lock</span>.unlock();</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="2-2、功能上的不同"><a href="#2-2、功能上的不同" class="headerlink" title="2.2、功能上的不同"></a>2.2、功能上的不同</h2><ol>
+<li><code>ReentrantLock</code>可以创建公平锁，从而使等待最长时间的线程获得锁。当然，<code>ReentrantLock</code>并没有提供其他额外的改变获得锁顺序的方法。</li>
+<li><code>ReentrantLock</code>支持<code>lockInterruptibly()</code>，使得当前线程在等待锁的过程中可以被中断；</li>
+<li><code>ReentrantLock</code>可以通过方法<code>tryLock()</code>，从而在指定的时间内尝试获取锁，如果超过时间仍未获取锁，则返回。</li>
+<li><code>ReentrantLock</code>可以通过方法<code>isHeldByCurrentThread()</code>来判断当前线程是否已经获得锁；</li>
+<li><code>ReentrantLock</code>可以通过方法<code>isLocked()</code>来判断是否有线程持有这个锁；</li>
+</ol>
+<p>上述这些所有的不同也可以说是<code>ReentrantLock</code>相对于<code>synchronized</code>的优势。</p>
+<h1 id="3、ReentrantLock-的不足"><a href="#3、ReentrantLock-的不足" class="headerlink" title="3、ReentrantLock 的不足"></a>3、ReentrantLock 的不足</h1><ol>
+<li>为了保证异常情况下锁的释放，<code>ReentrantLock</code>获取和释放锁必须写在<code>try/finally</code>代码块中，而<code>synchronized</code>不用。</li>
+<li><code>ReentrantLock</code>将释放锁的权限和责任交给了开发人员，而开发人员就有可能释放锁，这就导致了问题的发生。</li>
+</ol>
 <hr>
 <p>完</p>
 
@@ -404,6 +419,8 @@
           
             <a href="/tags/Java/" rel="tag"># Java</a>
           
+            <a href="/tags/Concurrent/" rel="tag"># Concurrent</a>
+          
         </div>
       
 
@@ -415,8 +432,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/25/常见-WEB-安全问题/" rel="next" title="常见 WEB 安全问题">
-                <i class="fa fa-chevron-left"></i> 常见 WEB 安全问题
+              <a href="/2017/05/25/CopyOnWriteArrayList-解析/" rel="next" title="CopyOnWriteArrayList 解析">
+                <i class="fa fa-chevron-left"></i> CopyOnWriteArrayList 解析
               </a>
             
           </div>
@@ -424,10 +441,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/20/ReentrantLock-VS-synchronized/" rel="prev" title="ReentrantLock VS synchronized">
-                ReentrantLock VS synchronized <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -558,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、CopyOnWriteArrayList-官方介绍"><span class="nav-number">1.</span> <span class="nav-text">1、CopyOnWriteArrayList 官方介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、源代码解析"><span class="nav-number">2.</span> <span class="nav-text">2、源代码解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、适用场景"><span class="nav-number">3.</span> <span class="nav-text">3、适用场景</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、什么是-ReentrantLock？"><span class="nav-number">1.</span> <span class="nav-text">1、什么是 ReentrantLock？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、ReentrantLock-和-synchronized-的不同点"><span class="nav-number">2.</span> <span class="nav-text">2、ReentrantLock 和 synchronized 的不同点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1、语法使用上的不同"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、语法使用上的不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2、功能上的不同"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、功能上的不同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、ReentrantLock-的不足"><span class="nav-number">3.</span> <span class="nav-text">3、ReentrantLock 的不足</span></a></li></ol></div>
             
 
           </div>
