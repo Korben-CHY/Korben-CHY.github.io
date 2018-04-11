@@ -1,0 +1,804 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Way" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="尽管你知道 Java NIO 非阻塞（Non-blocking）功能是如何工作的（利用Selector、Channel、Buffer 等），但是设计一个非阻塞的服务端仍然是非常困难的。相比于阻塞 IO，非阻塞 IO 具有许多的挑战。这篇非阻塞服务端教程会讨论非阻塞服务将面临的主要挑战，并会提供一些可能的解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO-10-非阻塞（Non-blocking）服务端">
+<meta property="og:url" content="http://korben-chy.github.io/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="尽管你知道 Java NIO 非阻塞（Non-blocking）功能是如何工作的（利用Selector、Channel、Buffer 等），但是设计一个非阻塞的服务端仍然是非常困难的。相比于阻塞 IO，非阻塞 IO 具有许多的挑战。这篇非阻塞服务端教程会讨论非阻塞服务将面临的主要挑战，并会提供一些可能的解决方案。">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-1.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-2.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-3.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-4.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-5.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-6.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-8.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-9.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-10.png">
+<meta property="og:updated_time" content="2018-04-11T03:43:20.290Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java NIO-10-非阻塞（Non-blocking）服务端">
+<meta name="twitter:description" content="尽管你知道 Java NIO 非阻塞（Non-blocking）功能是如何工作的（利用Selector、Channel、Buffer 等），但是设计一个非阻塞的服务端仍然是非常困难的。相比于阻塞 IO，非阻塞 IO 具有许多的挑战。这篇非阻塞服务端教程会讨论非阻塞服务将面临的主要挑战，并会提供一些可能的解决方案。">
+<meta name="twitter:image" content="http://korben-chy.github.io/images/java_NIO_10_Non-blocking_Server/non-blocking-server-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/"/>
+
+
+
+
+
+  <title> Java NIO-10-非阻塞（Non-blocking）服务端 | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java NIO-10-非阻塞（Non-blocking）服务端
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:43:20+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>尽管你知道 Java NIO 非阻塞（Non-blocking）功能是如何工作的（利用Selector、Channel、Buffer 等），但是设计一个非阻塞的服务端仍然是非常困难的。相比于阻塞 IO，非阻塞 IO 具有许多的挑战。这篇非阻塞服务端教程会讨论非阻塞服务将面临的主要挑战，并会提供一些可能的解决方案。<br><a id="more"></a></p>
+<h1 id="非阻塞服务端-GitHub-仓库"><a href="#非阻塞服务端-GitHub-仓库" class="headerlink" title="非阻塞服务端 - GitHub 仓库"></a>非阻塞服务端 - GitHub 仓库</h1><p>我在 GitHub 创建了一个仓库，并将我对于非阻塞服务端的实现代码上传了上去，大家可以去查看：<br><a href="https://github.com/jjenkov/java-nio-server" target="_blank" rel="external">github</a></p>
+<h1 id="非阻塞-IO-管道（Pipeline）"><a href="#非阻塞-IO-管道（Pipeline）" class="headerlink" title="非阻塞 IO 管道（Pipeline）"></a>非阻塞 IO 管道（Pipeline）</h1><p>非阻塞 IO 管道（non-blocking IO pipeline）是指执行非阻塞 IO 的一些列组件。这包括在非阻塞方式下的数据读取和写入。下面是一个简化的非阻塞 IO 管道:<br><img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-1.png" alt="non-blocking-server-1.png"></p>
+<p>图中的组件（Component）使用<code>Selector</code>来检查<code>Channel</code>中是否有数据写入。当检测到有数据写入时，这个组件会从 input 中读取数据，并根据 input 产生一些 output，output 数据会再次写入到一个 channel 中。</p>
+<p>一个非阻塞 IO 管道并不会同时进行读取和写入操作。一些管道只会读取数据，而另外一些管道只会写入数据。</p>
+<p>上面的插图只展示了一个组件。一个非阻塞 IO 管道可能会有不止一个组件在进行数据的接收。非阻塞 IO 的管道长度取决于这个管道所要做的工作。</p>
+<p>一个非阻塞 IO 管道还可能同时从多个<code>Channel</code>中读取数据。例如，从多个<code>SocketChannel</code>中读取数据。</p>
+<p>在上面的插图中的操作流程同样被简化了。是这个组件启动了读取操作，并通过 Selector 从 Channel 中读取数据。并不是 Channel 将数据推送到了 Selector 中，然后又推送到了组件中，即使从上面的图表看确实如此。</p>
+<h1 id="非阻塞-IO-VS-阻塞-IO-管道"><a href="#非阻塞-IO-VS-阻塞-IO-管道" class="headerlink" title="非阻塞 IO VS 阻塞 IO 管道"></a>非阻塞 IO VS 阻塞 IO 管道</h1><p>非阻塞 IO 和阻塞 IO 的管道最大的不同是从底层 Channel（socket or file） 读取数据的方式不同。</p>
+<p>IO管道通常从一些流（从 socket 或 file）读取数据，并将该数据分割为一致的消息。这类似于使用 tokenizer 将数据流分成很多个 token 进行解析。不同的是，我们会将数据流分解成更大的消息块。我把将数据流分解的组件称为 Message Reader。下面是一个将数据流分解成消息的图示：<br><img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-2.png" alt="non-blocking-server-2.png"></p>
+<p>阻塞 IO 的管道可以利用 InputStream 这样的接口，每次从底层的 channel 读取一个字节的数据，这个接口会阻塞直到有数据可以读取。这些构成了阻塞 Messag Reader 的实现。</p>
+<p>使用阻塞 IO 的接口来实现 Message Reader 会简单得多。一个阻塞 Message Reader 从来不需要处理 stream 中没有数据读取到、只从 stream 中读取到了部分数据、读取到的数据需要以后才能处理等等情况。</p>
+<p>相似的，一个阻塞的 Message Writer(向 stream 写入消息的组件)也从来不用处理只有一部分消息写入、写入的数据稍后还需要恢复等情形。</p>
+<h1 id="阻塞-IO-管道的弊端"><a href="#阻塞-IO-管道的弊端" class="headerlink" title="阻塞 IO 管道的弊端"></a>阻塞 IO 管道的弊端</h1><p>尽管阻塞的 Message Reader 实现起来比较简单，但是它致命的不足是对于每一个需要被解析成消息的stream，它需要单独的线程去处理。需要独立的线程去处理的原因是阻塞 IO 的接口会阻塞，直到有数据可以读取。这就是说，一个线程在不能够在处理的 stream 没有数据读取时，去处理其他的 stream。只要一个线程尝试从 stream 中读取数据时，这个线程会被阻塞直到真的有数据可以读取。</p>
+<p>如果一个 IO 管道所在的 Server 需要同时处理相当多的连接，那么这个服务端就需要为每一个连接分配一个线程。如果当前并发只有几百个连接，这并不是什么问题。但是，如果当前服务器有几百万的并发，这种类型的设计就不能很好的伸缩了。每一个线程大约需要占用 320K（32 bit JVS）到 1024K（64 bit JVS）的堆内存。所以，1,000,000 个线程将会占用 1TB 的内存！这还不需要计算服务仍需要一些内存来处理解析这些数据所需要的内存（例如，在解析消息时需要分配内存）。</p>
+<p>为了减少线程的数量，许多服务器会采用线程池。线程池会每次会从所有的接入连接中取一个连接来读取消息。这些接入连接会方在一个队列中，线程池会按照连接在队列中的顺序来获得连接。下面这张图片阐释了这种设计方式：<br><img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-3.png" alt="non-blocking-server-3.png"></p>
+<p>然而，这种设计方式需要接入的连接相当频繁的发送数据。如果接入的连接在长时间内都是不活跃的，那么可能会有许多的不活跃的连接将线程池所有的线程都阻塞。这意味着服务器响应迟缓，甚至无响应。</p>
+<p>一些服务会尝试将线程池的数量设定为弹性的来缓解这个问题。例如，如果线程池中的线程使用完了，线程池会尝试开启更多的线程来加载数据。这种解决方式意味着大量的迟缓连接使得服务不可靠。但是请记住，服务仍然有最大可开启的线程数量的限制。所以，这仍然不能够处理 1,000,000 个缓慢的连接。</p>
+<h1 id="基本的非阻塞（Non-blocing）IO-管道设计"><a href="#基本的非阻塞（Non-blocing）IO-管道设计" class="headerlink" title="基本的非阻塞（Non-blocing）IO 管道设计"></a>基本的非阻塞（Non-blocing）IO 管道设计</h1><p>一个非阻塞 IO 管道可以使用一个线程来读取多个 stream 的消息。这需要 stream 可以被切换为非阻塞模式。在非阻塞模式下，在从 stream 中读取数据时，可能会返回 0 个或多个字节的数据。当 stream 中没有数据时会返回 0 个字节的数据。当 stream 中有数据可读取时，会返回不少于 0 个字节的数据。</p>
+<p>为了避免总是校验 stream 是否返回了 0 个字节，我们使用 Java NIO Selector 来帮助我们。一个或多个 SelectableChannel 可以使用同一个 Selector 注册。当你调用 Selector 的<code>select()</code>方法或<code>selectNow()</code>方法时，会得到有数据可读取的 SelectableChannel 的实例。下面这张图片阐释了这种设计方式：<br> <img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-4.png" alt="non-blocking-server-4.png"></p>
+<h1 id="读取部分消息"><a href="#读取部分消息" class="headerlink" title="读取部分消息"></a>读取部分消息</h1><p>当我们从一个数据块读取数据时，我们并不会知道读取到的数据包含多少的消息。一个数据块可能包含部分的消息（少于一个完整的消息）、一个完整的消息或者多于一个完整的消息，例如 1.5 或 2.5 个消息。各种部分消息的可能性如下所示：<br> <img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-5.png" alt="non-blocking-server-5.png"></p>
+<p>要处理这些部分的消息我们会面临两个挑战：</p>
+<ol>
+<li>检测数据块中是否含有一个完整的消息。</li>
+<li>在剩下的消息可读取之前，要怎样处理这些只有部分的消息。</li>
+</ol>
+<p>要检测数据块中是否含有完整的消息需要 Message Reader 来查看消息块。如果这个数据块包含一个或多个消息，这些消息可以被发送到管道中处理。查看数据块是否含有完整的消息将会经常的被调用，所以这个工作要完成的越快越好。</p>
+<p>无论什么时候数据块中只含有部分的消息，无论是数据块只含有部分的消息还是在一个或多个完整的消息之后含有部分的消息，这部分消息都需要被保存起来直到剩余部分的消息可以从 channel 中读取。</p>
+<p>校验是否含有完整的消息和保存部分的消息都需要 Message Reader 来完成。为了避免不同的 channel 会混淆消息数据，我们会为每一个 channel 分派一个 Message Reader。这个设计如下：<br> <img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-6.png" alt="non-blocking-server-5.png"></p>
+<p>当通过 Selector 获得可读取数据的 channel 后，与 Channel 关联的 Message Reader 会读取数据并尝试将数据解析为消息。如果有完整的消息被读取，那这些被读取的消息将会通过读取管道传递给任何需要处理它们的组件。</p>
+<p>Message Reader 当然有特定的协议。Message Reader 需要知道它要读取的数据的格式。如果我们的 Message Reader 实现需要是跨协议的，那么具体的协议格式需要插入到我们的实现当中–可以通过 Message Reader 工厂作为一个配置参数。</p>
+<h1 id="存储不完整的消息"><a href="#存储不完整的消息" class="headerlink" title="存储不完整的消息"></a>存储不完整的消息</h1><p>现在我们已经确定知道收到完整的而消息之前，消息读取器有责任存储部分消息。我么需要确定这部分消息要怎样存储。</p>
+<p>下面的两个设计要点我们要考虑在内：</p>
+<ol>
+<li>我们需要这部分消息被复制的次数越少越好，因为越多的复制，越低的性能。</li>
+<li>我们需要希望将完整的消息存储在连续的字节序列中，以便解析消息更加的容易。</li>
+</ol>
+<h2 id="为每一个-Message-Reader-分配一个-Buffer"><a href="#为每一个-Message-Reader-分配一个-Buffer" class="headerlink" title="为每一个 Message Reader 分配一个 Buffer"></a>为每一个 Message Reader 分配一个 Buffer</h2><p>很明显这些不完整的消息不要被保存在某一种 Buffer 中。最直接的实现方式是每一个 Message Reader 具有一个独立的 buffer。然而，这个 Buffer 的大小需要设置为多少？它需要足够大来存储那些可能非常大的消息。所以，如果最大的消息的大小 1MB，那么 Message Reader 所含有的 Buffer 的大小最少也应为 1MB。</p>
+<p>为每一个连接分配 1MB 的内存并不能在我们达到 1,000,000 个连接时工作，1,000,000 * 1MB 仍然是 1TB 的大小。那如果最大的消息的大小为16MB 或者 128MB 呢？</p>
+<h2 id="大小可调整的-Buffer"><a href="#大小可调整的-Buffer" class="headerlink" title="大小可调整的 Buffer"></a>大小可调整的 Buffer</h2><p>另一种选择是为每一个 Message Reader 实现一个大小可调整的 Buffer。一个大小可调整的 Buffer 在初始时是很小的。当接收的消息的大小超出了 Buffer 的容量时，就扩展 Buffer 的容量。这样每一个连接就不用必须例如 1MB 的 Buffer。每一个连接只需要占用他们能容纳下一个消息的内存大小。</p>
+<p>这里有几种方式来实现一个大小可调整的 Buffer。每一种实现方式多有它们的优势和劣势。所以我会在下面的章节中把所有的实现方式都讨论一遍。</p>
+<h2 id="在复制消息时调整大小"><a href="#在复制消息时调整大小" class="headerlink" title="在复制消息时调整大小"></a>在复制消息时调整大小</h2><p>实现可调整大小的 Buffer 的第一种方式是，给 Buffer 设置一个小的初始大小，例如 4KB。如果有消息的大小超出了 4KB，我们会分配一个更大的 Buffer，例如 8KB，原来 4KB Buffer 的数据将会被拷贝到 8KB Buffer 中。</p>
+<p>在复制消息时调整大小（reseize-by-copy）的 Buffer 的优势是，同一个消息的所有字节数据会被保存在一个连续的字节数组中。这样在解析消息时将会更加简单。</p>
+<p>但它的劣势是，这种实现方式将会导致非常多的数据拷贝，总是拷贝数据到更大的 Buffer 中。</p>
+<p>要减少数据拷贝的次数，你应当分析整个消息流中消息的大小，并找到可以减少拷贝次数的 Buffer 大小。例如，你发现绝大部分消息的大小都小于 4KB，那就是说你的初始 Buffer 大小就是 4KB。</p>
+<p>然后你又发现大于 4KB 的消息也经常出现，分析后得知这个消息的大小不超过 128KB，那将 Buffer 的大小设置为 128KB 将会更好。</p>
+<p>最终你会发现当消息的大小超过 128KB 时就没有规律可言了。所以最终 Buffer 的大小应当就是最大的消息的大小。</p>
+<p>结合这三次扩容时的大小设置，可以一定程度上减少数据拷贝。4KB 以下的数据无需拷贝。在 1百万的连接下需要的内存大小为 1,000,000 x 4KB = 4GB，目前大多数服务器都扛得住。4KB 到128KB 仅需拷贝一次，即拷贝 4KB 数据到 128KB 的 Buffer 中。消息大小介于 128KB 和最大容量的时需要拷贝两次。首先 4KB 数据被拷贝，然后是拷贝 128KB 的数据，所以总共需要拷贝 132KB 数据。假设没有很多的消息会超过 128KB，那么这个方案还是可以接受的。</p>
+<p>当消息被处理完毕后，被分配的内存将会被释放。这样这个连接中下一个接收的消息将会以最小的 Buffer 重新开始。这对于在连接间更加有效的共享内存很有必要。这样基本上可以保证不是所有的连接会同时需要最大的 Buffer 大小。</p>
+<p>我写了一个完整的教程阐述了如何实现一个可调整大小的内存缓存：<a href="http://tutorials.jenkov.com/java-performance/resizable-array.html" target="_blank" rel="external">Resizable Arrays</a>。这个教程也附带了一个指向GitHub上的源码仓地址，里面有实现方案的具体代码。</p>
+<h2 id="通过附加来调整大小"><a href="#通过附加来调整大小" class="headerlink" title="通过附加来调整大小"></a>通过附加来调整大小</h2><p>另一种可调整大小的 Buffer 的实现方式是使 Buffer 由多个数组组成。当需要调整 Buffer 的大小时，你只需要分配另一个字节数组并将数据写入其中。</p>
+<p>这里有两种方式来扩展 Buffer 的大小。一种方式是分配独立的字节数组，然后记录这一系列的数组。另一种方式是将一个大的共享数组切片，让后记录切分的数组。我个人更喜欢切分数组的实现方式，当让这两种实现方式的不同点很小。</p>
+<p>这种通过附加独立的字节数组或者数组切片的优势是，没有数据需要拷贝。所有的数据可以直接从 socket（Channel）直接拷贝到一个数组或者数组切片中。</p>
+<p>这种实现方式的劣势是，数据没有被存储在一个连续的数组中。这就导致了消息的解析更加困难，因为解析器不得不同时查找每一个独立数组的结尾和所有数组的结尾。正因为需要在这些数据中查找消息尾，所以要作这种模型并不是那么容易。</p>
+<h2 id="TLV-编码的消息"><a href="#TLV-编码的消息" class="headerlink" title="TLV 编码的消息"></a>TLV 编码的消息</h2><p>有些协议消息的格式是 TLV（Type，Length，Value）格式。这就是说，当消息到达后，消息的总长度会被存储在消息的开始处。这样你就可以立即知道需要为这个消息分配多少的内存。</p>
+<p>TLV 的编码方式使得内存管理更加的简单。你可以立即知道需要为这条消息分配多少内存。即使在这条消息的结尾也没有内存浪费。</p>
+<p>使用 TLV 编码的一个劣势是，在接收到所有的数据之前，你就为这条消息分配了所有的内存。一些发送大文件的慢连接这样会分配掉你所有可用的内存，这样就导致了你的服务不可靠。</p>
+<p>对于这个问题的一种解决方案是，改进消息的格式，使这个消息由多个 TLV 消息片段构成。这样，我们只会给每个消息片段分配内存，而不是整个的消息，而且内存只会在接收到消息片段之后才会被分配。但是，如果消息片段足够大的话，仍然会导致上述的问题。</p>
+<p>另一种解决方案是使长时间没有接收到的消息（例如 10-15s）超时。这可以让服务器从偶发的并发处理大块消息中恢复过来，不过还是会让服务器有一段时间无响应。另外恶意的DoS（Denial of Service）攻击会导致服务器开辟大量内存。</p>
+<p>TLV 编码有不同的变种。具体到底是用多少个字节来表示消息的类型和长度取决于每一个 TLV 编码的具体变种。同样有 TLV 编码将长度（Length）放到最前面，然后才是类型（Type），然后才是 value。尽管顺序改变了，但这这仍然是 TLV 的变种。</p>
+<p>TLV 编码使得内存的管理更加的简单，这也正式 HTTP 1.1 是一个糟糕的协议的原因。这也是 HTTP 2.0 试图修复的一个问题之一，HTTP 2.0 使用 TLV 编码来传输数据帧。这也是为什么在项目<a href="http://vstack.co/" target="_blank" rel="external">VStack.co projec</a>中我们使用 TLV 编码设计了自己的网络传输协议。</p>
+<h1 id="写不完整的消息"><a href="#写不完整的消息" class="headerlink" title="写不完整的消息"></a>写不完整的消息</h1><p>在非阻塞 IO 管道中，写数据同样是一个挑战。在非阻塞模式下调用 Channel 的<code>wirte(ByteBuffer)</code>方法，有多少数据被写入到了 ByteBuffer 中并不会得到保证。<code>write(ByteBuffer)</code>方法会返回有多少数据被写入了，所以我们可以记录写入数据的数量。那么我们面临的挑战是：记录这些不完整的消息从而可以在所有的消息被写入后我们可以发送完整的消息。</p>
+<p>为了将不完整的消息写入到 Channel 中，我们创建了 Message Writer。就像 Message Reader 一样，我们为每一个写入消息的 Channel 分配一个 Message Writer。在这个 Message Writer 中我们会精确的记录当前消息有多少字节已经被写入了。</p>
+<p>为了解决收到的消息的数量超过了 Message Writer 可以直接写入的数量的情况，我们需要将接收的消息放到 Message Writer 的内部队列中。然后 Message Writer 会以最快的速度将消息写入到 Channel 中。</p>
+<p>下面的图表展示了当前我们写不完整消息的解决方案：<br> <img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-8.png" alt="non-blocking-server-8.png"></p>
+<p>为了使 Message Writer 可以继续发送之前发送的不完整消息，Message Writer 需要被持续的调用，这样它才可以继续发送数据。</p>
+<p>如果你有许多的连接，那你同样会有许多的 Message Writer 实例。我们来测试大量的（例如 1百万）Message Writer 实例来校验写入数据是否缓慢。首先，其中许多的 Message Writer 实例可能并没有消息发送。我们不会测试这些实例。其次，不是所有的 Channel 已经准备好写入数据了。我们也不想浪费时间来向这些没有准备好的 Channel 写入数据。</p>
+<p>要校验一个 Channel 是否已经准备好写入数据了，你可以注册一个 Selector 给 Channel。然而，我们并不想给所有的 Channel 实例都注册 Selector。想象一下你有 1,000,000 个连接而其中的大部分都是空闲的，而这所有的而连接都已经使用 Selector 注册了。然后，你调用了<code>select()</code>方法获取了这所有的 Channel 实例（但它们中的大多数都是 idle 的）。你必须校验所有的 Message Writer 来确定是否有数据可以写入。</p>
+<p>为了避免校验所有的这些要写入消息的 Message Writer，以及所有的 Channel 的实例，来确定是否有数据可以写入，我们使用了下面两个步骤：</p>
+<ol>
+<li>当有数据写入到 Message Writer 时，Message Writer 用 Selector 注册和它关联的 Channel。</li>
+<li>当你的服务器空闲后，它会通过 Selector 校验哪些注册的 Channel 已经准备好写入数据了。对于每一个准备好写入数据的 Channel，Message Writer 会请求数据并写入到 Channel 中。如果 Message Writer 完成了所有的数据写入工作，使Channel 会取消 Selector 的注册</li>
+</ol>
+<p>这两个小步骤保证了只有有数据写入的 Channel 才会被 Selecotr 注册。</p>
+<h1 id="整合所有的步骤"><a href="#整合所有的步骤" class="headerlink" title="整合所有的步骤"></a>整合所有的步骤</h1><p>正如你看到的，非阻塞服务器需要不断的校验接收的数据来确定是否一个消息已经接收完整。服务器必须一直进行校验直到有消息接收完整。只校验一次是不够的。</p>
+<p>相似的，一个非阻塞服务器需要不断地校验是否有数据可写入。如果有，服务器还必须校验对应的连接是否已经准备好写入数据了。只进行一次校验也是不够的，因为消息可能只有部分被写入了。</p>
+<p>所有这些非阻塞服务器最终都需要定期执行三个“管道”：</p>
+<ul>
+<li>读取管道，从连接中读取数据。</li>
+<li>工作管道，将读取的数据转换为完整的而消息。</li>
+<li>写入管道，检查是否可以将任何传出的消息写入任何打开的连接。</li>
+</ul>
+<p>这三个管道在一个循环中重复执行。你或许从某种程度上进行优化。例如，如果没有数据读取，你可以跳过写入管道。或者，如果没有新的、完整的消息读取，你可以跳过工作管道。</p>
+<p>下面这张图展示了完整的服务器循环：<br> <img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-9.png" alt="non-blocking-server-9.png"></p>
+<p>如果你仍然感觉这些复杂难懂，你可以下载这个 GitHub 仓库：<br><a href="https://github.com/jjenkov/java-nio-server" target="_blank" rel="external">https://github.com/jjenkov/java-nio-server</a></p>
+<p>或许阅读源代码实现可以帮助你理解怎样来实现这个非阻塞服务。</p>
+<h1 id="服务线程模型"><a href="#服务线程模型" class="headerlink" title="服务线程模型"></a>服务线程模型</h1><p>在 GitHub 仓库中实现的非阻塞服务使用了由两个线程组成的线程模型。第一个线程从一个 ServerSocketChannel 中读取数据。第二个线程解析接收到的数据，同时解析数据，将数据再写入到连接中。下面这张图展示了这个线程模型：<br> <img src="/images/java_NIO_10_Non-blocking_Server/non-blocking-server-10.png" alt="non-blocking-server-10.png"></p>
+<p>在前一个章节中说明的工作管道循环是被我们的第二个线程工作线程执行的。</p>
+<hr>
+<blockquote>
+<p>本文翻译自<a href="http://tutorials.jenkov.com/java-nio/non-blocking-server.html" target="_blank" rel="external">Java NIO: Non-blocking Server</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-9-ServerSocketChannel/" rel="next" title="Java NIO-9-ServerSocketChannel">
+                <i class="fa fa-chevron-left"></i> Java NIO-9-ServerSocketChannel
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-11-DatagramChannel/" rel="prev" title="Java NIO-11 DatagramChannel">
+                Java NIO-11 DatagramChannel <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#非阻塞服务端-GitHub-仓库"><span class="nav-number">1.</span> <span class="nav-text">非阻塞服务端 - GitHub 仓库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非阻塞-IO-管道（Pipeline）"><span class="nav-number">2.</span> <span class="nav-text">非阻塞 IO 管道（Pipeline）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非阻塞-IO-VS-阻塞-IO-管道"><span class="nav-number">3.</span> <span class="nav-text">非阻塞 IO VS 阻塞 IO 管道</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#阻塞-IO-管道的弊端"><span class="nav-number">4.</span> <span class="nav-text">阻塞 IO 管道的弊端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本的非阻塞（Non-blocing）IO-管道设计"><span class="nav-number">5.</span> <span class="nav-text">基本的非阻塞（Non-blocing）IO 管道设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读取部分消息"><span class="nav-number">6.</span> <span class="nav-text">读取部分消息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储不完整的消息"><span class="nav-number">7.</span> <span class="nav-text">存储不完整的消息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为每一个-Message-Reader-分配一个-Buffer"><span class="nav-number">7.1.</span> <span class="nav-text">为每一个 Message Reader 分配一个 Buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#大小可调整的-Buffer"><span class="nav-number">7.2.</span> <span class="nav-text">大小可调整的 Buffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在复制消息时调整大小"><span class="nav-number">7.3.</span> <span class="nav-text">在复制消息时调整大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过附加来调整大小"><span class="nav-number">7.4.</span> <span class="nav-text">通过附加来调整大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLV-编码的消息"><span class="nav-number">7.5.</span> <span class="nav-text">TLV 编码的消息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写不完整的消息"><span class="nav-number">8.</span> <span class="nav-text">写不完整的消息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整合所有的步骤"><span class="nav-number">9.</span> <span class="nav-text">整合所有的步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务线程模型"><span class="nav-number">10.</span> <span class="nav-text">服务线程模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "1df5358122a34c2ea8ff83d099d7006e",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

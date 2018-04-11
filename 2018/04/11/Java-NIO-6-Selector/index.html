@@ -1,0 +1,769 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Way" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Java NIO Selector是一个可以检查一个或多个NIO Channel，并可以确定哪一个已经准备好写入、读取的组件。这样一个线程就可以管理多个Channel，甚至多个网络连接。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO-6-Selector">
+<meta property="og:url" content="http://korben-chy.github.io/2018/04/11/Java-NIO-6-Selector/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="Java NIO Selector是一个可以检查一个或多个NIO Channel，并可以确定哪一个已经准备好写入、读取的组件。这样一个线程就可以管理多个Channel，甚至多个网络连接。">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_6_Selector/overview-selectors.png">
+<meta property="og:updated_time" content="2018-04-11T03:42:25.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java NIO-6-Selector">
+<meta name="twitter:description" content="Java NIO Selector是一个可以检查一个或多个NIO Channel，并可以确定哪一个已经准备好写入、读取的组件。这样一个线程就可以管理多个Channel，甚至多个网络连接。">
+<meta name="twitter:image" content="http://korben-chy.github.io/images/java_NIO_6_Selector/overview-selectors.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2018/04/11/Java-NIO-6-Selector/"/>
+
+
+
+
+
+  <title> Java NIO-6-Selector | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-6-Selector/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java NIO-6-Selector
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:42:25+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2018/04/11/Java-NIO-6-Selector/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java NIO <code>Selector</code>是一个可以检查一个或多个<code>NIO Channel</code>，并可以确定哪一个已经准备好写入、读取的组件。这样一个线程就可以管理多个<code>Channel</code>，甚至多个网络连接。<br><a id="more"></a></p>
+<h1 id="为什么使用-Selector"><a href="#为什么使用-Selector" class="headerlink" title="为什么使用 Selector?"></a>为什么使用 Selector?</h1><p>使用<code>Selector</code>，我们可以使用更少的线程来处理<code>Channel</code>。实际上，你可以使用一个线程处理你所有的<code>Channel</code>。在操作系统中，线程切换是非常昂贵的，而且每个线程也会占用操作系统的资源。因此，你使用的线程越少越好。</p>
+<p>但是你要知道，现代操作系统和 CPU 在多任务处理中变得越来越好，所以多线程的开销也变得越来越好。实际上，如果一个 CPU 有多核，如果你不使用多线程就是对 CPU 的浪费。无论如何，对于这个的讨论完全属于不同的范畴了。但在这里可以说，你可以使用一个<code>Selector</code>处理单个线程的多个通道。</p>
+<p>这里有一个插图展示了一个<code>Selector</code>处理三个<code>Channel</code>：<br><img src="/images/java_NIO_6_Selector/overview-selectors.png" alt="overview-selectors"></p>
+<h1 id="创建一个-Selector"><a href="#创建一个-Selector" class="headerlink" title="创建一个 Selector"></a>创建一个 Selector</h1><p>你可以通过<code>Selector.open()</code>方法来创建一个<code>Selector</code>：<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Selector</span> <span class="keyword">selector</span> = <span class="keyword">Selector</span>.open();</div></pre></td></tr></table></figure></p>
+<h1 id="使用-Selector-注册-Channel"><a href="#使用-Selector-注册-Channel" class="headerlink" title="使用 Selector 注册 Channel"></a>使用 Selector 注册 Channel</h1><p>为了将<code>Selecotr</code>和<code>Channel</code>一起使用，你需要用<code>Selector</code>注册到<code>Channel</code>上。这可以通过<code>SelectableChannel.register()</code>方法来完成：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">channel.configureBlocking(<span class="literal">false</span>);</div><div class="line"></div><div class="line">SelectionKey key = channel.<span class="keyword">register</span>(selector, SelectionKey.OP_READ);</div></pre></td></tr></table></figure></p>
+<p>要使用<code>Selector</code>，<code>Channel</code>必须在非阻塞模式（non-blocking）下。也就是说你不能将<code>FileChannel</code>和<code>Selector</code>一起使用，因为<code>FileChannel</code>不能够被转换为<code>non-blocking</code>模式。然而<code>SocketChannel</code>却可以很好的使用<code>Selector</code>。</p>
+<p>注意<code>register()</code>方法的第二个参数。这是一个“兴趣集合”（interest set），意思就是你需要监听的对于这个<code>Channel</code>感兴趣的事件。这里有四种不同的事件可以监听：</p>
+<ol>
+<li>连接（Connect）</li>
+<li>接收（Accept）</li>
+<li>读（Read）</li>
+<li>写（Write）</li>
+</ol>
+<p><code>Channnel</code>“触发一个事件”（fires an event）是被称为准备好（ready）了这个事件。所以，一个<code>Channel</code>成功的连接了另外一个服务器称为”连接成功”（connect ready）。一个服务端 Server 准备好接收连接称为“accept ready”。一个<code>Channel</code>准备好读取数据称为”read ready”。一个<code>Channel</code>准备好写入数据称为“write ready”。</p>
+<p>这四种事件被这四个<code>SelectionKey</code>表示：</p>
+<ol>
+<li>SelectionKey.OP_CONNECT</li>
+<li>SelectionKey.OP_ACCEPT</li>
+<li>SelectionKey.OP_READ</li>
+<li>SelectionKey.OP_WRITE</li>
+</ol>
+<p>如果你不止对一个事件感兴趣，用<code>OR</code>将这些事件连接在一起：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">int interestSet</span> = SelectionKey.OP_READ | SelectionKey.OP_WRITE;</div></pre></td></tr></table></figure></p>
+<p>我会在这篇文章的后面章节接着讨论兴趣集。</p>
+<h1 id="SelectionKey"><a href="#SelectionKey" class="headerlink" title="SelectionKey"></a>SelectionKey</h1><p>正如你在前面的章节所看到的，当你通过方法<code>register()</code>使用<code>Selector</code>注册一个<code>Channel</code>时会返回一个<code>SelectionKey</code>对象，这个<code>SelectionKey</code>对象包含了一些有趣的属性：</p>
+<ul>
+<li>兴趣集（interest set）</li>
+<li>当前事件状态（ready set）</li>
+<li>Channel</li>
+<li>Selector</li>
+<li>附加的对象（可选）</li>
+</ul>
+<p>我会在下面具体说明这些属性。</p>
+<h2 id="兴趣集（Interest-Set）"><a href="#兴趣集（Interest-Set）" class="headerlink" title="兴趣集（Interest Set）"></a>兴趣集（Interest Set）</h2><p>兴趣集（interest set）是一系列的你感兴趣的事件，在前面的章节”使用 Selector 注册 Channel”中有描述。你可以通过<code>SelectionKey</code>来读写这个兴趣集：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">int interestSet</span> = selectionKey.interestOps();</div><div class="line"></div><div class="line"><span class="attribute">boolean isInterestedInAccept</span>  = interestSet &amp; SelectionKey.OP_ACCEPT;</div><div class="line"><span class="attribute">boolean isInterestedInConnect</span> = interestSet &amp; SelectionKey.OP_CONNECT;</div><div class="line"><span class="attribute">boolean isInterestedInRead</span>    = interestSet &amp; SelectionKey.OP_READ;</div><div class="line"><span class="attribute">boolean isInterestedInWrite</span>   = interestSet &amp; SelectionKey.OP_WRITE;</div></pre></td></tr></table></figure></p>
+<p>正如你所看到的，你可以通过<code>AND</code>来连接制定的<code>SelectionKey</code>来找到这个事件是否在这个兴趣集中。</p>
+<h2 id="当前事件状态（Ready-Set）"><a href="#当前事件状态（Ready-Set）" class="headerlink" title="当前事件状态（Ready Set）"></a>当前事件状态（Ready Set）</h2><p>当前事件状态的集合（ready set）是指当前<code>channel</code>已经准备好的操作。你主要会在<code>selection</code>之后访问 ready set。<code>Selection</code>会在后面的章节介绍。你可以像这样访问 ready set：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">int readySet</span> = selectionKey.readyOps();</div></pre></td></tr></table></figure></p>
+<p>你可以和 intereset set<br>中一样测试<code>Channel</code>的某一事件状态是否存在于集合中。当然，你还可以使用下面的方法测试，它们都返回 boolean 值：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">selectionKey.isAcceptable()<span class="comment">;</span></div><div class="line">selectionKey.isConnectable()<span class="comment">;</span></div><div class="line">selectionKey.isReadable()<span class="comment">;</span></div><div class="line">selectionKey.isWritable()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<h2 id="Channel-Selector"><a href="#Channel-Selector" class="headerlink" title="Channel + Selector"></a>Channel + Selector</h2><p>在<code>SelectionKey</code>中访问<code>channel + selector</code>非常的简单：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Channel  channel</span>  = selectionKey.channel();</div><div class="line"></div><div class="line"><span class="attribute">Selector selector</span> = selectionKey.selector();</div></pre></td></tr></table></figure></p>
+<h2 id="添加附加对象"><a href="#添加附加对象" class="headerlink" title="添加附加对象"></a>添加附加对象</h2><p>你可以附加一个对象到<code>SelectionKey</code>中。这样可以方便的辨识指定的<code>Channel</code>，或者附加对象到<code>Channel</code>中以便后续使用。例如，你可以附加<code>Channel</code>正在使用的<code>Buffer</code>，或者其它包含聚合数据的对象。下面展示了怎样附加对象：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">selectionKey.attach(theObject)<span class="comment">;</span></div><div class="line"></div><div class="line">Object attachedObj = selectionKey.attachment()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>你还可以在<code>register()</code>方法使用<code>Selector</code>注册<code>Channel</code>时添加对象，像下面这样：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SelectionKey </span>key = channel.register(<span class="keyword">selector, </span><span class="keyword">SelectionKey.OP_READ, </span>theObject)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<h2 id="通过-Selector-选择-Channel"><a href="#通过-Selector-选择-Channel" class="headerlink" title="通过 Selector 选择 Channel"></a>通过 Selector 选择 Channel</h2><p>当你使用<code>Selector</code>注册一个或多个<code>Channel</code>时，你可以调用<code>select()</code>方法。<code>select()</code>方法会返回已对你关注的事件准本就绪的<code>channel</code>。换句话说，如果你关注的<code>channel</code>已经准备好读取了，那么调用<code>select()</code>方法你会得到这些读取准备就绪的<code>channel</code>。</p>
+<p>下面是<code>select()</code>方法的几种形式：</p>
+<ul>
+<li>int select()</li>
+<li>int select(long timeout)</li>
+<li>int selectNow()</li>
+</ul>
+<p><code>select()</code>方法会阻塞直到你注册的某一个事件准备好了。</p>
+<p><code>select(long timeout)</code>和<code>select()</code>的行为几乎一样除了它最多等待的最大事件长度为 timeout。</p>
+<p><code>selectNow()</code>却完全不会阻塞。它会立即返回任何准备好的<code>channel</code>。</p>
+<p><code>select()</code>方法的返回值 int 表示有多少个<code>channel</code>已经准备好了。也就是从你上一次调用<code>select()</code>方法开始统计有多少<code>channel</code>准备好了。如果你调用了<code>select()</code>方法并返回了1，那是因为只有1个<code>channel</code>准备好了，如果你再一次调用了<code>select()</code>方法，而又有一个<code>channel</code>准备好了，那它还会返回1.如果你对第一个准备好的<code>channel</code>没有做任何操作，那你现在就有两个准备好的<code>channel</code>了，但只有1个<code>channel</code>在每次调用<code>select()</code>时准备好了。</p>
+<h2 id="selectedKeys"><a href="#selectedKeys" class="headerlink" title="selectedKeys()"></a>selectedKeys()</h2><p>当你调用<code>select()</code>方法并且它返回了 int 值，这就表明有1个或多个<code>channel</code>准备好了，你可以通过<code>selected key set</code>获取这些准备好的<code>channel</code>。下面是你的做法：<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Set</span>&lt;SelectionKey&gt; selectedKeys <span class="comment">= selector.selectedKeys()</span>;</div></pre></td></tr></table></figure></p>
+<p>当你通过方法<code>Channel.register()</code>方法使用<code>selector</code>注册一个<code>channel</code>时会返回<code>SelectionKey</code>对象。这个返回值代表使用这个<code>selector</code>注册的所有<code>channel</code>。你可以通过<code>selectedKeySet()</code>方法获取这些 key。</p>
+<p>你可以遍历 selected set 来访问准备好的<code>channel</code>。向下面这样：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">Set&lt;SelectionKey&gt; selectedKeys = selector.selectedKeys();</div><div class="line"></div><div class="line">Iterator&lt;SelectionKey&gt; keyIterator = selectedKeys.iterator();</div><div class="line"></div><div class="line"><span class="keyword">while</span>(keyIterator.hasNext()) &#123;</div><div class="line">    </div><div class="line">    SelectionKey <span class="built_in">key</span> = keyIterator.next();</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(<span class="built_in">key</span>.isAcceptable()) &#123;</div><div class="line">        <span class="comment">// a connection was accepted by a ServerSocketChannel.</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">key</span>.isConnectable()) &#123;</div><div class="line">        <span class="comment">// a connection was established with a remote server.</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">key</span>.isReadable()) &#123;</div><div class="line">        <span class="comment">// a channel is ready for reading</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">key</span>.isWritable()) &#123;</div><div class="line">        <span class="comment">// a channel is ready for writing</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    keyIterator.remove();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个循环遍历了 selected key set，对于每一个 key，它会测试到底对应的<code>channel</code>准备好了哪一种状态。</p>
+<p>注意在每一个遍历中调用的<code>keyIterator.remote()</code>方法。<code>Selector</code>自己并不会删除 selected key。当你处理完毕<code>channel</code>是，你需要手动删除对应的 key。当<code>channel</code>再次准备好时<code>Selector</code>会再添加对应的 key。</p>
+<p><code>SelectionKey.channel()</code>方法返回的<code>Channel</code>应当被强制转换为你使用的 channel，例如<code>ServerSocketChannel</code>或<code>SocketChannel</code>等等。</p>
+<h2 id="wakeUp"><a href="#wakeUp" class="headerlink" title="wakeUp()"></a>wakeUp()</h2><p>如果一个线程调用了<code>select()</code>方法并且被阻塞了，即使<code>channel</code>没有准备好你也可以脱离阻塞状态。你可以再其他的线程调用<code>Selector.wakeup()</code>方法，而这个<code>Selector</code>必须是阻塞线程调用的那一个。然后阻塞线程会立即返回。</p>
+<p>如果另一个线程调用了<code>wakeup()</code>方法，但当前却没有一个线程因为<code>select()</code>方法阻塞，那下一个调用<code>select()</code>方法的线程会立即返回。</p>
+<h2 id="close"><a href="#close" class="headerlink" title="close()"></a>close()</h2><p>当你对<code>Selector</code>所有的工作都完成后，你可以调用它的<code>close()</code>方法。这会关闭<code>Selector</code>并且会销毁所有注册到<code>Selector</code>对象的<code>SelectionKey</code>。当对应的<code>channel</code>并不会被关闭。</p>
+<h1 id="完成的-Selector-示例"><a href="#完成的-Selector-示例" class="headerlink" title="完成的 Selector 示例"></a>完成的 Selector 示例</h1><p>这里是一个完整的完成打开一个<code>Selector</code>，然后使用它注册一个<code>channel</code>，并持续监听<code>Selector</code>：<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">Selector selector = Selector.<span class="built_in">open</span>();</div><div class="line"></div><div class="line">channel.configureBlocking(<span class="keyword">false</span>);</div><div class="line"></div><div class="line">SelectionKey <span class="built_in">key</span> = channel.register(selector, SelectionKey.OP_READ);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line"></div><div class="line">  <span class="built_in">int</span> readyChannels = selector.select();</div><div class="line"></div><div class="line">  <span class="keyword">if</span>(readyChannels == <span class="number">0</span>) <span class="keyword">continue</span>;</div><div class="line"></div><div class="line"></div><div class="line">  Set&lt;SelectionKey&gt; selectedKeys = selector.selectedKeys();</div><div class="line"></div><div class="line">  Iterator&lt;SelectionKey&gt; keyIterator = selectedKeys.iterator();</div><div class="line"></div><div class="line">  <span class="keyword">while</span>(keyIterator.hasNext()) &#123;</div><div class="line"></div><div class="line">    SelectionKey <span class="built_in">key</span> = keyIterator.next();</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(<span class="built_in">key</span>.isAcceptable()) &#123;</div><div class="line">        <span class="comment">// a connection was accepted by a ServerSocketChannel.</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">key</span>.isConnectable()) &#123;</div><div class="line">        <span class="comment">// a connection was established with a remote server.</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">key</span>.isReadable()) &#123;</div><div class="line">        <span class="comment">// a channel is ready for reading</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">key</span>.isWritable()) &#123;</div><div class="line">        <span class="comment">// a channel is ready for writing</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    keyIterator.remove();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<blockquote>
+<p>本文翻译自<a href="http://tutorials.jenkov.com/java-nio/selectors.html" target="_blank" rel="external">Java NIO Selector</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-5-Channel-到-Channel-的转换/" rel="next" title="Java NIO-5 Channel 到 Channel 的转换">
+                <i class="fa fa-chevron-left"></i> Java NIO-5 Channel 到 Channel 的转换
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-7-FileChannel/" rel="prev" title="Java NIO-7-FileChannel">
+                Java NIO-7-FileChannel <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用-Selector"><span class="nav-number">1.</span> <span class="nav-text">为什么使用 Selector?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建一个-Selector"><span class="nav-number">2.</span> <span class="nav-text">创建一个 Selector</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-Selector-注册-Channel"><span class="nav-number">3.</span> <span class="nav-text">使用 Selector 注册 Channel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SelectionKey"><span class="nav-number">4.</span> <span class="nav-text">SelectionKey</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#兴趣集（Interest-Set）"><span class="nav-number">4.1.</span> <span class="nav-text">兴趣集（Interest Set）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当前事件状态（Ready-Set）"><span class="nav-number">4.2.</span> <span class="nav-text">当前事件状态（Ready Set）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Channel-Selector"><span class="nav-number">4.3.</span> <span class="nav-text">Channel + Selector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加附加对象"><span class="nav-number">4.4.</span> <span class="nav-text">添加附加对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-Selector-选择-Channel"><span class="nav-number">4.5.</span> <span class="nav-text">通过 Selector 选择 Channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#selectedKeys"><span class="nav-number">4.6.</span> <span class="nav-text">selectedKeys()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wakeUp"><span class="nav-number">4.7.</span> <span class="nav-text">wakeUp()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#close"><span class="nav-number">4.8.</span> <span class="nav-text">close()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完成的-Selector-示例"><span class="nav-number">5.</span> <span class="nav-text">完成的 Selector 示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "1df5358122a34c2ea8ff83d099d7006e",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

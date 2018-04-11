@@ -260,7 +260,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/11/10/Improving-Layout-Performance-Re-using-Layouts-with-include/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/03/Https-实现原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/11/10/Improving-Layout-Performance-Re-using-Layouts-with-include/" itemprop="url">
-                  Improving Layout Performance-Re-using Layouts with &lt;include/&gt
+                <a class="post-title-link" href="/2017/05/03/Https-实现原理/" itemprop="url">
+                  Https 实现原理
                 </a>
               
             
@@ -299,8 +299,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-10T23:32:59+08:00">
-                2015-11-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-03T23:48:42+08:00">
+                2017-05-03
               </time>
             
 
@@ -322,8 +322,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/HTTPS/" itemprop="url" rel="index">
+                    <span itemprop="name">HTTPS</span>
                   </a>
                 </span>
 
@@ -358,10 +358,10 @@
 
       
         
-          <p>尽管Android提供了许多部件来提供小而可复用的节点，但我们仍然需要复用需要特殊布局的大组件。通过使用<code>&lt;include/&gt;</code>和<code>&lt;merge/&gt;</code>标签可以将另一个布局内嵌到当前的布局中，从而可以有效的复用组件。<br>
+          <p>我们知道<code>Http</code>是不安全的，容易被黑客攻击，而<code>Https</code>是安全的。那为什么<code>Https</code>是安全的？下面我们来尝试回答这个问题。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/11/10/Improving-Layout-Performance-Re-using-Layouts-with-include/#more" rel="contents">
+            <a class="btn" href="/2017/05/03/Https-实现原理/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -407,7 +407,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/11/10/Volley-完全解析/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/19/Java-ThreadLocal-源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -429,8 +429,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/11/10/Volley-完全解析/" itemprop="url">
-                  Volley 完全解析
+                <a class="post-title-link" href="/2017/04/19/Java-ThreadLocal-源码解析/" itemprop="url">
+                  Java ThreadLocal 源码解析
                 </a>
               
             
@@ -446,8 +446,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-10T22:55:00+08:00">
-                2015-11-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T23:46:20+08:00">
+                2017-04-19
               </time>
             
 
@@ -469,8 +469,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -505,23 +505,11 @@
 
       
         
-          <p>有很多的网络请求库，<a href="https://github.com/koush/AndroidAsync">AndroidAsync</a>、<a href="https://github.com/loopj/android-async-http">android-async-http</a>、<a href="https://github.com/square/okhttp">okhttp</a>等。当然，还有Google自家的<a href="http://developer.android.com/intl/zh-cn/training/volley/index.html">Volley</a>。</p>
-<p>根据官方文档，Volley的优点如下：</p>
-<ul>
-<li>自动执行网络请求</li>
-<li>多并发网络连接</li>
-<li>使用标准的Http <a href="http://en.wikipedia.org/wiki/Cache_coherence%22">cache coherence</a>缓存进行磁盘和内存响应</li>
-<li>支持请求优先级</li>
-<li>支持取消请求。可以取消一个单独的请求，也可以取消一个范围的请求</li>
-<li>可以灵活的定制。比如定制重试和后移功能</li>
-<li>强大的命令让你可以简单准确的使用异步的网络数据来填充UI</li>
-<li>调试和追踪工具</li>
-</ul>
-<p>但是Volley并不适用于大体积的下载因为Volley所有响应的解析操作都在内存中进行。</p>
-<p>今天就来剖析一下Volley。<br>
+          <p>我们都知道<code>ThreadLocal</code>是用来保存线程局部变量的，即保存在<code>ThreadLocal</code>中的变量只有当前线程可以访问，而其他线程是不能访问和修改的。</p>
+<p>那么<code>ThreadLocal</code>具体是怎样实现的？今天就让我们来揭开她的神秘面纱。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/11/10/Volley-完全解析/#more" rel="contents">
+            <a class="btn" href="/2017/04/19/Java-ThreadLocal-源码解析/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -567,7 +555,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/12/译：一个成功的Git分支模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -589,8 +577,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/" itemprop="url">
-                  Improving Layout Performance-Optimizing Layout Hierarchies
+                <a class="post-title-link" href="/2017/04/12/译：一个成功的Git分支模型/" itemprop="url">
+                  译：一个成功的Git分支模型
                 </a>
               
             
@@ -606,8 +594,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-06T23:20:59+08:00">
-                2015-11-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-12T10:06:24+08:00">
+                2017-04-12
               </time>
             
 
@@ -629,8 +617,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
                   </a>
                 </span>
 
@@ -665,10 +653,10 @@
 
       
         
-          <p>就像复杂的页面会降低加载速度，复杂的布局同样会导致性能问题。本课程演示如何使用SDK工具来检查布局并发现其中的性能瓶颈。<br>
+          <p>现在越来越多的公司开始使用<code>Git</code>作为版本管理的工具，我在工作中也使用<code>Git</code>有一段时间了。我们知道，<code>Git</code>相对于<code>SVN</code>最方便的莫过于对于分支的管理。这篇文章给我们提供了一个成功的<code>Git</code>分支开发模型，包括<code>develop</code>分支、<code>feature</code>分支、<code>hotfix</code>分支、<code>release</code>分支等。下面让我们来一块学习下这篇文章。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/11/06/Improving-Layout-Performance-Optimizing-Layout-Hierarchies/#more" rel="contents">
+            <a class="btn" href="/2017/04/12/译：一个成功的Git分支模型/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -714,7 +702,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/11/04/Performance-Tips/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/09/Java类加载器-Classloader/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -736,8 +724,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/11/04/Performance-Tips/" itemprop="url">
-                  Performance Tips
+                <a class="post-title-link" href="/2017/04/09/Java类加载器-Classloader/" itemprop="url">
+                  Java类加载器--Classloader
                 </a>
               
             
@@ -753,8 +741,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-04T22:21:41+08:00">
-                2015-11-04
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-09T13:37:58+08:00">
+                2017-04-09
               </time>
             
 
@@ -776,8 +764,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
                   </a>
                 </span>
 
@@ -812,10 +800,10 @@
 
       
         
-          <p>这篇文章主要介绍提高Android性能的小技巧，当把这些小技巧组合起来后可以提高应用的整体性能，但并不会产生特别显著的效果。选择正确的算法和数据结构应该总是你首先需要考虑的，但这些并不在这篇文章讨论的范围。你应该把这些技巧应用在平常的代码实践中，并把它变成一个习惯来提升代码的效率。</p>
+          <p>类加载器是<code>Java</code>虚拟机的一个基石，它使得一个类可以被动态的加载的<code>Java</code>虚拟机中并执行，使<code>Java</code>运行时不用关注所运行的文件和文件系统。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/11/04/Performance-Tips/#more" rel="contents">
+            <a class="btn" href="/2017/04/09/Java类加载器-Classloader/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -861,7 +849,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/10/22/Managing-Your-App-s-Memory/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/29/并发编程之-synchronized浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -883,8 +871,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/10/22/Managing-Your-App-s-Memory/" itemprop="url">
-                  Managing Your App's Memory
+                <a class="post-title-link" href="/2017/03/29/并发编程之-synchronized浅析/" itemprop="url">
+                  并发编程之-synchronized浅析
                 </a>
               
             
@@ -900,8 +888,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-22T23:01:59+08:00">
-                2015-10-22
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-29T22:35:36+08:00">
+                2017-03-29
               </time>
             
 
@@ -923,8 +911,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
                   </a>
                 </span>
 
@@ -959,10 +947,10 @@
 
       
         
-          <p>Random-access memory (RAM) 在任何软件开发环境中都是一种宝贵的资源，在物理内存常常受到限制的移动操作系统中，更显宝贵。尽管Android的Dalvik虚拟机执行常规的垃圾回收，但这并不是说你可以忽略分配和释放内存的时间与地点。</p>
+          <p>多线程开发是优秀的程序员必备的技能，而<code>synchronized</code>关键字是多线程开发中最基本的技能。今天让我们来解密<code>synchronized</code>。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/10/22/Managing-Your-App-s-Memory/#more" rel="contents">
+            <a class="btn" href="/2017/03/29/并发编程之-synchronized浅析/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1008,7 +996,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2015/10/22/CircularImageView/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/23/JUnit学习之-常用功能/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -1030,8 +1018,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/10/22/CircularImageView/" itemprop="url">
-                  CircleImageView 解析
+                <a class="post-title-link" href="/2017/03/23/JUnit学习之-常用功能/" itemprop="url">
+                  JUnit学习之--常用功能
                 </a>
               
             
@@ -1047,8 +1035,133 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-22T22:55:00+08:00">
-                2015-10-22
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-23T00:29:27+08:00">
+                2017-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在前一篇文章中，我们介绍了<a href="http://korben-chy.github.io/2017/03/19/JUnit%E5%AD%A6%E4%B9%A0%E4%B9%8B-assertThat/">JUnit学习之–assertThat</a>，学习了新的断言方式，今天我们继续学习<code>JUnit</code>的常用功能。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/23/JUnit学习之-常用功能/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/19/JUnit学习之-assertThat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/19/JUnit学习之-assertThat/" itemprop="url">
+                  JUnit学习之--assertThat
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-19T23:42:34+08:00">
+                2017-03-19
               </time>
             
 
@@ -1070,8 +1183,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -1106,10 +1219,454 @@
 
       
         
-          <p>程序员与作家类似，需要不断的阅读优秀的作品，不断的实践，才能写出好的作品。<br>今天来看<a href="https://github.com/">GitHub</a>上的开源项目：<a href="https://github.com/hdodenhof/CircleImageView">CircleImageView</a>。</p>
+          <p><code>JUnit</code>单元测试框架是我们工作中必不可少的单元测试工具，合理的使用<code>JUnit</code>，可以帮助我们加快Coding速度，提高Coding的质量。所以熟练的使用<code>JUnit</code>，就显得尤为重要。</p>
+<p>现在，就让我们来扒一扒<code>JUnit</code>的功能之–<code>assertThat</code><br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/10/22/CircularImageView/#more" rel="contents">
+            <a class="btn" href="/2017/03/19/JUnit学习之-assertThat/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/12/并发编程之-Volatile浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/12/并发编程之-Volatile浅析/" itemprop="url">
+                  并发编程之-Volatile浅析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-12T23:44:11+08:00">
+                2017-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><code>volatile</code>是一个神秘的关键字，我想大部分人都仅仅知道她在并发编程中使用，却从来没用使用过，也疑惑怎样正确的使用<code>volatile</code>。</p>
+<p>今天就让我们试着揭开<code>volatile</code>的神秘面纱。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/12/并发编程之-Volatile浅析/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/06/程序在计算机中的运行过程简析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/06/程序在计算机中的运行过程简析/" itemprop="url">
+                  程序在计算机中的运行过程简析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-06T00:26:01+08:00">
+                2017-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>现在我们所使用的编程语言大多是<code>C</code>、<code>C++</code>、<code>Java</code>等高级语言，这些高级语言让我们无需再面对与计算机直接交互的机器级语言，从而让我们的工作更有成效。</p>
+<p>然而，作为<code>程序员</code>的我们，怎会不好奇自己所书写的<code>高级语言代码</code>转变成了什么样的<code>汇编语言</code>代码，且是怎样被计算机运行的？<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/06/程序在计算机中的运行过程简析/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/02/26/初窥计算机程序的运行/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/26/初窥计算机程序的运行/" itemprop="url">
+                  初窥计算机程序的运行
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-26T01:03:54+08:00">
+                2017-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>作为程序猿的我，每天在用着熟知的编程语言书写着自己的理想国，并时不时 <code>new</code><br>一个<code>对象</code>出来，程序猿的天性都是好奇的，我在好奇我的<code>对象</code>是怎样在计算机中生存的，下面让我们试着窥探下程序在计算机中的运行。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/02/26/初窥计算机程序的运行/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1150,7 +1707,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1195,7 +1752,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -1217,7 +1774,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -1259,7 +1816,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

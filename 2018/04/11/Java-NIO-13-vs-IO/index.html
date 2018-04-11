@@ -1,0 +1,768 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Way" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="当你在学习了 Java NIO 和 IO 的 API 后，你一定会想，在什么时候我应当使用 IO 接口，什么时候使用 NIO 接口？
+在这篇文章中我会试着在 Java NIO 与 IO 的不同之处、它们的使用场景、对你设计代码的影响等方面给大家一些启发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO-13-vs.IO">
+<meta property="og:url" content="http://korben-chy.github.io/2018/04/11/Java-NIO-13-vs-IO/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="当你在学习了 Java NIO 和 IO 的 API 后，你一定会想，在什么时候我应当使用 IO 接口，什么时候使用 NIO 接口？
+在这篇文章中我会试着在 Java NIO 与 IO 的不同之处、它们的使用场景、对你设计代码的影响等方面给大家一些启发。">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_13_nio-vs-io/nio-vs-io-1.png">
+<meta property="og:image" content="http://korben-chy.github.io/images/java_NIO_13_nio-vs-io/nio-vs-io-2.png">
+<meta property="og:updated_time" content="2018-04-11T03:44:01.057Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java NIO-13-vs.IO">
+<meta name="twitter:description" content="当你在学习了 Java NIO 和 IO 的 API 后，你一定会想，在什么时候我应当使用 IO 接口，什么时候使用 NIO 接口？
+在这篇文章中我会试着在 Java NIO 与 IO 的不同之处、它们的使用场景、对你设计代码的影响等方面给大家一些启发。">
+<meta name="twitter:image" content="http://korben-chy.github.io/images/java_NIO_13_nio-vs-io/nio-vs-io-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2018/04/11/Java-NIO-13-vs-IO/"/>
+
+
+
+
+
+  <title> Java NIO-13-vs.IO | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-13-vs-IO/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java NIO-13-vs.IO
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:44:01+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2018/04/11/Java-NIO-13-vs-IO/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>当你在学习了 Java NIO 和 IO 的 API 后，你一定会想，在什么时候我应当使用 IO 接口，什么时候使用 NIO 接口？</p>
+<p>在这篇文章中我会试着在 Java NIO 与 IO 的不同之处、它们的使用场景、对你设计代码的影响等方面给大家一些启发。<br><a id="more"></a></p>
+<h1 id="Java-NIO-与-IO-之间的主要不同点"><a href="#Java-NIO-与-IO-之间的主要不同点" class="headerlink" title="Java NIO 与 IO 之间的主要不同点"></a>Java NIO 与 IO 之间的主要不同点</h1><p>下面的表格总结了 Java NIO 与 IO 之间的主要不同点，我会在下面的章节来更详细的阐述每一个不同点。</p>
+<table>
+<thead>
+<tr>
+<th>IO</th>
+<th>NIO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>面向 Stream</td>
+<td>面向 Buffer</td>
+</tr>
+<tr>
+<td>阻塞 IO</td>
+<td>非阻塞 IO</td>
+</tr>
+<tr>
+<td></td>
+<td>Selectors</td>
+</tr>
+</tbody>
+</table>
+<h1 id="面向-Stream-vs-面向-Buffer"><a href="#面向-Stream-vs-面向-Buffer" class="headerlink" title="面向 Stream vs. 面向 Buffer"></a>面向 Stream vs. 面向 Buffer</h1><p>Java NIO 与 IO 之间的第一个不同是 IO 是 面向 stream 的而 NIO 是面向 buffer 的，那么这是什么意思呢？</p>
+<p>Java IO 是面向 stream 的，也就是说，你一次从 stream 中读取一个或多个字节。怎么处理读取到的字节完全取决于你，这些字节不会在任何别的地方缓存。而且，你不能够在 stream 的数据中前后移动。如果你需要在从 stream 中读取到的数据中前后移动，你需要将读取到的数据缓存在 buffer 中。</p>
+<p>Java NIO 是面向 buffer 编程的，它会有些许的不同，它的数据会读取到 buffer 中以便后续处理。你可以在 buffer 中的数据中前后移动。这可以让我们更加便利的处理上数据。然而，你还需要校验 Buffer 中包含的数据是否已经完整，从而可以完整的处理这些数据。而且，你需要确认将数据读取到 buffer 中时，你不可以覆盖那些 buffer 中未处理的数据。</p>
+<h1 id="阻塞-IO-vs-非阻塞-IO"><a href="#阻塞-IO-vs-非阻塞-IO" class="headerlink" title="阻塞 IO vs. 非阻塞 IO"></a>阻塞 IO vs. 非阻塞 IO</h1><p>Java IO 中各种各样的 stream 都是阻塞的。也就是说，当一个线程调用了 stream 的<code>read()</code>或<code>write()</code>方法时，线程会阻塞直到有数据可以读取，或数据写入完毕。在阻塞的过程中，线程什么都不能做。</p>
+<p>Java NIO 的非阻塞模式使得一个线程可以从 channel 中读取数据，而且只会读取到当前可读取的数据或在没有数据时什么都不会读取。而不是保持阻塞状态直到有数据可以读取。这样线程可以处理其它的任务。</p>
+<p>对于非阻塞写操作也是一样的。一个线程可以请求数据并写入到 channel 中，但是不必等待数据写入完毕，这个线程可以在同时做其它的处理。</p>
+<p>一个线程在调用 IO 时的空闲时间，通常会处理其他的 channel。也就是说，一个线程现在可以处理多个 channel 的输入和输出。</p>
+<h1 id="Selectors"><a href="#Selectors" class="headerlink" title="Selectors"></a>Selectors</h1><p>Java NIO 的 selector 允许一个线程可以监听多个 channel 的输入。你可以使用一个 selector 注册多个 channel，然后使用一个线程来”选择”那些有数据可读取的 channel ，或那字儿准备好写入数据的 channel。这种 Selector 的机制使得一个线程可以管理多个 channel。</p>
+<h1 id="NIO-和-IO-是怎样影响程序的设计的"><a href="#NIO-和-IO-是怎样影响程序的设计的" class="headerlink" title="NIO 和 IO 是怎样影响程序的设计的"></a>NIO 和 IO 是怎样影响程序的设计的</h1><p>当你选择 NIO 或者 IO 作为你的 IO 工具时，可能对你程序设计的这些方面产生影响：</p>
+<ol>
+<li>对于 NIO 或 IO 的接口调用。</li>
+<li>数据处理。</li>
+<li>处理数据所需的线程数量。</li>
+</ol>
+<h2 id="接口调用"><a href="#接口调用" class="headerlink" title="接口调用"></a>接口调用</h2><p>NIO 接口的调用与IO 接口的调用当然是有所不同的，这毫无疑问。不同于 IO 从例如 InputStream 中读取数据，NIO 会首先将数据读取到 buffer 中，然后再处理 buffer 中的数据。</p>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><p>使用纯 NIO 处理数据相比于使用 IO 处理数据同样会受到影响。</p>
+<p>在 IO 设计中，你一个字节一个字节的从 Inputstream 或 Reader 中读取数据。想象下你在处理一个由基于行的文本数据流。例如：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Name</span>: Anna</div><div class="line"><span class="attribute">Age</span>: <span class="number">25</span></div><div class="line"><span class="attribute">Email</span>: anna<span class="variable">@mailserver</span>.com</div><div class="line"><span class="attribute">Phone</span>: <span class="number">1234567890</span></div></pre></td></tr></table></figure></p>
+<p>对于这个流的处理会像这样：<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">InputStream input = ... ; <span class="comment">// get the InputStream from the client socket</span></div><div class="line"></div><div class="line">BufferedReader reader = <span class="keyword">new</span> <span class="type">BufferedReader</span>(<span class="keyword">new</span> <span class="type">InputStreamReader</span>(input));</div><div class="line"></div><div class="line"><span class="keyword">String</span> nameLine   = reader.readLine();</div><div class="line"><span class="keyword">String</span> ageLine    = reader.readLine();</div><div class="line"><span class="keyword">String</span> emailLine  = reader.readLine();</div><div class="line"><span class="keyword">String</span> phoneLine  = reader.readLine();</div></pre></td></tr></table></figure></p>
+<p>注意下数据的解析是怎样被程序执行的进度影响的。换句话说，当<code>reader.readLine()</code>方法第一次返回时，你可以确定完整的一行文本被读取了。因为<code>readLine()</code>方法会阻塞直到完整的一行被读取。你还知道这一行文本包含了 Name。同样，当第二次调用<code>readLine()</code>方法后，你知道读取到的这一行文本包含 age。</p>
+<p>正如你所看到的，只有有新的数据读取到时，程序才会往下执行，而且执行的每一步你都知道读取到的数据是什么。当线程将数据中的某一确定片段读取完毕后，线程并不打算回退到数据的前边。这个原则可以用下面的图表展示：<br><img src="/images/java_NIO_13_nio-vs-io/nio-vs-io-1.png" alt="nio-vs-io-1"></p>
+<p>NIO 的实现方式会有些许不同，下面是一个简单的示例：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ByteBuffer <span class="built_in">buffer</span> = ByteBuffer.allocate(<span class="number">48</span>);</div><div class="line"></div><div class="line"><span class="keyword">int</span> bytesRead = inChannel.<span class="built_in">read</span>(<span class="built_in">buffer</span>);</div></pre></td></tr></table></figure></p>
+<p>注意程序的第二行，这段代码将 channel 中的数据读取到了 buffer 中。当这个方法返回时，你并不知道所有你需要的数据是否已经被读取到了 buffer 中。你只知道这个 buffer 包含了一些数据，这使得数据的解析在某些程度上变得困难了。</p>
+<p>假如在第一次调用方法<code>read(buffer)</code>后，只有不到一行的数据被读取到了 buffer 中，例如只读取到了“Name: An”。那你可以解析这些数据吗？还不行。你需要在有至少一行数据被读取后才能进行数据的解析。</p>
+<p>那你怎样知道 buffer 中的数据已经足够可以进行解析了？好吧，你不知道。要知道的唯一办法是，校验 buffer 中的数据。在你知道数据足够解析之前，你必须多次对 buffer 中的数据进行校验。这会很没有效率，还会设程序的设计变得混乱。例如：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ByteBuffer </span><span class="keyword">buffer </span>= <span class="keyword">ByteBuffer.allocate(48);</span></div><div class="line"></div><div class="line"><span class="symbol">int</span> <span class="keyword">bytesRead </span>= inChannel.read(<span class="keyword">buffer);</span></div><div class="line"></div><div class="line"><span class="symbol">while</span>(! <span class="keyword">bufferFull(bytesRead) </span>) &#123;</div><div class="line">    <span class="keyword">bytesRead </span>= inChannel.read(<span class="keyword">buffer);</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>bufferFull()</code>方法需要检查到底有多少数据已经读取到了 Buffer 中，然后根据 buffer 是否已经满了返回 true 或 false。换句话说，buffer 已经可以被解析了就是说 buffer 满了。</p>
+<p><code>bufferFull()</code>方法会扫描 buffer，但是会最终将 buffer 的状态保持与调用<code>bufferFull</code>方法前一样。如果没有保持 buffer 的状态一致，那么下一个读取进入 buffer 的数据可能没有在正确的位置。这并非不可能，这是我们需要注意的另一个问题。</p>
+<p>如果 buffer 满了，那么就可以进行解析了。如果没有满，你也许可以对 buffer 中不完整的数据进行解析，如果这对你有作用的话。</p>
+<p>“buffer 是否已经可以解析了”的循环在下面的图表中进行了展示：<br><img src="/images/java_NIO_13_nio-vs-io/nio-vs-io-2.png" alt="nio-vs-io-2"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>NIO 允许你只使用一个线程来管理多个 channel （网络 channel 或文件），但是代价是数据的解析要比从阻塞 IO 中读取数据困难。</p>
+<p>如果你需要同时处理成千上万的连接，而这些连接只发送很少的数据，例如一个聊天服务，使用 NIO 实现这个服务也许是一个优势。相似的，如果你需要和其他计算机保持很多的连接，例如 P2P 网络，使用一个线程来管理你所有的出站连接或许是一个优势。这种一个线程，多个连接的设计可以用下图展示：</p>
+<p>如果你只有很少的连接并且有足够的带宽，每次发送大量的数据，也许经典的 IO<br>实现方式也许是最合适的。下图展示了一个经典的 IO 服务设计：</p>
+<hr>
+<blockquote>
+<p>本文翻译自<a href="http://tutorials.jenkov.com/java-nio/nio-vs-io.html" target="_blank" rel="external">Java NIO vs. IO</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-12-Pipe/" rel="next" title="Java NIO-12-Pipe">
+                <i class="fa fa-chevron-left"></i> Java NIO-12-Pipe
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-14-Path/" rel="prev" title="Java NIO-14-Path">
+                Java NIO-14-Path <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-NIO-与-IO-之间的主要不同点"><span class="nav-number">1.</span> <span class="nav-text">Java NIO 与 IO 之间的主要不同点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#面向-Stream-vs-面向-Buffer"><span class="nav-number">2.</span> <span class="nav-text">面向 Stream vs. 面向 Buffer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#阻塞-IO-vs-非阻塞-IO"><span class="nav-number">3.</span> <span class="nav-text">阻塞 IO vs. 非阻塞 IO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Selectors"><span class="nav-number">4.</span> <span class="nav-text">Selectors</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NIO-和-IO-是怎样影响程序的设计的"><span class="nav-number">5.</span> <span class="nav-text">NIO 和 IO 是怎样影响程序的设计的</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#接口调用"><span class="nav-number">5.1.</span> <span class="nav-text">接口调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理"><span class="nav-number">5.2.</span> <span class="nav-text">数据处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "1df5358122a34c2ea8ff83d099d7006e",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

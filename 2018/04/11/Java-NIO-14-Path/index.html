@@ -1,0 +1,743 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Way" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Java Path 接口是在 Java 6 和 Java 7 中的部分更新之一。Java Path 接口是在 Java 7 中添加到 Java NIO 中的。Path 接口在java.nio.file包下，所以它的完整包名是java.nio.file.Path。
+一个 Java Path 实例代表文件系统中的一个路径（path）。一个路径可以指向一个文件或者一个文件夹。一个路劲更可以是绝对的或者相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO-14-Path">
+<meta property="og:url" content="http://korben-chy.github.io/2018/04/11/Java-NIO-14-Path/index.html">
+<meta property="og:site_name" content="Korben C .">
+<meta property="og:description" content="Java Path 接口是在 Java 6 和 Java 7 中的部分更新之一。Java Path 接口是在 Java 7 中添加到 Java NIO 中的。Path 接口在java.nio.file包下，所以它的完整包名是java.nio.file.Path。
+一个 Java Path 实例代表文件系统中的一个路径（path）。一个路径可以指向一个文件或者一个文件夹。一个路劲更可以是绝对的或者相">
+<meta property="og:updated_time" content="2018-04-11T03:44:04.422Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java NIO-14-Path">
+<meta name="twitter:description" content="Java Path 接口是在 Java 6 和 Java 7 中的部分更新之一。Java Path 接口是在 Java 7 中添加到 Java NIO 中的。Path 接口在java.nio.file包下，所以它的完整包名是java.nio.file.Path。
+一个 Java Path 实例代表文件系统中的一个路径（path）。一个路径可以指向一个文件或者一个文件夹。一个路劲更可以是绝对的或者相">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://korben-chy.github.io/2018/04/11/Java-NIO-14-Path/"/>
+
+
+
+
+
+  <title> Java NIO-14-Path | Korben C . </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?248a1a42adfa894d9423899a4664ebb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Korben C .</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">One Fall in Love with W.  Bai</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-14-Path/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java NIO-14-Path
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:44:04+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2018/04/11/Java-NIO-14-Path/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java Path 接口是在 Java 6 和 Java 7 中的部分更新之一。Java Path 接口是在 Java 7 中添加到 Java NIO 中的。Path 接口在<code>java.nio.file</code>包下，所以它的完整包名是<code>java.nio.file.Path</code>。</p>
+<p>一个 Java Path 实例代表文件系统中的一个路径（path）。一个路径可以指向一个文件或者一个文件夹。一个路劲更可以是绝对的或者相对的。绝对路径包含了从文件系统的根目录到它指向的文件或路径的完整的路径。相对路径包含了指向的文件或路径相对于其它路径的路径。相对路劲可能听起来有一些疑惑。但不用担心，我会在这篇教程中进行更详细的阐释。<br><a id="more"></a></p>
+<p>不要混淆文件系统的路径和某些系统的环境变量。<code>java.nio.file.Path</code>接口和环境变量没有任何的关系。</p>
+<p>在很多方面<code>java.nio.file.Path</code>接口和<code>java.io.File</code>很相似，但是仍有一些不同的地方。尽管如此，在很多情况下你可以把 File 类的使用替换为 Path 接口。</p>
+<h1 id="创建一个-Path-实例"><a href="#创建一个-Path-实例" class="headerlink" title="创建一个 Path 实例"></a>创建一个 Path 实例</h1><p>为了使用<code>Java.nio.file.Path</code>实例，你需要创建一个 Path 实例。你可以通过<code>java.nio.file.Paths</code>类的静态方法<code>Paths.get()</code>来创建一个 Path 的实例。下面是一个<code>Paths.get(0</code>的示例：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta"><span class="meta-keyword">import</span> java.nio.file.Path;</span></div><div class="line"><span class="meta"><span class="meta-keyword">import</span> java.nio.file.Paths;</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PathExample</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) &#123;</div><div class="line"></div><div class="line">        Path path = Paths.get(<span class="string">"c:\\data\\myfile.txt"</span>);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意<code>Paths.get(&quot;c:\\data\\myfile.txt&quot;)</code>方法的调用，这个方法创建了 Path 实例。<code>Paths.get()</code>方法是一个创建 Path 的工厂方法。</p>
+<h1 id="创建一个绝对路径（Absolute-Path）"><a href="#创建一个绝对路径（Absolute-Path）" class="headerlink" title="创建一个绝对路径（Absolute Path）"></a>创建一个绝对路径（Absolute Path）</h1><p>创建一个绝对路径是通过调用方法<code>Paths.get()</code>并以绝对路径为参数来完成的。下面是一个创建代表绝对路径的 Path 实例的方法：<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Path</span> path = <span class="keyword">Paths</span>.get(<span class="string">"c:\\data\\myfile.txt"</span>);</div></pre></td></tr></table></figure></p>
+<p>这个绝对路径是<code>c:\data\myfile.txt</code>。</p>
+<p>上面的路径是一个 Windows 系统的路径。在 Unix 系统（例如 Linux，MacOS，FreeBSD 等）中绝对路径会像下面这样：<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Path</span> path = <span class="keyword">Paths</span>.get(<span class="string">"/home/jakobjenkov/myfile.txt"</span>);</div></pre></td></tr></table></figure></p>
+<p>现在这个绝对路径是<code>/home/jakobjenkov/myfile.txt</code>。</p>
+<h1 id="创建一个相对路径"><a href="#创建一个相对路径" class="headerlink" title="创建一个相对路径"></a>创建一个相对路径</h1><p>相对路径是指从一个路径（基准路径）指向一个文件或文件夹的路径。相对路径的完整的路径（绝对路径）是由基准路径和相对路径结合在一起组成的。</p>
+<p>Java NIO 中的 Path 类也可以和相对路径一起使用。你可以使用<code>Paths.get(basePath, relativePath)</code>来创建一个相对路径。下面是两个创建相对路径的实例：<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Path</span> projects = <span class="keyword">Paths</span>.get(<span class="string">"d:\\data"</span>, <span class="string">"projects"</span>);</div><div class="line"></div><div class="line"><span class="keyword">Path</span> file     = <span class="keyword">Paths</span>.get(<span class="string">"d:\\data"</span>, <span class="string">"projects\\a-project\\myfile.txt"</span>);</div></pre></td></tr></table></figure></p>
+<p>第一个例子创建了一个指向路径<code>d:\data\projects</code>的 Path 实例。第二个例子创建了一个指向<code>d:\data\projects\a-project\myfile.txt</code>的 Path 实例。</p>
+<p>当使用相对路径时，你可以在路径字符串中使用下面两个特殊的代码。它们是：</p>
+<ul>
+<li><code>.</code></li>
+<li><code>..</code></li>
+</ul>
+<p><code>.</code>代指当前路径。例如，如果你创建了一个这样的相对路径：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Path currentDir = Paths.get(<span class="string">"."</span>)<span class="comment">;</span></div><div class="line">System.out.println(currentDir.toAbsolutePath())<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>那么这个 Path 实例指向的绝对路径就是执行上述代码的应用所在的路径。</p>
+<p>如果<code>.</code>在路径字符串的中间被使用，那么它和在那个点所指向的路径相同。下面的实例说明了这点：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Path currentDir = Paths.get("d:<span class="symbol">\\</span>data<span class="symbol">\\</span>projects<span class="symbol">\.</span><span class="symbol">\a</span>-project");</div></pre></td></tr></table></figure></p>
+<p>这个路径和下面的路径对应：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">d:<span class="symbol">\d</span>ata<span class="symbol">\p</span>rojects<span class="symbol">\a</span>-project</div></pre></td></tr></table></figure></p>
+<p><code>..</code>代码指“父路径”或者“上一级路径”。下面是实例：<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Path</span> parentDir = <span class="keyword">Paths</span>.get(<span class="string">".."</span>);</div></pre></td></tr></table></figure></p>
+<p>这个例子创建的 Path 实例指执行这段代码的应用所在路径的父路径。</p>
+<p>如果<code>..</code>在路径字符串的中间被使用，那么它就把那个点所指向的路径改变为上一级路径。例如：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String path = <span class="string">"d:<span class="subst">\\</span>data<span class="subst">\\</span>projects<span class="subst">\\</span>a-project<span class="subst">\\</span>..<span class="subst">\\</span>another-project"</span>;</div><div class="line">Path parentDir2 = Paths.get(path);</div></pre></td></tr></table></figure></p>
+<p>这个例子创建的 Path 实例和下面的路径对应：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">d:<span class="symbol">\d</span>ata<span class="symbol">\p</span>rojects<span class="symbol">\a</span>nother-project</div></pre></td></tr></table></figure></p>
+<p>在 a-project 后的<code>..</code>代码将路径改变为上一级路径– projects，然后路径又从这里指向了 another-project。</p>
+<p><code>.</code>和<code>..</code>代码还可以结合使用在<code>Paths.get()</code>方法中。下面是两个简单的实例展示了这种情况：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Path path1 = Paths.get(<span class="string">"d:<span class="subst">\\</span>data<span class="subst">\\</span>projects"</span>, <span class="string">".<span class="subst">\\</span>a-project"</span>);</div><div class="line"></div><div class="line">Path path2 = Paths.get(<span class="string">"d:<span class="subst">\\</span>data<span class="subst">\\</span>projects<span class="subst">\\</span>a-project"</span>,</div><div class="line">                       <span class="string">"..<span class="subst">\\</span>another-project"</span>);</div></pre></td></tr></table></figure></p>
+<p>这里还有很多方式将相对路径应用在 Java NIO Path 中。在这篇文章中的后续章节中你会看到更多。</p>
+<h1 id="Path-normalize"><a href="#Path-normalize" class="headerlink" title="Path.normalize()"></a>Path.normalize()</h1><p>Path 接口的<code>normalize()</code>方法可以标准化（normalize）一个路径。标准化指将路径字符串中所有的<code>.</code>和<code>..</code>删除，并转化为所指向的真正路径。下面是一个<code>Path.normalize()</code>的示例：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">String <span class="keyword">originalPath </span>=</div><div class="line">        <span class="string">"d:\\data\\projects\\a-project\\..\\another-project"</span><span class="comment">;</span></div><div class="line"></div><div class="line">Path path1 = Paths.get(<span class="keyword">originalPath);</span></div><div class="line">System.out.println(<span class="string">"path1 = "</span> + path1)<span class="comment">;</span></div><div class="line"></div><div class="line">Path path2 = path1.<span class="keyword">normalize();</span></div><div class="line">System.out.println(<span class="string">"path2 = "</span> + path2)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>这个 Path 例子首先创建了一个中间带有<code>..</code>的路径字符串，然后使用这个字符串创建了一个 Path 的实例，然后将这个实例打印出来（实际上调用了 Path.toString()）。</p>
+<p>这个例子然后调用了 Path 实例的<code>normalize()</code>方法，并返回了一个新的 Path 实例。这个新的、标准化的 Path 实例也被打印了出来。</p>
+<p>下面是上面的代码打印的结果：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">path1 = d:<span class="symbol">\d</span>ata<span class="symbol">\p</span>rojects<span class="symbol">\a</span>-project<span class="symbol">\.</span>.<span class="symbol">\a</span>nother-project</div><div class="line">path2 = d:<span class="symbol">\d</span>ata<span class="symbol">\p</span>rojects<span class="symbol">\a</span>nother-project</div></pre></td></tr></table></figure></p>
+<p>正如你看到的，标准化的路径不再包含 a-project.. 部分，因为这是多余的。被删除的部分没有向最终的绝对路径添加任何东西。</p>
+<hr>
+<blockquote>
+<p>本文翻译自<a href="http://tutorials.jenkov.com/java-nio/path.html" target="_blank" rel="external">Java NIO Path</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-13-vs-IO/" rel="next" title="Java NIO-13-vs.IO">
+                <i class="fa fa-chevron-left"></i> Java NIO-13-vs.IO
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/11/Java-NIO-15-Files/" rel="prev" title="Java NIO-15 Files">
+                Java NIO-15 Files <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Korben C ." />
+          <p class="site-author-name" itemprop="name">Korben C .</p>
+           
+              <p class="site-description motion-element" itemprop="description">On The Way</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#创建一个-Path-实例"><span class="nav-number">1.</span> <span class="nav-text">创建一个 Path 实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建一个绝对路径（Absolute-Path）"><span class="nav-number">2.</span> <span class="nav-text">创建一个绝对路径（Absolute Path）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建一个相对路径"><span class="nav-number">3.</span> <span class="nav-text">创建一个相对路径</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Path-normalize"><span class="nav-number">4.</span> <span class="nav-text">Path.normalize()</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Korben C .</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "1df5358122a34c2ea8ff83d099d7006e",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

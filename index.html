@@ -260,7 +260,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/06/20/ReentrantLock-VS-synchronized/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-16-AsynchronousFileChannel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -282,8 +282,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/20/ReentrantLock-VS-synchronized/" itemprop="url">
-                  ReentrantLock VS synchronized
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-16-AsynchronousFileChannel/" itemprop="url">
+                  Java NIO-16-AsynchronousFileChannel
                 </a>
               
             
@@ -299,8 +299,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T14:56:34+08:00">
-                2017-06-20
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:44:13+08:00">
+                2018-04-11
               </time>
             
 
@@ -309,28 +309,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -358,10 +336,10 @@
 
       
         
-          <p>在<code>Java</code>中，使用<code>synchronized</code>是我们最常用的同步手段。而在<code>Java 5</code>中，又新引入了<code>ReentrantLock</code>来提供同步的功能，那么<code>ReentrantLock</code>相比于<code>synchronized</code>有何异同呢？<br>
+          <p><code>AsynchronousFileChannel</code>在 Java 7 中被加入到了 Java NIO 中。<code>AsynchronousFileChannel</code>使得我们可以异步的向文件进行读写操作。这篇教程将会讲解怎样使用<code>AsynchronousFileChannel</code>。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/06/20/ReentrantLock-VS-synchronized/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-16-AsynchronousFileChannel/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -407,7 +385,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/25/CopyOnWriteArrayList-解析/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-15-Files/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -429,8 +407,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/05/25/CopyOnWriteArrayList-解析/" itemprop="url">
-                  CopyOnWriteArrayList 解析
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-15-Files/" itemprop="url">
+                  Java NIO-15 Files
                 </a>
               
             
@@ -446,8 +424,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-25T21:09:37+08:00">
-                2017-05-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:44:08+08:00">
+                2018-04-11
               </time>
             
 
@@ -456,28 +434,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -505,10 +461,10 @@
 
       
         
-          <p>我们知道<code>ArrayList</code>不是线程安全的，可以通过：<code>Collections.synchronizedList(arrayList)</code>来将<code>ArrayList</code>转换为一个线程安全的 List，而<code>CopyOnWriteArrayList</code>生来就是线程安全的，它是怎样实现的？它有什么特点？今天让我们一探究竟。<br>
+          <p>Java NIO Files 类（java.nio.file.Files）提供了许多操作文件系统中文件的方法。这篇 Java NIO 教程会覆盖这些方法中最常使用的部分。这个 Files 类包含很多方法，如果你需要的方法不在这里，可以去 JavaDoc 中查看。这个 Files 类或许会含有这个方法。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/05/25/CopyOnWriteArrayList-解析/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-15-Files/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -554,7 +510,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/25/常见-WEB-安全问题/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-14-Path/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -576,8 +532,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/05/25/常见-WEB-安全问题/" itemprop="url">
-                  常见 WEB 安全问题
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-14-Path/" itemprop="url">
+                  Java NIO-14-Path
                 </a>
               
             
@@ -593,8 +549,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-25T10:56:09+08:00">
-                2017-05-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:44:04+08:00">
+                2018-04-11
               </time>
             
 
@@ -603,28 +559,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/WEB/" itemprop="url" rel="index">
-                    <span itemprop="name">WEB</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -652,10 +586,11 @@
 
       
         
-          <p>在<code>WEB</code>应用中，我们会遇到各种各样的安全问题，本文讲解了几种最常见几种安全问题。<br>
+          <p>Java Path 接口是在 Java 6 和 Java 7 中的部分更新之一。Java Path 接口是在 Java 7 中添加到 Java NIO 中的。Path 接口在<code>java.nio.file</code>包下，所以它的完整包名是<code>java.nio.file.Path</code>。</p>
+<p>一个 Java Path 实例代表文件系统中的一个路径（path）。一个路径可以指向一个文件或者一个文件夹。一个路劲更可以是绝对的或者相对的。绝对路径包含了从文件系统的根目录到它指向的文件或路径的完整的路径。相对路径包含了指向的文件或路径相对于其它路径的路径。相对路劲可能听起来有一些疑惑。但不用担心，我会在这篇教程中进行更详细的阐释。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/05/25/常见-WEB-安全问题/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-14-Path/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -701,7 +636,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/23/Java-HashMap-源代码解析/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-13-vs-IO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -723,8 +658,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/05/23/Java-HashMap-源代码解析/" itemprop="url">
-                  Java HashMap 源代码解析
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-13-vs-IO/" itemprop="url">
+                  Java NIO-13-vs.IO
                 </a>
               
             
@@ -740,8 +675,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-23T21:39:26+08:00">
-                2017-05-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:44:01+08:00">
+                2018-04-11
               </time>
             
 
@@ -750,28 +685,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -799,10 +712,11 @@
 
       
         
-          <p><code>Map</code>可以说是我们开发中最常用的数据结构，而<code>HashMap</code>是我们最常用的<code>Map</code>实例，今天我们来研究<code>HashMap</code>的内部实现。<br>
+          <p>当你在学习了 Java NIO 和 IO 的 API 后，你一定会想，在什么时候我应当使用 IO 接口，什么时候使用 NIO 接口？</p>
+<p>在这篇文章中我会试着在 Java NIO 与 IO 的不同之处、它们的使用场景、对你设计代码的影响等方面给大家一些启发。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/05/23/Java-HashMap-源代码解析/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-13-vs-IO/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -848,7 +762,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/05/03/Https-实现原理/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-12-Pipe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -870,8 +784,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/05/03/Https-实现原理/" itemprop="url">
-                  Https 实现原理
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-12-Pipe/" itemprop="url">
+                  Java NIO-12-Pipe
                 </a>
               
             
@@ -887,8 +801,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-03T23:48:42+08:00">
-                2017-05-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:43:54+08:00">
+                2018-04-11
               </time>
             
 
@@ -897,28 +811,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HTTPS/" itemprop="url" rel="index">
-                    <span itemprop="name">HTTPS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -946,10 +838,142 @@
 
       
         
-          <p>我们知道<code>Http</code>是不安全的，容易被黑客攻击，而<code>Https</code>是安全的。那为什么<code>Https</code>是安全的？下面我们来尝试回答这个问题。<br>
+          
+            <p>Java NIO 管道（Pipe）是两个线程间的单向数据连接。一个管道有一个 source channle 和一个 sink channel。你将数据写入到 sink channel，那这些数据可以被读取到 source channel 中。</p>
+<p>下面的插图展示了 Pipe 的原则：<br><img src="/images/java_NIO_12_Pipe/pipe-internals.png" alt="pipe-internals"></p>
+<h1 id="创建一个-Pipe"><a href="#创建一个-Pipe" class="headerlink" title="创建一个 Pipe"></a>创建一个 Pipe</h1><p>你可以通过方法<code>Pipe.open()</code>来打开一个管道（Pipe）：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Pipe pipe</span> = Pipe.open();</div></pre></td></tr></table></figure></p>
+<h1 id="向-Pipe-中写入数据"><a href="#向-Pipe-中写入数据" class="headerlink" title="向 Pipe 中写入数据"></a>向 Pipe 中写入数据</h1><p>你需要通过 sink channel 来向 Pipe 中写入数据。像下面这样：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Pipe.SinkChannel sinkChannel = pipe.sink()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>通过调用它的<code>write()</code>方法，你可以向 SinkChannel 中写入数据：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">String </span>newData = <span class="string">"New String to write to file..."</span> + System.currentTimeMillis()<span class="comment">;</span></div><div class="line"></div><div class="line"><span class="keyword">ByteBuffer </span><span class="keyword">buf </span>= <span class="keyword">ByteBuffer.allocate(48);</span></div><div class="line"><span class="keyword">buf.clear();</span></div><div class="line"><span class="keyword">buf.put(newData.getBytes());</span></div><div class="line"></div><div class="line"><span class="keyword">buf.flip();</span></div><div class="line"></div><div class="line"><span class="symbol">while</span>(<span class="keyword">buf.hasRemaining()) </span>&#123;</div><div class="line">    sinkChannel.write(<span class="keyword">buf);</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="从-Pipe-中读取数据"><a href="#从-Pipe-中读取数据" class="headerlink" title="从 Pipe 中读取数据"></a>从 Pipe 中读取数据</h1><p>你需要通过 source channel 来从 Pipe 中读取数据。像下面这样：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Pipe.SourceChannel sourceChannel = pipe.source()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>要从 source channel 中读取数据，你需要调用它的<code>read()</code>方法：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ByteBuffer </span><span class="keyword">buf </span>= <span class="keyword">ByteBuffer.allocate(48);</span></div><div class="line"></div><div class="line"><span class="symbol">int</span> <span class="keyword">bytesRead </span>= inChannel.read(<span class="keyword">buf);</span></div></pre></td></tr></table></figure></p>
+<p>方法<code>read()</code>的 int 返回值表明从 buffer 中读取到的字节数。</p>
+<hr>
+<blockquote>
+<p>本位翻译自<a href="http://tutorials.jenkov.com/java-nio/pipe.html" target="_blank" rel="external">Java NIO Pipe</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-11-DatagramChannel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-11-DatagramChannel/" itemprop="url">
+                  Java NIO-11 DatagramChannel
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:43:49+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Java NIO 中的 DatagramChannel 是一个可以发送和接收 UDP 数据包的 channel。因为 UDP 是一个无连接的（connection-less）网络协议，你不能像其它 Channel 一样向 DatagramChannel 读写数据。取而代之的是，你接收和发送数据包。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/05/03/Https-实现原理/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-11-DatagramChannel/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -995,7 +1019,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/19/Java-ThreadLocal-源码解析/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -1017,8 +1041,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/19/Java-ThreadLocal-源码解析/" itemprop="url">
-                  Java ThreadLocal 源码解析
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/" itemprop="url">
+                  Java NIO-10-非阻塞（Non-blocking）服务端
                 </a>
               
             
@@ -1034,8 +1058,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T23:46:20+08:00">
-                2017-04-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:43:20+08:00">
+                2018-04-11
               </time>
             
 
@@ -1044,28 +1068,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -1093,11 +1095,10 @@
 
       
         
-          <p>我们都知道<code>ThreadLocal</code>是用来保存线程局部变量的，即保存在<code>ThreadLocal</code>中的变量只有当前线程可以访问，而其他线程是不能访问和修改的。</p>
-<p>那么<code>ThreadLocal</code>具体是怎样实现的？今天就让我们来揭开她的神秘面纱。<br>
+          <p>尽管你知道 Java NIO 非阻塞（Non-blocking）功能是如何工作的（利用Selector、Channel、Buffer 等），但是设计一个非阻塞的服务端仍然是非常困难的。相比于阻塞 IO，非阻塞 IO 具有许多的挑战。这篇非阻塞服务端教程会讨论非阻塞服务将面临的主要挑战，并会提供一些可能的解决方案。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/04/19/Java-ThreadLocal-源码解析/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-10-非阻塞（Non-blocking）服务端/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1143,7 +1144,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/12/译：一个成功的Git分支模型/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-9-ServerSocketChannel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -1165,8 +1166,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/12/译：一个成功的Git分支模型/" itemprop="url">
-                  译：一个成功的Git分支模型
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-9-ServerSocketChannel/" itemprop="url">
+                  Java NIO-9-ServerSocketChannel
                 </a>
               
             
@@ -1182,8 +1183,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-12T10:06:24+08:00">
-                2017-04-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:43:06+08:00">
+                2018-04-11
               </time>
             
 
@@ -1192,28 +1193,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Git/" itemprop="url" rel="index">
-                    <span itemprop="name">Git</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -1241,10 +1220,141 @@
 
       
         
-          <p>现在越来越多的公司开始使用<code>Git</code>作为版本管理的工具，我在工作中也使用<code>Git</code>有一段时间了。我们知道，<code>Git</code>相对于<code>SVN</code>最方便的莫过于对于分支的管理。这篇文章给我们提供了一个成功的<code>Git</code>分支开发模型，包括<code>develop</code>分支、<code>feature</code>分支、<code>hotfix</code>分支、<code>release</code>分支等。下面让我们来一块学习下这篇文章。<br>
+          
+            <p>Java NIO ServerSocketChannel 是监听 TCP 网络连接的 Channel，就像标准 Java 网络中的 ServerSocket。ServerSocketChannel 在 java.nio.channel 包下。</p>
+<p>下面是示例：<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</div><div class="line"></div><div class="line">serverSocketChannel.socket().bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">9999</span>));</div><div class="line"></div><div class="line"><span class="keyword">while</span>(<span class="literal">true</span>)&#123;</div><div class="line">    SocketChannel socketChannel =</div><div class="line">            serverSocketChannel.<span class="keyword">accept</span>();</div><div class="line"></div><div class="line">    //<span class="keyword">do</span> something <span class="keyword">with</span> socketChannel...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="打开-ServerSocketChannel"><a href="#打开-ServerSocketChannel" class="headerlink" title="打开 ServerSocketChannel"></a>打开 ServerSocketChannel</h1><p>你可以通过方法 ServerSocketChannel.open() 来打开 ServerSocketChannel：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">ServerSocketChannel serverSocketChannel</span> = ServerSocketChannel.open();</div></pre></td></tr></table></figure></p>
+<h1 id="关闭-ServerSocketChannel"><a href="#关闭-ServerSocketChannel" class="headerlink" title="关闭 ServerSocketChannel"></a>关闭 ServerSocketChannel</h1><p>ServerSocketChannel 工作完毕后，你可以通过 ServerSocketChannel.close() 方法关闭它：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">serverSocketChannel.close()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<h1 id="监听连接"><a href="#监听连接" class="headerlink" title="监听连接"></a>监听连接</h1><p>你可以通过方法 ServerSocketChannel.accept() 方法来监听输入连接。当 accept() 方法返回时，会返回一个持有连接的 SocketChanel。因此，accept() 方法会阻塞直到监听到连接的来临。</p>
+<p>因为你不仅仅只关注一个连接，需要同时监听多个连接，所以你需要在循环中调用 accept() 方法。下面是示例：<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span>(<span class="literal">true</span>)&#123;</div><div class="line">    SocketChannel socketChannel =</div><div class="line">            serverSocketChannel.<span class="keyword">accept</span>();</div><div class="line"></div><div class="line">    //<span class="keyword">do</span> something <span class="keyword">with</span> socketChannel...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当然除了 true 之外，你还可以使用其他的退出循环的机制。</p>
+<h1 id="非阻塞（Non-blocking）模式"><a href="#非阻塞（Non-blocking）模式" class="headerlink" title="非阻塞（Non-blocking）模式"></a>非阻塞（Non-blocking）模式</h1><p>ServerSocketChannel 可以设置为非阻塞模式。在非阻塞模式下，accept() 方法会立即返回，如果没有连接的会湖返回 null。因此你必须检查返回的 SocketChannel 是否为 null。下面是示例：<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</div><div class="line"></div><div class="line">serverSocketChannel.socket().bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">9999</span>));</div><div class="line">serverSocketChannel.configureBlocking(<span class="literal">false</span>);</div><div class="line"></div><div class="line"><span class="keyword">while</span>(<span class="literal">true</span>)&#123;</div><div class="line">    SocketChannel socketChannel =</div><div class="line">            serverSocketChannel.<span class="keyword">accept</span>();</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(socketChannel != null)&#123;</div><div class="line">        //<span class="keyword">do</span> something <span class="keyword">with</span> socketChannel...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-8-SocketChannel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Korben C .">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Korben C .">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-8-SocketChannel/" itemprop="url">
+                  Java NIO-8-SocketChannel
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:42:57+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Java NIO SocketChannel 是一个连接到 TCP 网络 socket 的 channel，和 Java 网络的 Socket 等价。这里有两种方式来创建 SocketChannel：</p>
+<ol>
+<li>你打开一个 SocketChannel，并将这个 channel 连接至互联网。</li>
+<li>ServerSocketChannel 接收到连接时会创建一个 SocketChannel。
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/04/12/译：一个成功的Git分支模型/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-8-SocketChannel/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1290,7 +1400,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/04/09/Java类加载器-Classloader/">
+    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2018/04/11/Java-NIO-7-FileChannel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Korben C .">
@@ -1312,8 +1422,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/09/Java类加载器-Classloader/" itemprop="url">
-                  Java类加载器--Classloader
+                <a class="post-title-link" href="/2018/04/11/Java-NIO-7-FileChannel/" itemprop="url">
+                  Java NIO-7-FileChannel
                 </a>
               
             
@@ -1329,302 +1439,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-09T13:37:58+08:00">
-                2017-04-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Basic</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>类加载器是<code>Java</code>虚拟机的一个基石，它使得一个类可以被动态的加载的<code>Java</code>虚拟机中并执行，使<code>Java</code>运行时不用关注所运行的文件和文件系统。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/09/Java类加载器-Classloader/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/29/并发编程之-synchronized浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Korben C .">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Korben C .">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/29/并发编程之-synchronized浅析/" itemprop="url">
-                  并发编程之-synchronized浅析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-29T22:35:36+08:00">
-                2017-03-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Basic/" itemprop="url" rel="index">
-                    <span itemprop="name">Basic</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>多线程开发是优秀的程序员必备的技能，而<code>synchronized</code>关键字是多线程开发中最基本的技能。今天让我们来解密<code>synchronized</code>。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/29/并发编程之-synchronized浅析/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://korben-chy.github.io/2017/03/23/JUnit学习之-常用功能/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Korben C .">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Korben C .">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/23/JUnit学习之-常用功能/" itemprop="url">
-                  JUnit学习之--常用功能
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-23T00:29:27+08:00">
-                2017-03-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-11T11:42:46+08:00">
+                2018-04-11
               </time>
             
 
@@ -1660,10 +1476,11 @@
 
       
         
-          <p>在前一篇文章中，我们介绍了<a href="http://korben-chy.github.io/2017/03/19/JUnit%E5%AD%A6%E4%B9%A0%E4%B9%8B-assertThat/">JUnit学习之–assertThat</a>，学习了新的断言方式，今天我们继续学习<code>JUnit</code>的常用功能。<br>
+          <p>Java NIO <code>FileChannel</code>是指和文件连接的channel。使用<code>FileChannel</code>，你可以读取文件中的数据，也可以写入数据到文件。Java NIO FileChannel 是使用标准的 Java IO 接口读取文件的一种选择。</p>
+<p><code>FileChannel</code>不能被这只为非阻塞（non-blocking）模式。它总是在阻塞模式下运行。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/23/JUnit学习之-常用功能/#more" rel="contents">
+            <a class="btn" href="/2018/04/11/Java-NIO-7-FileChannel/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1704,7 +1521,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1749,7 +1566,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -1771,7 +1588,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -1813,7 +1630,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
